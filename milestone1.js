@@ -1,0 +1,1 @@
+console.log("milestone 1 first commit for the project");
