@@ -1,1 +1,0 @@
-Hello World, this is a smaple text file for git manaement testing. 
