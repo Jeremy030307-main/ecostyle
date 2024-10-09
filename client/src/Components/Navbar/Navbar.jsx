@@ -22,9 +22,10 @@ const Navbar = () => {
             </div>
 
             <ul className='nav-menu'>
-                 <li onClick={() => {setMenu("shop")}}><NoDecorationLink style={{textDecoration: 'none'}} to='/'>Shop</NoDecorationLink>{menu==="shop"?<hr/>:<></>}</li>
-                 <li onClick={() => {setMenu("eco-point")}}><NoDecorationLink style={{textDecoration: 'none'}} to='/eco-point'>EcoPoint</NoDecorationLink>{menu==="eco-point"?<hr/>:<></>}</li>
-                 <li onClick={() => {setMenu("about")}}><NoDecorationLink style={{textDecoration: 'none'}} to='/about'>About</NoDecorationLink>{menu==="about"?<hr/>:<></>}</li>
+                <li onClick={() => {setMenu("home")}}><NoDecorationLink to='/'>Home</NoDecorationLink>{menu==="home"?<hr/>:<></>}</li>
+                 <li onClick={() => {setMenu("shop")}}><NoDecorationLink to='/shop'>Shop</NoDecorationLink>{menu==="shop"?<hr/>:<></>}</li>
+                 <li onClick={() => {setMenu("eco-point")}}><NoDecorationLink to='/eco-point'>EcoPoint</NoDecorationLink>{menu==="eco-point"?<hr/>:<></>}</li>
+                 <li onClick={() => {setMenu("about")}}><NoDecorationLink to='/about'>About</NoDecorationLink>{menu==="about"?<hr/>:<></>}</li>
             </ul>
 
             <div className='nav-account-cart-wishlist'>
