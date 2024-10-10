@@ -14,7 +14,6 @@ import {
 const db = getFirestore(firebase);
 
 //create new product
-
 export const createProduct = async (req, res, next) => {
   try {
     const data = req.body;
@@ -26,7 +25,6 @@ export const createProduct = async (req, res, next) => {
 };
 
 // get all products
-
 export const getProducts = async (req, res, next) => {
   try {
     const products = await getDocs(collection(db, 'products'));

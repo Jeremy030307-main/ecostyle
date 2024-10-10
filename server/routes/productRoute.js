@@ -8,12 +8,12 @@ import {
   deleteProduct,
 } from '../controllers/productController.js';
 
-const router = express.Router();
+const productRouter = express.Router();
 
-router.get('/', getProducts);
-router.post('/new', createProduct);
-router.get('/product/:id', getProduct);
-router.put('/update/:id', updateProduct);
-router.delete('/delete/:id', deleteProduct);
+productRouter.get('/', getProducts);
+productRouter.post('/new', createProduct);
+productRouter.get('/:id', getProduct);
+productRouter.put('/update/:id', updateProduct);
+productRouter.delete('/delete/:id', deleteProduct);
 
-export default router;
+export default productRouter;
