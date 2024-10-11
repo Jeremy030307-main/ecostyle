@@ -13,17 +13,6 @@ import {
 
 const db = getFirestore(firebase);
 
-//create new product
-export const createProduct = async (req, res, next) => {
-  try {
-    const data = req.body;
-    await addDoc(collection(db, 'products'), data);
-    res.status(200).send('product created successfully');
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-};
-
 // get all products
 export const getProducts = async (req, res, next) => {
   try {
@@ -67,6 +56,18 @@ export const getProduct = async (req, res, next) => {
   }
 };
 
+// ---------- Admin action ------------------
+//create new product
+export const createProduct = async (req, res, next) => {
+  try {
+    const data = req.body;
+    await addDoc(collection(db, 'products'), data);
+    res.status(200).send('product created successfully');
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 //update product (with id)
 export const updateProduct = async (req, res, next) => {
   try {
@@ -85,7 +86,7 @@ export const deleteProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
     await deleteDoc(doc(db, 'products', id));
-    res.status(200).send('product deleted successfully');
+    res.status(200).send('Product deleted successfully');
   } catch (error) {
     res.status(400).send(error.message);
   }

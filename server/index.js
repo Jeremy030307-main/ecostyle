@@ -3,7 +3,7 @@ import cors from 'cors';
 
 import config from './config.js';
 import productRoute from './routes/productRoute.js';
-import userRouter from './routes/userRoute.js';
+import userRouter from './authentication/userRoute.js';
 
 const app = express();
 
