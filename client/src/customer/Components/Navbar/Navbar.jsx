@@ -15,17 +15,17 @@ const NoDecorationLink = styled(Link)`
 const Navbar = () => {
 
         const [menu,setMenu] = useState("shop");
+
     return (
         <div className="navbar">
             <div className='nav-logo'>
                 <Link to='/'><img src={logo_text} alt=''/></Link>
             </div>
-
             <ul className='nav-menu'>
-                <li onClick={() => {setMenu("home")}}><NoDecorationLink to='/'>Home</NoDecorationLink>{menu==="home"?<hr/>:<></>}</li>
-                 <li onClick={() => {setMenu("shop")}}><NoDecorationLink to='/shop'>Shop</NoDecorationLink>{menu==="shop"?<hr/>:<></>}</li>
-                 <li onClick={() => {setMenu("eco-point")}}><NoDecorationLink to='/eco-point'>EcoPoint</NoDecorationLink>{menu==="eco-point"?<hr/>:<></>}</li>
-                 <li onClick={() => {setMenu("about")}}><NoDecorationLink to='/about'>About</NoDecorationLink>{menu==="about"?<hr/>:<></>}</li>
+                <li onClick={() => {setMenu("home")}}><NoDecorationLink to={`/`}>Home</NoDecorationLink>{menu==="home"?<hr/>:<></>}</li>
+                 <li onClick={() => {setMenu("shop")}}><NoDecorationLink to={`/shop`}>Shop</NoDecorationLink>{menu==="shop"?<hr/>:<></>}</li>
+                 <li onClick={() => {setMenu("eco-point")}}><NoDecorationLink to={`/eco-point`}>EcoPoint</NoDecorationLink>{menu==="eco-point"?<hr/>:<></>}</li>
+                 <li onClick={() => {setMenu("about")}}><NoDecorationLink to={`/about`}>About</NoDecorationLink>{menu==="about"?<hr/>:<></>}</li>
             </ul>
 
             <div className='nav-account-cart-wishlist'>
