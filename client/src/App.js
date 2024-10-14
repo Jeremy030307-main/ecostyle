@@ -9,25 +9,36 @@ import Wishlist from './customer/Pages/Wishlist';
 import Accout from './customer/Pages/Accout';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
+import Admin from './admin/admin';
+
+import AdminRoutes from './authentication/protectedRoute';
+import { AuthProvider } from './authentication/authContext';
+
 
 function App() {
+
   return (
     <div>
-      
       <BrowserRouter>
+        <AuthProvider>
+          <Routes>
+              <Route path='/' element={<Customer/>}>
+                <Route path='' element={<Home/>}></Route>
+                <Route path='shop' element={<Shop/>}></Route>
+                <Route path='eco-point' element={<EcoPoint/>}></Route>
+                <Route path='about' element={<About/>}></Route>
+                <Route path='wishlist' element={<Wishlist/>}></Route>
+                <Route path='cart' element={<Cart/>}></Route>
+                <Route path='account' element={<Accout/>}></Route>
+                <Route path='product' element={<Product/>}></Route>
+              </Route>
+            
+            <Route element={<AdminRoutes/>}>
+              <Route path='/admin' element={<Admin/>}></Route>
+            </Route>
 
-      <Routes>
-        <Route path='/' element={<Customer/>}>
-          <Route path='' element={<Home/>}></Route>
-          <Route path='shop' element={<Shop/>}></Route>
-          <Route path='eco-point' element={<EcoPoint/>}></Route>
-          <Route path='about' element={<About/>}></Route>
-          <Route path='wishlist' element={<Wishlist/>}></Route>
-          <Route path='cart' element={<Cart/>}></Route>
-          <Route path='account' element={<Accout/>}></Route>
-          <Route path='product' element={<Product/>}></Route>
-        </Route>
-      </Routes>
+        </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </div>
   );

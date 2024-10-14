@@ -14,7 +14,7 @@ const NoDecorationLink = styled(Link)`
 
 const Navbar = () => {
 
-        const [menu,setMenu] = useState("shop");
+    const [menu,setMenu] = useState("home");
 
     return (
         <div className="navbar">
@@ -29,10 +29,10 @@ const Navbar = () => {
             </ul>
 
             <div className='nav-account-cart-wishlist'>
-                <Link to='/wishlist'><img src={wishlist_icon} alt="" /></Link>
-                <Link to='/cart'><img src={cart_icon} alt="" /></Link>
+                <Link to='/wishlist'><img onClick={() => {setMenu("wishlist")}} src={wishlist_icon} alt="" /></Link>
+                <Link to='/cart'><img onClick={() => {setMenu("cart")}} src={cart_icon} alt="" /></Link>
                 <div className='nav-cart-count'>0</div>
-                <Link to='/account'><img src={account_icon} alt="" /></Link>
+                <Link to='/account'><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
             </div>
         </div>
     );
