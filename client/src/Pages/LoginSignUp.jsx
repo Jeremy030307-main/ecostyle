@@ -10,6 +10,11 @@ const LoginSignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
 
+  // Email validation function
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic regex for email validation
+    return re.test(String(email).toLowerCase());
+  };
 
   // Toggle between Login and Sign-Up views 
   const toggleForm = () => {
@@ -23,10 +28,18 @@ const LoginSignUp = () => {
     setPassword('');
     setConfirmPassword('');
     setUsername('');
+    setError('');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent the default form submission
+    setError('');
+
+    // Validate email
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
 
     // If signing up, validate that password and confirm password fields should match.
     if (isSignUp && password !== confirmPassword) {
@@ -48,8 +61,8 @@ const LoginSignUp = () => {
 
   return (
     <div className="login-signup-container">
-      {/* Form Wrapper */}
       <div className="form-wrapper">
+        
         {/* Toggle Heading */}
         <h2>{isSignUp ? 'Create an Account' : 'Login'}</h2>
 
