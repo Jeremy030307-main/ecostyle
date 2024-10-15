@@ -1,5 +1,3 @@
-import { DELETE, POST } from "../apiManager/ApiMethods";
-import AUTH_ENDPOINTS from "./authEndpoint";
 import { ApiMethods } from '../apiManager/ApiMethods'; 
 
 class AuthenticationManager {
@@ -30,16 +28,16 @@ class AuthenticationManager {
             email: '123456@gmail.com',
             password: "userpassword123"
         }
-        let tokenID = null
+        let signInToken = null
 
         try {
             const response = await ApiMethods.post("/user/signIn", body);
-            tokenID = response.idToken;
+            signInToken = response;
         } catch (error) {
             console.log('error', error)
         }
 
-        return tokenID
+        return signInToken
     };
 
     static signOut = async() => {
@@ -49,6 +47,18 @@ class AuthenticationManager {
         } catch (error) {
             console.log("error", error)
         }
+    }
+
+    static getUser = async(id) => {
+
+        let user = null
+        try {
+            user = await ApiMethods.get(`/user/${id}`)
+        } catch (error) {
+            console.log('error', error)
+        }
+
+        return user
     }
 }
 

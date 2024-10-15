@@ -16,14 +16,14 @@ const NoDecorationLink = styled(Link)`
 const Navbar = () => {
 
     const [menu,setMenu] = useState("home");
-    const { login, logout, token } = useAuth();
+    const { login, logout, token, role } = useAuth();
 
     return (
         <div className="navbar">
             <div className='nav-logo'>
                 <Link to='/'><img src={logo_text} alt=''/></Link>
             </div>
-            <p>{token}</p>
+            <p>{role}</p>
             <ul className='nav-menu'>
                 <li onClick={() => {setMenu("home")}}><NoDecorationLink to={`/`}>Home</NoDecorationLink>{menu==="home"?<hr/>:<></>}</li>
                  <li onClick={() => {setMenu("shop")}}><NoDecorationLink to={`/shop`}>Shop</NoDecorationLink>{menu==="shop"?<hr/>:<></>}</li>

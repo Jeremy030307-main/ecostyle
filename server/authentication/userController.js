@@ -11,6 +11,7 @@ import {
   getFirestore,
   doc,
   setDoc,
+  getDoc
 } from 'firebase/firestore';
 import { ROLES } from "./userRole.js";
 
@@ -82,12 +83,31 @@ export const userSignOut = async (req, res, next) => {
         await signOut(auth);
 
         // Send a success response after the user is created
-        res.status(200).send("Sign Out Successfully")
+        res.status(200).json({
+          message: "Log Out Successfully",
+        });
 
       } catch (error) {
         // Send error response if there is any
         res.status(400).send(error.message);
       }
+};
+
+// get a user by its id
+export const getUser = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const user = doc(db, 'user', id);
+    const data = await getDoc(user);
+    
+    if (data.exists()) {
+      res.status(200).send(data.data());
+    } else {
+      res.status(404).send('product not found');
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 };
 
 // create admin level user

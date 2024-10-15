@@ -5,15 +5,22 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
   // const [user, setUser] = useState(null)
+  const [role, setRole] = useState(localStorage.getItem('role'))
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   const login = async(email, password) => {
 
-    const tokenID = await AuthenticationManager.signIn("",""); 
-
-    if (tokenID){
+    const signInToken = await AuthenticationManager.signIn("",""); 
+    const tokenID = signInToken.idToken
+    const user = await AuthenticationManager.getUser(signInToken.uid);
+    
+    console.log(signInToken)
+    if ((tokenID) && (user)){
       localStorage.setItem('token', tokenID)
-      setToken(tokenID)
+      setToken(tokenID);
+      localStorage.setItem('role', user.role)
+      setRole(user.role)
+      console.log(user)
     }
   };
 
@@ -22,7 +29,10 @@ export const AuthProvider = ({ children }) => {
     try {
       await AuthenticationManager.signOut();
       localStorage.setItem('token', null)
-      setToken(null)
+      setToken(null);
+      localStorage.setItem('role', null)
+      setRole(null);
+      console.log("Logout")
     } catch (error) {
       console.error("Logout failed", error)
     }
@@ -31,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout,token }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout,token,role }}>
       {children}
     </AuthContext.Provider>
   );
