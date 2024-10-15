@@ -9,6 +9,7 @@ const LoginSignUp = () => {
   const [password, setPassword] = useState(''); 
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
 
   // Email validation function
   const validateEmail = (email) => {
@@ -62,7 +63,7 @@ const LoginSignUp = () => {
   return (
     <div className="login-signup-container">
       <div className="form-wrapper">
-        
+
         {/* Toggle Heading */}
         <h2>{isSignUp ? 'Create an Account' : 'Login'}</h2>
 
@@ -79,6 +80,7 @@ const LoginSignUp = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
+              aria-invalid={error ? 'true' : 'false'}
             />
           </div>
 
@@ -92,6 +94,7 @@ const LoginSignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
               required
+              aria-invalid={error ? 'true' : 'false'}
             />
           </div>
 
@@ -108,6 +111,7 @@ const LoginSignUp = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your password"
                   required
+                  aria-invalid={error ? 'true' : 'false'}
                 />
               </div>
 
@@ -121,10 +125,14 @@ const LoginSignUp = () => {
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Choose a username"
                   required 
+                  aria-invalid={error ? 'true' : 'false'}
                 />
               </div>
             </>
           )}
+
+          {/* Display error message if there is an error */}
+          {error && <p className="error-message">{error}</p>}
 
           {/* Submit button changes label based on Login/Sign Up mode */}
           <button className="submit-btn" type="submit">
