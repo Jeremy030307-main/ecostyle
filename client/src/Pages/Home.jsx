@@ -6,7 +6,7 @@ import Product_3 from '../Components/Assets/Product_3.png'
 import Product_4 from '../Components/Assets/Product_4.png'
 import search_icon from '../Components/Assets/search_icon.png'
 import flash_sale_icon from '../Components/Assets/flash_sale_rectangle.png'
-import add_to_fav_script from '../Components/Scripts/add_to_fav_button.js'
+// import add_to_fav_script from '../Components/Scripts/add_to_fav_button.js'
 
 const Home = () => {
   return (
