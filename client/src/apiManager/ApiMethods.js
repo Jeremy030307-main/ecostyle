@@ -57,7 +57,7 @@ class ApiMethods {
         return this.apiRequest('PUT', url, data);
     }
     
-    static delete(url, data){
+    static delete(url){
         return this.apiRequest('DELETE', url);
     }
 };
@@ -108,6 +108,29 @@ const POST = (url, body) => {
     return { data, loading, error };
 };
 
-export {GET, POST}
+const DELETE = (url) => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await ApiMethods.delete(url);
+                setData(response);
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, [url]);
+
+    return { data, loading, error };
+}
+
+export {GET, POST, DELETE, ApiMethods}
 
 

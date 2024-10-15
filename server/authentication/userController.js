@@ -3,6 +3,7 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword ,
     signOut,
+    onAuthStateChanged
 } from "firebase/auth";
 
 import firebase from '../firebase.js';
