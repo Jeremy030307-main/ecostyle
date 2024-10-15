@@ -4,7 +4,7 @@ import './LoginSignUp.css';
 const LoginSignUp = () => {
   const [isSignUp, setIsSignUp] = useState(false);
 
-  // Toggle between Login and Sign-Up views
+  // Toggle between Login and Sign-Up views 
   const toggleForm = () => {
     setIsSignUp(!isSignUp);
   };
