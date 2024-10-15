@@ -2,10 +2,12 @@ import { ApiMethods } from '../apiManager/ApiMethods';
 
 class AuthenticationManager {
     
-    static signUp = async(email, password) => {
+    static signUp = async(fname, lname, email, password) => {
 
         // const { login } = useAuth();
         const body = {
+            firstName: fname,
+            lastName: lname,
             email: email,
             password: password
         };
@@ -14,30 +16,30 @@ class AuthenticationManager {
 
         try {
             const response = await ApiMethods.post("/user/signUp", body);
-            tokenID = response.idToken;
+            tokenID = response;
+            return tokenID
         } catch (error) {
             console.log('error', error)
+            return tokenID
         }
-
-        return tokenID
     }
 
     static signIn = async (email, password) => {
 
         const body = {
-            email: '123456@gmail.com',
-            password: "userpassword123"
+            email: email,
+            password: password
         }
         let signInToken = null
 
         try {
             const response = await ApiMethods.post("/user/signIn", body);
             signInToken = response;
+            return signInToken
         } catch (error) {
             console.log('error', error)
+            return signInToken
         }
-
-        return signInToken
     };
 
     static signOut = async() => {

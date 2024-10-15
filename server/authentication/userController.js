@@ -21,7 +21,7 @@ const auth = getAuth();
 // user sign up with email and password (only for customer creation)
 export const signUp = async (req, res, next) => {
     try {
-        const { email, password } = req.body;
+        const { firstName, lastName, email, password } = req.body;
 
         // Merge req.body data with an additional field (e.g., 'role': 'user')
         const userData = {

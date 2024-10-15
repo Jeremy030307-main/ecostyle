@@ -10,6 +10,7 @@ import Accout from './customer/Pages/Accout';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
+import LoginSignUp from './customer/Pages/LoginSignUp';
 
 import AdminRoutes from './authentication/protectedRoute';
 import { AuthProvider } from './authentication/authContext';
@@ -31,7 +32,9 @@ function App() {
                 <Route path='cart' element={<Cart/>}></Route>
                 <Route path='account' element={<Accout/>}></Route>
                 <Route path='product' element={<Product/>}></Route>
+                <Route path='login' element={<LoginSignUp/>}></Route>
               </Route>
+
             
             <Route element={<AdminRoutes/>}>
               <Route path='/admin' element={<Admin/>}></Route>

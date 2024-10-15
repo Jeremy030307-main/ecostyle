@@ -15,8 +15,8 @@ const NoDecorationLink = styled(Link)`
 
 const Navbar = () => {
 
-    const [menu,setMenu] = useState("home");
-    const { login, logout, token, role } = useAuth();
+    const [menu,setMenu] = useState("");
+    const { isAuthenticated,logout,role} = useAuth();
 
     return (
         <div className="navbar">
@@ -24,6 +24,7 @@ const Navbar = () => {
                 <Link to='/'><img src={logo_text} alt=''/></Link>
             </div>
             <p>{role}</p>
+            {isAuthenticated ? <p>true</p>: <p>false</p>}
             <ul className='nav-menu'>
                 <li onClick={() => {setMenu("home")}}><NoDecorationLink to={`/`}>Home</NoDecorationLink>{menu==="home"?<hr/>:<></>}</li>
                  <li onClick={() => {setMenu("shop")}}><NoDecorationLink to={`/shop`}>Shop</NoDecorationLink>{menu==="shop"?<hr/>:<></>}</li>
@@ -35,8 +36,7 @@ const Navbar = () => {
                 <Link to='/wishlist'><img onClick={() => {setMenu("wishlist")}} src={wishlist_icon} alt="" /></Link>
                 <Link to='/cart'><img onClick={() => {setMenu("cart")}} src={cart_icon} alt="" /></Link>
                 <div className='nav-cart-count'>0</div>
-                <Link to='/account'><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
-                <img onClick={() => {login()}} src={account_icon} alt="" />
+                <Link to= {isAuthenticated ? '/account':'/login'}><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
                 <img onClick={() => {logout()}} src={account_icon} alt="" />
             </div>
         </div>
