@@ -1,102 +1,134 @@
-/* General Styles */
-body, html {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f4f8;
-}
-
-/* Container */
-.login-signup-container {
+.form-container{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    padding: 20px;
+    flex-direction: row;
+    width: 90%;
+    height: 500px;
+    margin: auto;
+    border-radius: 12px;
+    background-color: #fff;
+    padding: 50px;
 }
 
-/* Form Wrapper */
-.form-wrapper {
-    background-color: #ffffff;
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-}
-
-/* Form Heading */
-h2 {
-    margin-bottom: 20px;
-    color: #333333;
-    font-size: 24px;
-}
-
-/* Form Fields */
-.form-field {
-    margin-bottom: 20px;
-}
-
-.form-field label {
+.form-image {
     display: block;
-    margin-bottom: 8px;
-    font-size: 16px;
-    color: #666666;
+    flex-basis: 100%;
 }
 
-.form-field input {
+.form-image img{
+    width: 80%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 20;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    margin-left: 10px;
+    width: 70%;
+}
+
+.form-header{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header img {
+    width: 60px;
+    height: auto;
+}
+
+.form-header h1{
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.field-wrap{
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    padding: 10px;
-    border: 1px solid #dddddd;
-    border-radius: 5px;
-    box-sizing: border-box;
+    gap: 48px;
+}
+
+.form-field{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.form-field input{
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #181824;
     font-size: 14px;
-    background-color: #f9f9f9;
-    transition: border-color 0.3s;
+    font-weight: 300;
+    transition: 300ms ease;
 }
 
-.form-field input:focus {
-    border-color: #0077b6; /* Focus color */
+.form-field input::placeholder {
+    visibility: hidden;
 }
 
-/* Submit Button */
+.form-field input:focus{
+    outline: none;
+    box-shadow: 0 1px 0 0 #17A375;
+    border-color: #17A375;
+}
+
+.form-field input:focus::placeholder {
+    visibility: visible;
+}
+
+.field-label{
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: 300ms ease;
+}
+
+.field-label label{
+    display: block;
+    font-size: 14px;
+    color: #b0b0b0;
+}
+
+.form-field input:focus + .field-label,
+.form-field input:not(:placeholder-shown) + .field-label{
+    transform: translateY(-27px);
+    visibility: visible;
+}
+
+.form-field input:focus + .field-label label{
+    font-weight: 500;
+    color: initial;
+}
+
 .submit-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #0077b6;
-    color: #ffffff;
-    font-size: 16px;
+    padding: 12px 18px;
     border: none;
-    border-radius: 5px;
+    align-self: flex-start;
+    background-color: #17A375;
+    color: #fff;
+    border-radius: 12px;
+    transition: 300ms ease;
+}
+
+.submit-btn:hover{
     cursor: pointer;
-    transition: background-color 0.3s;
+    background-color: #f1f1f1;
+    color: #17A375;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);;
 }
 
-.submit-btn:hover {
-    background-color: #005f8a;
+.toggleSignIn{
+    text-decoration: underline;
+    color: #17A375;
 }
 
-/* Toggle Message */
-.toggle-message {
-    margin-top: 20px;
-}
-
-.toggle-message span {
-    font-size: 14px;
-    color: #666666;
-}
-
-.toggle-btn {
-    background: none;
-    border: none;
-    color: #0077b6;
-    font-size: 14px;
+.toggleSignIn:hover{
     cursor: pointer;
-    padding-left: 5px;
-    transition: color 0.3s;
-}
-
-.toggle-btn:hover {
-    color: #005f8a;
 }

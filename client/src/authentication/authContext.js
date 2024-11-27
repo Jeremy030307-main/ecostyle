@@ -4,9 +4,9 @@ import AuthenticationManager from "./authenticationManager";
 const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
-  // const [user, setUser] = useState(null)
   const [role, setRole] = useState(localStorage.getItem('role'))
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [user, setUser] = useState(localStorage.getItem('user'));
 
   const signUp = async(fname, lname, email, password) => {
 
@@ -16,10 +16,12 @@ export const AuthProvider = ({ children }) => {
       const tokenID = signInToken.idToken
       const user = await AuthenticationManager.getUser(signInToken.uid);
       if ((tokenID) && (user)){
-        localStorage.setItem('token', tokenID)
+        localStorage.setItem('token', tokenID);
+        localStorage.setItem('user', user);
+        localStorage.setItem('role', user.role);
         setToken(tokenID);
-        localStorage.setItem('role', user.role)
-        setRole(user.role)
+        setRole(user.role);
+        setUser(user)
         return true
       }
     }
@@ -37,14 +39,15 @@ export const AuthProvider = ({ children }) => {
       const user = await AuthenticationManager.getUser(signInToken.uid);
 
       if ((tokenID) && (user)){
-        localStorage.setItem('token', tokenID)
+        localStorage.setItem('token', tokenID);
+        localStorage.setItem('user', user);
+        localStorage.setItem('role', user.role);
         setToken(tokenID);
-        localStorage.setItem('role', user.role)
-        setRole(user.role)
+        setRole(user.role);
+        setUser(user)
         return true
       }
     }
-    
     return false
   };
 
@@ -53,19 +56,22 @@ export const AuthProvider = ({ children }) => {
     try {
       await AuthenticationManager.signOut();
       localStorage.setItem('token', null)
+      localStorage.setItem('user', null)
       setToken(null);
       localStorage.setItem('role', null)
       setRole(null);
-      console.log("Logout")
+      setUser(null)
+      return true
     } catch (error) {
       console.error("Logout failed", error)
+      return false
     }
   };
 
   const isAuthenticated = !!token;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated,token,role,login, logout, signUp }}>
+    <AuthContext.Provider value={{ isAuthenticated,token,role,user,login, logout, signUp }}>
       {children}
     </AuthContext.Provider>
   );
