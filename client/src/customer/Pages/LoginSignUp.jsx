@@ -8,44 +8,13 @@ import { Navigate } from "react-router-dom";
 const LoginSignUp = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
+  const formRef = useRef(null);
+  const { login, signUp, isAuthenticated } = useAuth();
+  let state = null
 
   // Toggle between Login and Sign-Up views 
   const toggleForm = () => {
     setIsSignUp(!isSignUp);
-    setError(''); // Reset error message when toggling
-    setSuccess(''); // Reset success message when toggling
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
-
-    // Simulate API call
-    await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        // Simple validation
-        if (!email || !password) {
-          reject('Email and password are required.');
-        } else if (isSignUp && password !== e.target['confirm-password'].value) {
-          reject('Passwords do not match.');
-        } else {
-          resolve('Success!'); // Simulate successful sign-up/login
-        }
-      }, 2000); // Simulate a 2-second API response time
-    })
-      .then((message) => {
-        setSuccess(message);
-      })
-      .catch((errorMessage) => {
-        setError(errorMessage);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
   const checkPassword = (p1, p2) => {
@@ -105,8 +74,27 @@ const LoginSignUp = () => {
           <h1>{isSignUp ? 'Create an Account' : 'Login'}</h1>
         </div>
 
-        {/* Form */}
-        <form>
+        <div className='field-wrap'>
+          {isSignUp && (
+            <>
+              {/* First Name Field */}
+              <div className="form-field">
+                <input type="text" id="fname" name='fname' placeholder="My First Name" required />
+                <div className='field-label'>
+                  <label htmlFor="fname">First Name</label>
+                </div>
+              </div>
+
+              {/* Last Name Field */}
+              <div className="form-field">
+                <input type="text" id="lname" name='lname' placeholder="My Last Name" required />
+                <div className='field-label'>
+                  <label htmlFor="lname">Last Name</label>
+                </div>
+              </div>
+            </>
+          )}
+
           {/* Email Field */}
           <div className="form-field">
             <input type="email" id="email" name='email' placeholder="Enter your email" required />
@@ -137,19 +125,10 @@ const LoginSignUp = () => {
           )}
 
           {/* Submit Button */}
-          <button className="submit-btn" type="submit" disabled={loading}>
-            {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Login')}
+          <button className="submit-btn" type="submit">
+            {isSignUp ? 'Sign Up' : 'Login'}
           </button>
-        </form>
 
-        {/* Toggle between Login and Signup */}
-        <div className="toggle-message">
-          <span>
-            {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-          </span>
-          <button className="toggle-btn" onClick={toggleForm}>
-            {isSignUp ? 'Login' : 'Sign Up'}
-          </button>
         </div>
 
         <div className='form-footer'>
