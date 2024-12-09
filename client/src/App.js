@@ -9,15 +9,18 @@ import Wishlist from './customer/Pages/Wishlist';
 import Accout from './customer/Pages/Accout';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
-import Admin from './admin/admin';
 import LoginSignUp from './customer/Pages/LoginSignUp';
+
+import Admin from './admin/admin';
+import Add from './admin/Pages/Add';
+import Products from './admin/Pages/Products';
+import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
 import { AuthProvider } from './authentication/authContext';
 
 
 function App() {
-
   return (
     <div>
       <BrowserRouter>
@@ -38,6 +41,9 @@ function App() {
             
             <Route element={<AdminRoutes/>}>
               <Route path='/admin' element={<Admin/>}></Route>
+              <Route path='/add' element={<Add/>}></Route>
+              <Route path='/products' element={<Products/>}></Route>
+              <Route path='/orders' element={<Orders/>}></Route>
             </Route>
 
           </Routes>
