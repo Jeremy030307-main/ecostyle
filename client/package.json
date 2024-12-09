@@ -9,15 +9,16 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "styled-components": "^6.1.13",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack": "^5.95.0"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "server": "nodemon ../index.js",
+    "client": "react-scripts start",
+    "dev": "concurrently -kill-others-on-fail \"npm run server\" \"npm run client\""
   },
   "proxy": "http://localhost:5001/",
   "eslintConfig": {
@@ -37,5 +38,20 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/core": "7.22.5",
+    "@babel/eslint-parser": "7.22.5",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-class-properties": "^7.25.7",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.25.8",
+    "@babel/plugin-transform-numeric-separator": "^7.25.8",
+    "@babel/plugin-transform-optional-chaining": "^7.25.8",
+    "@babel/plugin-transform-private-methods": "^7.25.7",
+    "@babel/plugin-transform-private-property-in-object": "^7.25.8",
+    "@babel/preset-env": "^7.25.4",
+    "@eslint/config-array": "^0.18.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rimraf": "^4.4.1"
   }
 }
