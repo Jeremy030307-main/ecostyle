@@ -3,6 +3,7 @@
     justify-content:space-around;
     padding: 5px 15px 5px 15px;
     box-shadow: 0 1px 3px -2px black;
+    height: 60px;
 }
 
 .nav-logo{

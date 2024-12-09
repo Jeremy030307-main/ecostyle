@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './LoginSignUp.css';
+import { useAuth } from '../../authentication/authContext';
+import formImage from '../Components/Assets/form-bg.png'
+import logo from '../Components/Assets/logo_image.png'
+import { Navigate } from "react-router-dom";
 
 const LoginSignUp = () => {
+
   const [isSignUp, setIsSignUp] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   // Toggle between Login and Sign-Up views 
   const toggleForm = () => {
@@ -46,25 +48,79 @@ const LoginSignUp = () => {
       });
   };
 
+  const checkPassword = (p1, p2) => {
+    return (p1 === p2);
+  }
+
+  const handleSubmit = (event) => {
+
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    if (isSignUp){
+      if (!checkPassword(formData.get('password'), formData.get('confirm-password'))){
+        return false
+      }
+    }
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    if (isSignUp){
+      const fname = formData.get('fname');
+      const lname = formData.get('lname');
+      state = signUp(fname, lname, email, password);
+    } else {
+      login(email, password)
+        .then(result => {
+          console.log(result)
+          state = result
+        })
+        .catch(error=> {
+          console.log(error)
+          state = false
+        });
+
+      if (state === false){
+        formRef.current.reset()};
+    }
+  };
+
+  if (isAuthenticated) {
+    return <Navigate to="/" />; // Redirect to home page
+}
+
   return (
-    <div className="login-signup-container">
-      {/* Form Wrapper */}
-      <div className="form-wrapper">
-        {/* Toggle Heading */}
-        <h2>{isSignUp ? 'Create an Account' : 'Login'}</h2>
+    <div className="form-container">
+      {/* Left (Form Image) */}
+      <div className='form-image'>
+        <img src={formImage} alt="" />
+      </div>
+
+      {/* Right (Form Content) */}
+      <form className='form-content' onSubmit={handleSubmit} ref={formRef}>
+
+        {/* Form Heading */}
+        <div className='form-header'>
+          <img src={logo} alt="" />
+          <h1>{isSignUp ? 'Create an Account' : 'Login'}</h1>
+        </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <form>
           {/* Email Field */}
           <div className="form-field">
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" placeholder="Enter your email" required />
+            <input type="email" id="email" name='email' placeholder="Enter your email" required />
+            <div className='field-label'>
+              <label htmlFor="email">Email</label>
+            </div>
           </div>
 
           {/* Password Field */}
           <div className="form-field">
-            <label htmlFor="password">Password</label>
-            <input type="password" id="password" placeholder="Enter your password" required />
+            <input type="password" id="password" name='password' placeholder="Enter your password" required />
+            <div className='field-label'>
+              <label htmlFor="password">Password</label>
+            </div>
           </div>
 
           {/* If SignUp is active, show additional fields */}
@@ -72,14 +128,10 @@ const LoginSignUp = () => {
             <>
               {/* Confirm Password Field */}
               <div className="form-field">
-                <label htmlFor="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" placeholder="Confirm your password" required />
-              </div>
-
-              {/* Username Field */}
-              <div className="form-field">
-                <label htmlFor="username">Username</label>
-                <input type="text" id="username" placeholder="Choose a username" required />
+                <input type="password" id="confirm-password" name='confirm-password' placeholder="Confirm your password" required />
+                <div className='field-label'>
+                  <label htmlFor="confirm-password">Confirm Password</label>
+                </div>
               </div>
             </>
           )}
@@ -88,10 +140,6 @@ const LoginSignUp = () => {
           <button className="submit-btn" type="submit" disabled={loading}>
             {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Login')}
           </button>
-
-          {/* Display error or success message */}
-          {error && <p className="error-message">{error}</p>}
-          {success && <p className="success-message">{success}</p>}
         </form>
 
         {/* Toggle between Login and Signup */}
@@ -103,7 +151,13 @@ const LoginSignUp = () => {
             {isSignUp ? 'Login' : 'Sign Up'}
           </button>
         </div>
-      </div>
+
+        <div className='form-footer'>
+          <p>{isSignUp ? 'Already have an account?' : "Don't have an account? "} 
+            <span className='toggleSignIn' onClick={toggleForm}>{isSignUp ? 'Sign In' : 'Sign Up'}</span>
+          </p>     
+        </div>
+      </form>
     </div>
   );
 };

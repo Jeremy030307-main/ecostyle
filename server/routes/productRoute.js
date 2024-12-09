@@ -1,4 +1,5 @@
 import express from 'express';
+import { authenticate, isAdmin } from '../authentication/middleware.js';
 
 import {
   createProduct,
@@ -8,12 +9,13 @@ import {
   deleteProduct,
 } from '../controllers/productController.js';
 
-const router = express.Router();
+const productRouter = express.Router();
 
-router.get('/', getProducts);
-router.post('/new', createProduct);
-router.get('/product/:id', getProduct);
-router.put('/update/:id', updateProduct);
-router.delete('/delete/:id', deleteProduct);
+productRouter.get('/',authenticate, getProducts);
+productRouter.get('/:id',authenticate, getProduct);
 
-export default router;
+productRouter.post('/new',isAdmin, createProduct);
+productRouter.put('/update/:id',isAdmin, updateProduct);
+productRouter.delete('/delete/:id',isAdmin, deleteProduct);
+
+export default productRouter;
