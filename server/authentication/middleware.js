@@ -13,34 +13,39 @@ admin.initializeApp({
     credential: admin.credential.applicationDefault(),
     projectId: 'ecostyle-f6ae5', // Manually specify your project ID
 });
+import jwt from "jsonwebtoken";
 
 const db = getFirestore(firebase);
 
 // authenticate that the user has an account and currently log in
 const authenticate = async (req, res, next) => {
-    const idToken = req.headers.authorization?.split('Bearer ')[1];
 
-    if (!idToken) {
-        return res.status(401).send('Unauthorized');
+    const token = req.cookies.authToken;
+
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized1" });
     }
 
     try {
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const cookie = jwt.verify(token, "your-secret-key");
+        const decodedToken = await admin.auth().verifyIdToken(cookie.idToken);
         req.user = decodedToken; // Attach user info to the request
         next(); // Proceed to the next middleware or route handler
-    } catch (error) {
-        return res.status(401).send(error.message);
+    } catch (err) {
+        res.status(401).json({ message: "Invalid token" });
     }
 };
 
 const isAdmin = async (req, res, next) => {
-    const idToken = req.headers.authorization?.split('Bearer ')[1];
+    const token = req.cookies.authToken;
 
-    if (!idToken) {
-        return res.status(401).send('Unauthorized');
+    if (!token) {
+        return res.status(401).json({ message: "Unauthorized" });
     }
 
     try {
+        const decoded = jwt.verify(token, "your-secret-key");
+        
         const decodedToken = await admin.auth().verifyIdToken(idToken);
 
         // get the document of this user id
@@ -51,8 +56,9 @@ const isAdmin = async (req, res, next) => {
             return res.status(401).send("Permission Denied")
         }
         next(); // Proceed to the next middleware or route handler
-    } catch (error) {
-        return res.status(401).send(error.message);
+
+    } catch (err) {
+        res.status(401).json({ message: "Invalid token" });
     }
 
 };

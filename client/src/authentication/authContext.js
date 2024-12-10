@@ -1,66 +1,49 @@
-import React, { createContext, useContext, useState } from "react";
-import AuthenticationManager from "./authenticationManager";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import ApiManager from "../apiManager/ApiManager";
 
 const AuthContext = createContext();
+
 export const AuthProvider = ({ children }) => {
 
-  const [role, setRole] = useState(localStorage.getItem('role'))
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(localStorage.getItem('user'));
+  const [role, setRole] = useState(null)
+  const [user, setUser] = useState(null);
 
   const signUp = async(fname, lname, email, password) => {
 
-    const signInToken = await AuthenticationManager.signUp(fname,lname, email, password); 
-
-    if (signInToken){
-      const tokenID = signInToken.idToken
-      const user = await AuthenticationManager.getUser(signInToken.uid);
-      if ((tokenID) && (user)){
-        localStorage.setItem('token', tokenID);
-        localStorage.setItem('user', user);
-        localStorage.setItem('role', user.role);
-        setToken(tokenID);
-        setRole(user.role);
-        setUser(user)
-        return true
-      }
+    try{
+      const signInToken = await ApiManager.signUp(fname,lname, email, password); 
+      const user = await ApiManager.getUser(signInToken.uid);
+      setUser(user)
+      setRole(user.role)
+      return true
+    } catch (error) {
+      console.log("error", error)
+      return false
     }
-    
-    return false
   };
 
   const login = async(email, password) => {
 
-    console.log(email, password)
-    const signInToken = await AuthenticationManager.signIn(email, password); 
-
-    if (signInToken){
-      const tokenID = signInToken.idToken
-      const user = await AuthenticationManager.getUser(signInToken.uid);
-
-      if ((tokenID) && (user)){
-        localStorage.setItem('token', tokenID);
-        localStorage.setItem('user', user);
-        localStorage.setItem('role', user.role);
-        setToken(tokenID);
-        setRole(user.role);
-        setUser(user)
-        return true
-      }
+    try{
+      const signInToken = await ApiManager.signIn(email, password); 
+      console.log("Login")
+      const user = await ApiManager.getUser(signInToken.uid);
+      console.log("user")
+      setUser(user)
+      setRole(user.role)
+      return true
+    } catch (error) {
+      console.log("error", error)
+      return false
     }
-    return false
   };
 
   const logout = async() => {
 
     try {
-      await AuthenticationManager.signOut();
-      localStorage.setItem('token', null)
-      localStorage.setItem('user', null)
-      setToken(null);
-      localStorage.setItem('role', null)
-      setRole(null);
+      await ApiManager.signOut();
       setUser(null)
+      setRole(null)
       return true
     } catch (error) {
       console.error("Logout failed", error)
@@ -68,10 +51,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const isAuthenticated = !!token;
+  // Persisting user state
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+      setRole(localStorage.getItem('role'))
+    }
+  }, []);
+
+  // Updating storage on user state change
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('role', role);
+    } else {
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
+    }
+  }, [user, role]);
+
+  const isAuthenticated = !!user;
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated,token,role,user,login, logout, signUp }}>
+    <AuthContext.Provider value={{ isAuthenticated,role,user,login, logout, signUp }}>
       {children}
     </AuthContext.Provider>
   );

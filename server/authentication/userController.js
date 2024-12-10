@@ -14,6 +14,7 @@ import {
   getDoc
 } from 'firebase/firestore';
 import { ROLES } from "./userRole.js";
+import jwt from "jsonwebtoken";
 
 const db = getFirestore(firebase);
 const auth = getAuth();
@@ -37,11 +38,19 @@ export const signUp = async (req, res, next) => {
 
         await setDoc(doc(db, 'user',user.uid), userData);
         
-        const idToken = await user.getIdToken(); // Or verify the token
+        const idToken = await user.getIdToken; // Or verify the token
+
+        const token = jwt.sign({ idToken }, "your-secret-key", { expiresIn: "1h" });
+
+        // Set the token in an HTTP-only cookie
+        res.cookie("authToken", token, {
+          httpOnly: true,
+          secure: true, // Use true in production (requires HTTPS)
+          sameSite: "None", // Prevents CSRF
+        });
 
         // Send a success response after the user is created
         res.status(200).json({
-        idToken: idToken,
         uid: user.uid
         });
 
@@ -64,9 +73,17 @@ export const signIn = async (req, res, next) => {
         
         const idToken = await user.getIdToken(); // Or verify the token
 
+        const token = jwt.sign({ idToken }, "your-secret-key", { expiresIn: "1h" });
+
+        // Set the token in an HTTP-only cookie
+        res.cookie("authToken", token, {
+          httpOnly: true,
+          secure: true, // Use `true` in production with HTTPS
+          sameSite: "None", // Prevents CSRF
+        });
+
         // Send a success response after the user is created
         res.status(200).json({
-          idToken: idToken,
           uid: user.uid
         });
 
@@ -83,6 +100,7 @@ export const userSignOut = async (req, res, next) => {
         await signOut(auth);
 
         // Send a success response after the user is created
+        res.clearCookie("authToken");
         res.status(200).json({
           message: "Log Out Successfully",
         });
@@ -101,7 +119,9 @@ export const getUser = async (req, res, next) => {
     const data = await getDoc(user);
     
     if (data.exists()) {
-      res.status(200).send(data.data());
+      const userData = data.data(); // Get the document's data
+      userData.id = id; // Add the document ID to the data
+      res.status(200).send(userData); // Send the data with the ID
     } else {
       res.status(404).send('product not found');
     }
