@@ -1,124 +1,48 @@
-import { 
-    getAuth, 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword ,
-    signOut,
-    onAuthStateChanged
-} from "firebase/auth";
+import admin from 'firebase-admin';
+import { db } from "../firebase.js";
 
-import firebase from '../firebase.js';
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc
-} from 'firebase/firestore';
-import { ROLES } from "./userRole.js";
-import jwt from "jsonwebtoken";
+const userCollection = 'user'
 
-const db = getFirestore(firebase);
-const auth = getAuth();
+// create new user by its id
+export const newUser = async (req, res, next) => {
+  try{
+    const {id, ...userData} = req.body;
+    await db.collection(userCollection).doc(id).create(userData)
+    res.status(200).send("User Sign Up")
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+}
 
-// user sign up with email and password (only for customer creation)
-export const signUp = async (req, res, next) => {
-    try {
-        const { firstName, lastName, email, password } = req.body;
+// update data of existing user
+export const updateUser = async(req, res) => {
+  try {
+    const {id, ...userData} = req.body;
+    await db.collection(userCollection).doc(id).set(userData)
+    res.status(200).send("User Updated")
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+}
 
-        // Merge req.body data with an additional field (e.g., 'role': 'user')
-        const userData = {
-          ...req.body, 
-          role: ROLES.CUSTOMER,
-        };
-        
-        // Wait for the user creation to complete
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        
-        // Extract user info from the created userCredential
-        const user = userCredential.user;
-
-        await setDoc(doc(db, 'user',user.uid), userData);
-        
-        const idToken = await user.getIdToken; // Or verify the token
-
-        const token = jwt.sign({ idToken }, "your-secret-key", { expiresIn: "1h" });
-
-        // Set the token in an HTTP-only cookie
-        res.cookie("authToken", token, {
-          httpOnly: true,
-          secure: true, // Use true in production (requires HTTPS)
-          sameSite: "None", // Prevents CSRF
-        });
-
-        // Send a success response after the user is created
-        res.status(200).json({
-        uid: user.uid
-        });
-
-      } catch (error) {
-        // Send error response if there is any
-        res.status(400).send(error.message);
-      }
-};
-
-// sign in
-export const signIn = async (req, res, next) => {
-    try {
-        const { email, password } = req.body;
-        
-        // Wait for the user sign in to complete
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        
-        // Extract user info from the created userCredential
-        const user = userCredential.user;
-        
-        const idToken = await user.getIdToken(); // Or verify the token
-
-        const token = jwt.sign({ idToken }, "your-secret-key", { expiresIn: "1h" });
-
-        // Set the token in an HTTP-only cookie
-        res.cookie("authToken", token, {
-          httpOnly: true,
-          secure: true, // Use `true` in production with HTTPS
-          sameSite: "None", // Prevents CSRF
-        });
-
-        // Send a success response after the user is created
-        res.status(200).json({
-          uid: user.uid
-        });
-
-      } catch (error) {
-        // Send error response if there is any
-        res.status(400).send(error.message);
-      }
-};
-
-// sign out
-export const userSignOut = async (req, res, next) => {
-    try {
-        // Wait for the user sign out to complete
-        await signOut(auth);
-
-        // Send a success response after the user is created
-        res.clearCookie("authToken");
-        res.status(200).json({
-          message: "Log Out Successfully",
-        });
-
-      } catch (error) {
-        // Send error response if there is any
-        res.status(400).send(error.message);
-      }
-};
+// delete data of existing user
+export const deleteUser = async(req, res) => {
+  try {
+    const id = req.params.id;
+    await db.collection(userCollection).doc(id).delete()
+    res.status(200).send("User Deleted")
+  } catch (error) {
+    res.status(400).send(error.message)
+  }
+}
 
 // get a user by its id
 export const getUser = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const user = doc(db, 'user', id);
-    const data = await getDoc(user);
+    const data = await db.collection('user').doc(id).get();
     
-    if (data.exists()) {
+    if (data.exists) {
       const userData = data.data(); // Get the document's data
       userData.id = id; // Add the document ID to the data
       res.status(200).send(userData); // Send the data with the ID
@@ -131,28 +55,18 @@ export const getUser = async (req, res, next) => {
 };
 
 // create admin level user
-export const createAdmin = async (req, res, next) => {
+export const setAdmin = async (req, res, next) => {
   try {
-    const { email, password, role } = req.body;
-    
-    // Wait for the user creation to complete
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    
-    // Extract user info from the created userCredential
-    const user = userCredential.user;
+    const uid = req.params.id;
 
-    await db.collection('user').doc(user.uid).set(req.body)
-    
-    const idToken = await user.getIdToken(); // Or verify the token
+    // Set the custom claim 'role' to 'admin' for the user
+    await admin.auth().setCustomUserClaims(uid, { admin: true })
 
-    // Send a success response after the user is created
-    res.status(200).json({
-    idToken: idToken,
-    uid: user.uid
-    });
+    console.log(`Custom claim set for user ${uid}`);
+    res.status(200).json({ message: `Custom claim 'admin' set for user ${uid}`});
 
   } catch (error) {
-    // Send error response if there is any
-    res.status(400).send(error.message);
+    console.error('Error setting custom claim:', error);
+    res.status(500).json({ error: 'Failed to set custom claim' });
   }
-}
+};

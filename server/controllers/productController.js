@@ -1,38 +1,22 @@
-import firebase from '../firebase.js';
-import Product from '../models/productModel.js';
-import {
-  getFirestore,
-  collection,
-  doc,
-  addDoc,
-  getDoc,
-  getDocs,
-  updateDoc,
-  deleteDoc,
-} from 'firebase/firestore';
 
-const db = getFirestore(firebase);
+import { db } from "../firebase.js";
+
 const productCollection = 'product'
 
 // get all products
 export const getProducts = async (req, res, next) => {
   try {
-    const productsSnapshot = await getDocs(collection(db, productCollection));
-    // const productArray = [];
+    const productsSnapshot = await db.collection(productCollection).get();
 
     if (productsSnapshot.empty) {
       res.status(400).send('No Products found');
     } else {
       const productArray = productsSnapshot.docs.map((doc) => {
-        const productData = doc.data();
-  
-        // Extract only the reference IDs from the "category" field
-        const categoryIds = productData.category.map((categoryRef) => categoryRef.id);
+        const {category, collection, ...productData} = doc.data();
   
         return {
           id: doc.id,
           ...productData,
-          category: categoryIds, // Replace full references with just IDs
         };
       });
   
@@ -47,9 +31,9 @@ export const getProducts = async (req, res, next) => {
 export const getProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const data = await getDoc(doc(db, productCollection, id));
+    const data = await db.collection(productCollection).doc(id).get();
 
-    if (data.exists()) {
+    if (data.exists) {
       const productData = data.data();
 
       // Extract only reference IDs from the category field
@@ -75,7 +59,7 @@ export const getProduct = async (req, res, next) => {
 export const createProduct = async (req, res, next) => {
   try {
     const data = req.body;
-    await addDoc(collection(db, productCollection), data);
+    await db.collection(productCollection).add(data);
     res.status(200).send('product created successfully');
   } catch (error) {
     res.status(400).send(error.message);
@@ -87,8 +71,7 @@ export const updateProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
     const data = req.body;
-    const product = doc(db, productCollection, id);
-    await updateDoc(product, data);
+    await db.collection(productCollection).doc(id).set(data)
     res.status(200).send('product updated successfully');
   } catch (error) {
     res.status(400).send(error.message);
@@ -99,7 +82,7 @@ export const updateProduct = async (req, res, next) => {
 export const deleteProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    await deleteDoc(doc(db,productCollection, id));
+    await db.collection(productCollection).doc(id).delete();
     res.status(200).send('Product deleted successfully');
   } catch (error) {
     res.status(400).send(error.message);
