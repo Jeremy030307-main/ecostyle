@@ -1,15 +1,9 @@
-import express from 'express';
-import { authenticate, isAdmin } from './middleware.js';
-
-import { newUser, updateUser, deleteUser, getUser, setAdmin } from './userController.js';
-
-const userRouter = express.Router();
-
 /**
  * @swagger
  * /user/{id}:
  *   get:
  *     summary: Get a user by their ID
+ *     tags: [User]
  *     description: Retrieves a user from the Firestore database by their unique user ID.
  *     operationId: getUser
  *     parameters:
@@ -43,13 +37,13 @@ const userRouter = express.Router();
  *       500:
  *         description: Internal server error.
  */
-userRouter.get('/:id', getUser)
 
 /**
  * @swagger
  * /user/{id}:
  *   post:
  *     summary: Create a new user
+ *     tags: [User]
  *     description: Creates a new user in the Firestore database with the provided user data.
  *     parameters:
  *       - in: path
@@ -84,13 +78,13 @@ userRouter.get('/:id', getUser)
  *       400:
  *         description: Bad request, invalid data.
  */
-userRouter.post('/:id',authenticate, newUser)
 
 /**
  * @swagger
  * /user/{id}/admin:
  *   post:
  *     summary: Set a user as an admin
+ *     tags: [User]
  *     description: Grants a user admin privileges by setting a custom claim to `admin: true`.
  *     operationId: setAdmin
  *     parameters:
@@ -108,13 +102,13 @@ userRouter.post('/:id',authenticate, newUser)
  *       404:
  *         description: User not found.
  */
-userRouter.put('/:id/admin',isAdmin, setAdmin)
 
 /**
  * @swagger
  * /user/{id}:
  *   put:
  *     summary: Update user data
+ *     tags: [User]
  *     description: Updates an existing user's data by their ID.
  *     parameters:
  *       - in: path
@@ -149,13 +143,13 @@ userRouter.put('/:id/admin',isAdmin, setAdmin)
  *       400:
  *         description: Bad request, invalid data.
  */
-userRouter.put('/:id',authenticate, updateUser)
 
 /**
  * @swagger
  * /user/{id}:
  *   delete:
  *     summary: Delete a user by their ID
+ *     tags: [User]
  *     description: Deletes a user from the Firestore database by their unique user ID.
  *     operationId: deleteUser
  *     parameters:
@@ -171,6 +165,3 @@ userRouter.put('/:id',authenticate, updateUser)
  *       400:
  *         description: Bad request, invalid data.
  */
-userRouter.delete('/delete/:id',authenticate, deleteUser)
-
-export default userRouter;

@@ -6,7 +6,8 @@ const userCollection = 'user'
 // create new user by its id
 export const newUser = async (req, res, next) => {
   try{
-    const {id, ...userData} = req.body;
+    const id = req.params.id;
+    const userData = req.body;
     await db.collection(userCollection).doc(id).create(userData)
     res.status(200).send("User Sign Up")
   } catch (error) {

@@ -1,11 +1,43 @@
-import express from 'express';
-import { authenticate, isAdmin } from '../authentication/middleware.js';
-
-import { getCategories, getCategory, addCategory, deleteCategory} from '../controllers/categoryController.js';
-
-const categoryRouter = express.Router();
-
-categoryRouter.get('/', getCategories);
+/**
+ * @swagger
+ * /category:
+ *   get:
+ *     summary: Get all categories including subcategories.
+ *     tags: [Category]
+ *     description: Retrieves all categories from the database, including any associated subcategories.
+ *     responses:
+ *       200:
+ *         description: A list of categories with their subcategories.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   name:
+ *                     type: string
+ *                   subcategories:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         name:
+ *                           type: string
+ *       400:
+ *         description: Error message.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
 
 /**
  * @swagger
@@ -47,7 +79,6 @@ categoryRouter.get('/', getCategories);
  *                 error:
  *                   type: string
  */
-categoryRouter.get('/*', getCategory);
 
 /**
  * @swagger
@@ -84,7 +115,6 @@ categoryRouter.get('/*', getCategory);
  *                 error:
  *                   type: string
  */
-categoryRouter.post('/new',isAdmin, addCategory)
 
 /**
  * @swagger
@@ -121,6 +151,3 @@ categoryRouter.post('/new',isAdmin, addCategory)
  *                 error:
  *                   type: string
  */
-categoryRouter.delete('/delete',isAdmin, deleteCategory)
-
-export default categoryRouter;

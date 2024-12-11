@@ -1,16 +1,3 @@
-import express from 'express';
-import { authenticate, isAdmin } from '../authentication/middleware.js';
-
-import {
-  createProduct,
-  getProduct,
-  getProducts,
-  updateProduct,
-  deleteProduct,
-} from '../controllers/productController.js';
-
-const productRouter = express.Router();
-
 /**
  * @swagger
  * /products:
@@ -62,7 +49,6 @@ const productRouter = express.Router();
  *                   type: string
  *                   description: The error message.
  */
-productRouter.get('/', getProducts);
 
 /**
  * @swagger
@@ -113,7 +99,6 @@ productRouter.get('/', getProducts);
  *                   type: string
  *                   description: The error message.
  */
-productRouter.get('/:id', getProduct);
 
 /**
  * @swagger
@@ -156,7 +141,6 @@ productRouter.get('/:id', getProduct);
  *                   type: string
  *                   description: The error message.
  */
-productRouter.post('/',isAdmin, createProduct);
 
 /**
  * @swagger
@@ -206,7 +190,6 @@ productRouter.post('/',isAdmin, createProduct);
  *                   type: string
  *                   description: The error message.
  */
-productRouter.put('/:id',isAdmin, updateProduct);
 
 /**
  * @swagger
@@ -238,6 +221,3 @@ productRouter.put('/:id',isAdmin, updateProduct);
  *                   type: string
  *                   description: The error message.
  */
-productRouter.delete('/:id',isAdmin, deleteProduct);
-
-export default productRouter;

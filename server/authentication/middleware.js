@@ -4,6 +4,22 @@ import admin from 'firebase-admin';
 import jwt from "jsonwebtoken";
 import { db } from '../firebase.js';
 
+/**
+ * @swagger
+ * components:
+ *   responses:
+ *     UnauthorizedError:
+ *       description: Unauthorized access due to invalid credentials or lack of authentication.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 example: "You are not authorized to access this resource."
+ */
+
 // authenticate that the user has an account and currently log in
 const authenticate = async (req, res, next) => {
 
@@ -26,6 +42,7 @@ const authenticate = async (req, res, next) => {
         res.status(401).json({ message: "Invalid token" });
     }
 };
+
 
 const isAdmin = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
