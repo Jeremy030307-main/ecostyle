@@ -85,8 +85,9 @@
  *   post:
  *     summary: Set a user as an admin
  *     tags: [User]
- *     description: Grants a user admin privileges by setting a custom claim to `admin: true`.
- *     operationId: setAdmin
+ *     description: |
+ *       Grants a user admin privileges by setting a custom claim to `admin: true`.
+ *       This operation requires the user's ID as a path parameter. *     operationId: setAdmin
  *     parameters:
  *       - name: id
  *         in: path
