@@ -1,17 +1,25 @@
 import React from 'react'
-import { useAuth } from '../../authentication/authContext';
+import { useState } from 'react';
 import { Navigate } from "react-router-dom";
-
+import AuthenticationManager from '../../authentication/authenticationManager';
 
 const Accout = () => {
 
-  const { isAuthenticated, logout,user } = useAuth()
+  const [isAuthenticated,setAuthentication] = useState(true);
 
-  const handleLogOut = () => {
-    logout()
+  const handleLogOut = async () => {
+    await AuthenticationManager.signOut()
+
+    AuthenticationManager.auth.onAuthStateChanged((user) => {
+      if (user) {
+        setAuthentication(true);
+      } else {
+        setAuthentication(false);
+      }
+    });
   };
 
-  if (!isAuthenticated){
+  if (isAuthenticated === false) {
     return <Navigate to="/" />; // Redirect to home page
   }
 

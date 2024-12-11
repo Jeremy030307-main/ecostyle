@@ -11,9 +11,7 @@ import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
 import LoginSignUp from './customer/Pages/LoginSignUp';
-
 import AdminRoutes from './authentication/protectedRoute';
-import { AuthProvider } from './authentication/authContext';
 
 
 function App() {
@@ -21,7 +19,6 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-        <AuthProvider>
           <Routes>
             <Route path='/' element={<Customer/>}>
               <Route path='' element={<Home/>}></Route>
@@ -40,7 +37,6 @@ function App() {
             </Route>
 
           </Routes>
-        </AuthProvider>
       </BrowserRouter>
     </div>
   );

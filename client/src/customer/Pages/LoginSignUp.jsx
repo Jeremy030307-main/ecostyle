@@ -1,16 +1,16 @@
 import React, { useState, useRef } from 'react';
 import './LoginSignUp.css';
-import { useAuth } from '../../authentication/authContext';
 import formImage from '../Components/Assets/form-bg.png'
 import logo from '../Components/Assets/logo_image.png'
 import { Navigate } from "react-router-dom";
+import AuthenticationManager from '../../authentication/authenticationManager';
 
 const LoginSignUp = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const formRef = useRef(null);
-  const { login, signUp, isAuthenticated } = useAuth();
-  let state = null
+  const [state, setState] = useState(false);
+
 
   // Toggle between Login and Sign-Up views 
   const toggleForm = () => {
@@ -21,7 +21,7 @@ const LoginSignUp = () => {
     return (p1 === p2);
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
 
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -37,26 +37,22 @@ const LoginSignUp = () => {
     if (isSignUp){
       const fname = formData.get('fname');
       const lname = formData.get('lname');
-      state = signUp(fname, lname, email, password);
-    } else {
-      login(email, password)
-        .then(result => {
-          console.log(result)
-          state = result
-        })
-        .catch(error=> {
-          console.log(error)
-          state = false
-        });
+      const result  = AuthenticationManager.signUp(fname, lname, email, password)
+      setState(result)
 
+    } else {
+      const result = await AuthenticationManager.signIn(email, password)
+      setState(result)
+      
+      console.log(state)
       if (state === false){
         formRef.current.reset()};
     }
   };
 
-  if (isAuthenticated) {
+  if (state === true) {
     return <Navigate to="/" />; // Redirect to home page
-}
+  }
 
   return (
     <div className="form-container">
