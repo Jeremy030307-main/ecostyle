@@ -1,13 +1,17 @@
 import express from 'express';
-import { authenticate } from './middleware.js';
+import { authenticate, isAdmin } from './middleware.js';
 
-import { signUp, signIn, userSignOut, getUser } from './userController.js';
+import { newUser, updateUser, deleteUser, getUser, setAdmin } from './userController.js';
 
 const userRouter = express.Router();
 
-userRouter.post('/signUp', signUp);
-userRouter.post('/signIn', signIn);
-userRouter.delete('/signOut', userSignOut);
-userRouter.get('/:id',authenticate, getUser)
+userRouter.get('/:id', getUser)
+
+userRouter.post('/new',authenticate, newUser)
+
+userRouter.put('/admin/:id',isAdmin, setAdmin)
+userRouter.put('/update',authenticate, updateUser)
+
+userRouter.delete('/delete/:id',authenticate, deleteUser)
 
 export default userRouter;
