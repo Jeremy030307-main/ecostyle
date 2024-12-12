@@ -32,8 +32,8 @@ function App() {
               <Route path='login' element={<LoginSignUp/>}></Route>
             </Route>
             
-            <Route element={<AdminRoutes/>}>
-              <Route path='/admin' element={<Admin/>}></Route>
+            <Route path='/admin' element={<AdminRoutes/>}>
+              
             </Route>
 
           </Routes>

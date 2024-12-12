@@ -7,10 +7,10 @@ const categoryRouter = express.Router();
 
 categoryRouter.get('/', getCategories);
 
-categoryRouter.get('/*', getCategory);
+categoryRouter.get('/:id', getCategory);
 
-categoryRouter.post('/new',isAdmin, addCategory)
+categoryRouter.post('/',isAdmin, addCategory)
 
-categoryRouter.delete('/delete',isAdmin, deleteCategory)
+categoryRouter.delete('/:id',isAdmin, deleteCategory)
 
 export default categoryRouter;
