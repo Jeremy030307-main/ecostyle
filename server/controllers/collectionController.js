@@ -1,9 +1,6 @@
 import { db } from "../firebase.js";
 import admin from 'firebase-admin'
-import { formatFirestoreTimestamps } from "./utility.js";
-
-const FieldValue = admin.firestore.FieldValue;
-const collection = 'collection'
+import { COLLECTIONS, formatFirestoreTimestamps } from "./utility.js";
 
 const STATUS_TYPES = {
     NEW: "new",
@@ -17,8 +14,12 @@ const isValidStatus = (status) => Object.values(STATUS_TYPES).includes(status);
 
 export const checkCollection = async (body) => {
     try {
+        // Check if at least one field is present (in this case, 'collection')
+        if (!body || !body.collection) {
+            return { isValid: true, errorMessage: null };
+        }
         // Reference to the document in the "category" collection
-        const collectionRef = db.collection(collection).doc(body.collection);
+        const collectionRef = db.collection(COLLECTIONS.COLLECTION).doc(body.collection);
         const collectionDoc = await collectionRef.get();
 
         // Return true if the document exists, otherwise false
@@ -36,7 +37,7 @@ export const checkCollection = async (body) => {
 
 export const getCollections = async (req, res) => {
     try {
-        const collectionSnapshot = await db.collection(collection).where("status", "==", STATUS_TYPES.ACTIVE).get();
+        const collectionSnapshot = await db.collection(COLLECTIONS.COLLECTION).where("status", "==", STATUS_TYPES.ACTIVE).get();
     
         if (collectionSnapshot.empty) {
           res.status(400).send('No Collection found');
@@ -62,7 +63,7 @@ export const getCollection = async (req, res) => {
     try {
 
         const collectionID = req.params.id;
-        const collectionSnapshot = await db.collection(collection).doc(collectionID).get();
+        const collectionSnapshot = await db.collection(COLLECTIONS.COLLECTION).doc(collectionID).get();
     
         if (collectionSnapshot.empty) {
           res.status(400).send('No Collection found');
@@ -98,8 +99,8 @@ export const addCollection = async (req, res) => {
             ...collectionData
         }
 
-        const collectionRef = db.collection(collection).doc(code);
-        const statusHistoryRef = collectionRef.collection("history").doc();
+        const collectionRef = db.collection(COLLECTIONS.COLLECTION).doc(code);
+        const statusHistoryRef = collectionRef.collection(COLLECTION_HISTROY).doc();
 
         await db.runTransaction( async(t) => {
 
@@ -125,16 +126,12 @@ export const updateCollection = async (req, res) => {
         const collectionID = req.params.id;
         const collectionData = req.body;
 
-        if (!collectionData){
-            return res.status(400).send(`Missing Request Body`)
-        }
-
         const data = {
             updatedAt: admin.firestore.Timestamp.now(),
             ...collectionData
         }
 
-        await db.collection(collection).doc(collectionID).update(collectionData)
+        await db.collection(COLLECTIONS.COLLECTION).doc(collectionID).update(collectionData)
         res.status(200).send(`Category Information Updated.`)
 
     } catch (error) {
@@ -164,8 +161,8 @@ export const updateCollectionStatus = async (req, res) => {
         }
 
         // Reference the Firestore document for the collection
-        const collectionRef = db.collection(collection).doc(collectionID);
-        const statusHistoryRef = collectionRef.collection("history").doc();
+        const collectionRef = db.collection(COLLECTIONS.COLLECTION).doc(collectionID);
+        const statusHistoryRef = collectionRef.collection(COLLECTION_HISTROY).doc();
 
         await db.runTransaction(async (t) => {
 
@@ -211,7 +208,7 @@ export const deleteCollection = async (req, res) => {
             return res.status(400).send("Missing Collection ID");
         }
 
-        const collectionRef = db.collection(collection).doc(collectionID);
+        const collectionRef = db.collection(COLLECTIONS.COLLECTION).doc(collectionID);
 
         // Check if any product is under this collection
         const q = db.collection("product").where("collection", "==", collectionRef);
@@ -225,7 +222,7 @@ export const deleteCollection = async (req, res) => {
         }
 
         // Delete all documents in the "history" subcollection
-        const historySnapshot = await collectionRef.collection("history").get();
+        const historySnapshot = await collectionRef.collection(COLLECTION_HISTROY).get();
 
         // Deleting each document in the "history" subcollection
         const batch = db.batch();
@@ -248,8 +245,8 @@ export const deleteCollection = async (req, res) => {
 export const getCollectionDetail = async (req, res) => {
     try {
         const collectionID = req.params.id;
-        const collectionRef = db.collection(collection).doc(collectionID);
-        const historyCollection = collectionRef.collection("history");
+        const collectionRef = db.collection(COLLECTIONS.COLLECTION).doc(collectionID);
+        const historyCollection = collectionRef.collection(COLLECTION_HISTROY);
 
         await db.runTransaction(async (t) => {
             // Retrieve the main collection document

@@ -6,16 +6,13 @@ const detailsSchema = Joi.object({
     material: Joi.string().optional().allow(null),
     fit: Joi.string().optional().allow(null),
 });
+
+export const variantSchema = Joi.object({
+  color: Joi.string().required(),
+  image: Joi.string().allow(null)
+});
   
-  // Define schema for the variant array
-const variantSchema = Joi.array().items(
-    Joi.object({
-      color: Joi.string().required(),
-      image: Joi.string().optional().allow(null),
-    }) 
-);
-  
-  // Define schema for the main product object with async validation
+// Define schema for the main product object with async validation
 export const productSchema =  Joi.object({
     name: Joi.string().required(),
     price: Joi.number().min(0).required(),
@@ -24,7 +21,7 @@ export const productSchema =  Joi.object({
     details: detailsSchema.required(), 
     category: Joi.string().required(),
     collection: Joi.string().required(),
-    variant: variantSchema.required(),
+    variant: Joi.array().items(variantSchema).required(),
 });
 
 export const updateProductSchema = Joi.object({
@@ -34,9 +31,4 @@ export const updateProductSchema = Joi.object({
   details: detailsSchema, 
   category: Joi.string(),
   collection: Joi.string()
-});
-
-export const newVariantSchema = Joi.object({
-  color: Joi.string().required(),
-  image: Joi.string().allow(null)
-});
+}).or("name","price","thumbnail","details","category","collection");

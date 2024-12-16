@@ -1,11 +1,10 @@
 import { db } from "../firebase.js";
-
-const color = "color";
+import { COLLECTIONS } from "./utility.js";
 
 export const checkColor = async (body) => {
     try {
         // Reference to the document in the "category" collection
-        const colorRef = db.collection(color).doc(body.color);
+        const colorRef = db.collection(COLLECTIONS.COLOR).doc(body.color);
         const colorDoc = await colorRef.get();
 
         // Return true if the document exists, otherwise false
@@ -24,7 +23,7 @@ export const checkColor = async (body) => {
 export const checkColors = async (body) => {
     try {
         // Reference to the document in the "category" collection
-        const colorRef = db.collection(color).doc(body.color);
+        const colorRef = db.collection(COLLECTIONS.COLOR).doc(body.color);
         const colorDoc = await colorRef.get();
 
         // Return true if the document exists, otherwise false
@@ -44,7 +43,7 @@ export const addcolor = async (req, res) => {
 
     try {
         const {code, ...colorCode} = req.body
-        db.collection(color).doc(code).create(colorCode)
+        db.collection(COLLECTIONS.COLOR).doc(code).create(colorCode)
         res.status(200).send("Color created successfully.")
 
     } catch (error) {

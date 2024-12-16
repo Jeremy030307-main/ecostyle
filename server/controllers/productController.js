@@ -1,12 +1,7 @@
 
 import { db } from "../firebase.js";
 import admin from 'firebase-admin'
-
-
-
-
-
-const productCollection = 'product'
+import { COLLECTIONS } from "./utility.js";
 
 const getVariantDetails = async (variantData) => {
   try{
@@ -41,10 +36,30 @@ const getVariantDetails = async (variantData) => {
   }
 }
 
+const checkStock = async (stockData) => {
+
+  let totalStock = 0;
+  stockData.forEach((doc) => {
+      totalStock += doc.stock || 0;
+    });
+
+  return totalStock;
+}
+
+const getProductData = async (productID, t = null) => {
+  const productRef = db.collection(productCollection).doc(productID);
+  const productSnapshot = t ? await t.get(productRef) : await productRef.get();
+
+  if (!productSnapshot.exists) {
+    throw new Error("No Product Found.");
+  }
+  return productSnapshot.data();
+};
+
 // get all products
 export const getProducts = async (req, res, next) => {
   try {
-    const productsSnapshot = await db.collection(productCollection).get();
+    const productsSnapshot = await db.collection(COLLECTIONS.PRODUCT).get();
 
     if (productsSnapshot.empty) {
       res.status(400).send('No Products found');
@@ -81,7 +96,7 @@ export const getProducts = async (req, res, next) => {
 export const getProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const data = await db.collection(productCollection).doc(id).get();
+    const data = await db.collection(COLLECTIONS.PRODUCT).doc(id).get();
 
     if (data.exists) {
       const productData = data.data();
@@ -101,7 +116,7 @@ export const getProduct = async (req, res, next) => {
 
       res.status(200).send(cleanedData);
     } else {
-      res.status(404).send('product not found');
+      res.status(404).send('Product not found');
     }
   } catch (error) {
     res.status(400).send(error.message);
@@ -118,9 +133,9 @@ export const createProduct = async (req, res) => {
  
     await db.runTransaction( async (transaction) => {
       
-      const productCode = await transaction.get(db.collection(productCollection).doc("productID"));
+      const productCode = await transaction.get(db.collection(COLLECTIONS.PRODUCT).doc("productID"));
       const productID = "ES" + `${productCode.data().code}`.padStart(5, '0')
-      const productRef = db.collection(productCollection).doc(productID);
+      const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
       const currentTime =  admin.firestore.Timestamp.now()
 
       const newProductData = {
@@ -131,7 +146,7 @@ export const createProduct = async (req, res) => {
       }
 
       transaction.create(productRef, newProductData);
-      transaction.update(db.collection(productCollection).doc("productID"), {code: admin.firestore.FieldValue.increment(1)});
+      transaction.update(db.collection(COLLECTIONS.PRODUCT).doc("productID"), {code: admin.firestore.FieldValue.increment(1)});
 
       for (const variantData of variant) {
         const variantID = `${variantData.color}`
@@ -144,7 +159,7 @@ export const createProduct = async (req, res) => {
             size: size,
             stock: 0,
           }
-          transaction.create(db.collection('stock').doc(sku), stockData);
+          transaction.create(db.collection(COLLECTIONS.STOCK).doc(sku), stockData);
         }
       };
     })
@@ -167,70 +182,64 @@ export const updateProduct = async (req, res) => {
       ...productData
     }
 
-    await db.collection(productCollection).doc(productID).update(newProductData);
+    await db.collection(COLLECTIONS.PRODUCT).doc(productID).update(newProductData);
     res.status(200).send("Product Updated Succesfully.");
+
   } catch (error) {
     res.status(400).send(`Product Failed to Update: ${error.message}`);
   }
-}
+};
 
 //delete product (with id)
 export const deleteProduct = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const productID = req.params.id;
+    const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID)
 
-    const productRef = db.collection(productCollection).doc(id)
+    await db.runTransaction(async (t) => {
 
-    const batch = db.batch();
-
-    // Loop through all variants and add delete operations to the batch
-    const variantSnapshot = await productRef.collection('variant').get();
-
-    // Using for...of loop instead of forEach to handle async correctly
-    for (const variantDoc of variantSnapshot.docs) {
-      // Querying the stock collection for each variant
-      const stockSnapshot = await db.collection('stock')
+      const stockQuery = db.collection(COLLECTIONS.STOCK)
         .orderBy(admin.firestore.FieldPath.documentId())
-        .startAt(variantDoc.id)
-        .endAt(variantDoc.id + '\uf8ff')  // '\uf8ff' is the highest Unicode character, which helps fetch all documents starting with the variant ID
-        .get();
+        .startAt(productID)
+        .endAt(productID + '\uf8ff')
 
-      // Loop through the stock snapshot and delete related stock documents
+      const stockSnapshot = await stockQuery.get();
+      const stockCount = await checkStock(stockSnapshot.docs);
+
+      if (stockCount > 0){
+        throw new Error(`There are ${stockCount} stock of this product remaining.`)
+      } 
+
       stockSnapshot.forEach((stock) => {
-        batch.delete(stock.ref);
+        t.delete(stock.ref);
       });
 
-      // Delete the variant document
-      batch.delete(variantDoc.ref);
-    }
+      t.delete(productRef)
+      return "Product Deleted"
 
-    // Finally, delete the product document
-    batch.delete(productRef);
-
-    // Commit the batch
-    await batch.commit();
-
-    res.status(200).send('Product deleted successfully');
+    }).then((result) => {
+      // Handle successful transaction
+      res.status(200).send(result); // Send success message
+    }).catch((error) => {
+      // Handle errors from transaction
+      res.status(400).send(`Product Failed To Delete: ${error.message}`);
+    });
   } catch (error) {
     res.status(400).send(error.message);
   }
 };
 
 export const addVariant = async (req, res) => {
-  const productID = req.params.id;
-  const variantData = req.body;
-  const productRef = db.collection(productCollection).doc(productID);
 
   try {
+    const productID = req.params.id;
+    const variantData = req.body;
+    const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
+
     // Run Firestore transaction
     await db.runTransaction(async (t) => {
-      const productSnapshot = await t.get(productRef);
 
-      if (!productSnapshot.exists) {
-        throw new Error("No Product Found.");
-      }
-
-      const productData = productSnapshot.data();
+      const productData = getProductData(productID, t);
       const productVariants = [...new Set(productData.variant.map((data) => data.color))];
       console.log(productVariants);
 
@@ -252,7 +261,7 @@ export const addVariant = async (req, res) => {
             size: size,
             stock: 0,
           };
-          t.create(db.collection('stock').doc(sku), stockData);
+          t.create(db.collection(COLLECTIONS.STOCK).doc(sku), stockData);
         }
 
         // Transaction completed successfully, return response here
@@ -275,21 +284,17 @@ export const addVariant = async (req, res) => {
 };
 
 export const updateVariant = async (req, res) => {
-  const productID = req.params.id;
-  const variantData = req.body;
-  const productRef = db.collection(productCollection).doc(productID);
 
   try {
+    const productID = req.params.id;
+    const variantData = req.body;
+    const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
+
     // Run Firestore transaction
     await db.runTransaction(async (t) => {
-      const productSnapshot = await t.get(productRef);
 
-      if (!productSnapshot.exists) {
-        throw new Error("No Product Found.");
-      }
-
-      const variants = productSnapshot.data().variant;
-      const variantToRemove = variants.find((variant) => variant.color === variantData.color);
+      const productData = await getProductData(productID, t);
+      const variantToRemove = productData.variant.find((variant) => variant.color === variantData.color);
 
       if (!variantToRemove) {
         new Error(`Variant with color ${colorToRemove} not found.`);
@@ -317,25 +322,33 @@ export const updateVariant = async (req, res) => {
     // Catch any errors outside of the transaction
     res.status(400).send(`New Variant Failed to Create: ${error.message}`);
   }
-}
+};
 
 export const deleteVariant = async (req, res) => {
-  const productID = req.params.productID;
-  const variantID = req.params.variantID;
-  const productRef = db.collection(productCollection).doc(productID);
 
   try {
+    const productID = req.params.productID;
+    const variantID = req.params.variantID;
+    const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
+
     // Run Firestore transaction
     await db.runTransaction(async (t) => {
-      const productSnapshot = await t.get(productRef);
+      const productData = await getProductData(productID, t);
 
-      if (!productSnapshot.exists) {
-        throw new Error("No Product Found.");
+      // Querying the stock collection for each variant
+      const stockSnapshot = await db.collection(COLLECTIONS.STOCK)
+        .orderBy(admin.firestore.FieldPath.documentId())
+        .startAt(`${productID}_${variantID}`)
+        .endAt(`${productID}_${variantID}` + '\uf8ff')  // '\uf8ff' is the highest Unicode character, which helps fetch all documents starting with the variant ID
+        .get();
+
+      const stockCount = await checkStock(stockSnapshot.docs);
+
+      if (stockCount > 0){
+        throw new Error(`There are ${stockCount} stock of this variant remaining.`)
       }
 
-      const variants = productSnapshot.data().variant;
-      const variantToRemove = variants.find((variant) => variant.color === variantID);
-
+      const variantToRemove = productData.variant.find((variant) => variant.color === variantID);
       if (!variantToRemove) {
         new Error(`Variant with color ${colorToRemove} not found.`);
       }
@@ -344,13 +357,6 @@ export const deleteVariant = async (req, res) => {
       t.update(productRef, {
         variant: admin.firestore.FieldValue.arrayRemove(variantToRemove)
       });
-
-      // Querying the stock collection for each variant
-      const stockSnapshot = await db.collection('stock')
-        .orderBy(admin.firestore.FieldPath.documentId())
-        .startAt(`${productID}_${variantID}`)
-        .endAt(`${productID}_${variantID}` + '\uf8ff')  // '\uf8ff' is the highest Unicode character, which helps fetch all documents starting with the variant ID
-        .get();
 
       // Loop through the stock snapshot and delete related stock documents
       stockSnapshot.forEach((stock) => {
@@ -370,24 +376,19 @@ export const deleteVariant = async (req, res) => {
     // Catch any errors outside of the transaction
     res.status(400).send(`New Variant Failed to Delete: ${error.message}`);
   }
-}
+};
 
 export const updateSize = async (req, res)=> {
 
-  const productID = req.params.productID;
-  const size = req.params.size;
-  const productRef = db.collection(productCollection).doc(productID);
-
   try {
+    const productID = req.params.productID;
+    const size = req.params.size;
+    const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
+
     // Run Firestore transaction
     await db.runTransaction(async (t) => {
-      const productSnapshot = await t.get(productRef);
 
-      if (!productSnapshot.exists) {
-        throw new Error("No Product Found.");
-      }
-
-      const productData = productSnapshot.data();
+      const productData = await getProductData(productID, t);
       const productVariants = [...new Set(productData.variant.map((data) => data.color))];
       const productSize = productData.size;
 
@@ -407,7 +408,7 @@ export const updateSize = async (req, res)=> {
             size: size,
             stock: 0,
           };
-          t.create(db.collection('stock').doc(sku), stockData);
+          t.create(db.collection(COLLECTIONS.STOCK).doc(sku), stockData);
         }
 
         // Transaction completed successfully, return response here
@@ -427,47 +428,51 @@ export const updateSize = async (req, res)=> {
     // Catch any errors outside of the transaction
     res.status(400).send(`New Size Failed to Create: ${error.message}`);
   }
-}
+};
 
 export const deleteSize = async (req, res) => {
-  const productID = req.params.productID;
-  const size = req.params.size;
-
-  // Validate productID and size
-  if (!productID || !size) {
-    return res.status(400).send("Invalid productID or size.");
-  }
-
-  const productRef = db.collection(productCollection).doc(productID);
 
   try {
+    const productID = req.params.productID;
+    const size = req.params.size;
+
+    // Validate productID and size
+    if (!productID || !size) {
+      return res.status(400).send("Invalid productID or size.");
+    }
+
+    const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
+
     // Run Firestore transaction
     await db.runTransaction(async (t) => {
-      const productSnapshot = await t.get(productRef);
 
-      // Check if product exists
-      if (!productSnapshot.exists) {
-        throw new Error("No Product Found.");
-      }
-
-      const productData = productSnapshot.data();
+      const productData = await getProductData(productID, t);
       const productSize = productData.size;
 
       // Check if size exists in the product sizes
       if (productSize.includes(size)) {
-        // Remove size from product document
-        t.update(productRef, {
-          size: admin.firestore.FieldValue.arrayRemove(size),
-        });
 
         // Query the stock collection for documents starting with productID and ending with size
-        const stockSnapshot = await db.collection('stock')
+        const stockSnapshot = await db.collection(COLLECTIONS.STOCK)
           .where(admin.firestore.FieldPath.documentId(), '>=', `${productID}_`)
           .where(admin.firestore.FieldPath.documentId(), '<=', `${productID}_\uf8ff`)
           .get();
 
         // Filter stock documents ending with the specific size
         const filterStock = stockSnapshot.docs.filter(doc => doc.id.endsWith(`_${size}`));
+
+        const stockCount = await checkStock(filterStock.map(doc => ({
+          ...doc.data(), // Spread the document data
+        })));
+
+        if (stockCount > 0){
+          throw new Error(`There are ${stockCount} stock of this product size remaining.`)
+        }
+
+        // Remove size from product document
+        t.update(productRef, {
+          size: admin.firestore.FieldValue.arrayRemove(size),
+        });
 
         // Delete filtered stock documents
         filterStock.forEach((stock) => {
@@ -489,6 +494,3 @@ export const deleteSize = async (req, res) => {
     res.status(400).send(`Size Failed to Delete: ${error.message}`);
   }
 };
-
-
-

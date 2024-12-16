@@ -1,19 +1,17 @@
 import { json } from "express";
 import { db } from "../firebase.js";
 import admin from 'firebase-admin'
-
-const categoryCollection = 'category'
-const subCategoryCollection = "subcategory"
+import { COLLECTIONS } from "./utility.js";
 
 const convertIdToRef = (categoryID) => {
 
     const pathSegments = categoryID.split('_'); // split the parent id in between _
     let path = null
     let tmp = pathSegments[0]
-    path = db.collection(categoryCollection).doc(tmp)
+    path = db.collection(COLLECTIONS.CATEGORY).doc(tmp)
     pathSegments.slice(1).forEach((segment, index) => {
         tmp += '_' + segment
-        path = path.collection(subCategoryCollection).doc(tmp)
+        path = path.collection(COLLECTIONS.SUBCATEGORY).doc(tmp)
     });
 
     console.log(path.path)
@@ -22,6 +20,10 @@ const convertIdToRef = (categoryID) => {
 
 export const checkCategory = async (body) => {
     try {
+        // Check if at least one field is present (in this case, 'collection')
+        if (!body || !body.category) {
+            return { isValid: true, errorMessage: null };
+        }
         // Reference to the document in the "category" collection
         const categoryRef = convertIdToRef(body.category);
         const categoryDoc = await categoryRef.get();
@@ -42,7 +44,7 @@ export const getCategories = async (req, res) => {
     // Helper function to get subcategories recursively
     async function getSubcategories(categoryDocRef) {
         // Get subcollections of the category document (i.e., "subcategory")
-        const subcategorySnapshot = await db.doc(categoryDocRef.path).collection(subCategoryCollection).get();
+        const subcategorySnapshot = await db.doc(categoryDocRef.path).collection(COLLECTIONS.SUBCATEGORY).get();
     
         let subcategories = [];
     
@@ -69,7 +71,7 @@ export const getCategories = async (req, res) => {
 
         if (!categoryID){
             // Fetch top-level categories
-            const categorySnapshot = await db.collection(categoryCollection).get();
+            const categorySnapshot = await db.collection(COLLECTIONS.CATEGORY).get();
 
             categories = [];
 
@@ -104,7 +106,7 @@ export const getCategories = async (req, res) => {
         console.error('Error fetching categories:', error);  // Log the error for debugging
         res.status(500).send({ error: error.message });  // Use status 500 for server errors
     }
-};
+}; 
 
 // ---------- Admin action ------------------
 
@@ -113,10 +115,6 @@ export const addCategory = async (req, res, next) => {
     const addCategoryToFirestore = async (data, parentID, batch) => {
 
         const {name,code, subcategory, ...categoryData} = data;
-        
-        if (!name) {
-          throw new Error("Invalid category data. 'name' field is required.");
-        }
     
         let categoryID = code;
         if (!!parentID) {
@@ -131,13 +129,8 @@ export const addCategory = async (req, res, next) => {
       
         // Step 2: Process subcategory if it exists
         if (!!subcategory) {
-            if (Array.isArray(subcategory)) {
-                for (const sub of subcategory) {
+            for (const sub of subcategory) {
                     await addCategoryToFirestore(sub, categoryID, batch);
-                }
-            } else {
-                // If subcategory is not an array, return array
-                throw new Error("Subcategory have to be an array.");
             }
         }
     };

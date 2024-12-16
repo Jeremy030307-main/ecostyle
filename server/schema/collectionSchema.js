@@ -35,7 +35,6 @@ export const newCollectionSchema = Joi.object({
       })
 });
 
-
 export const updateCollectionSchema = Joi.object({
     description: Joi.string()
       .max(2000)
@@ -50,4 +49,4 @@ export const updateCollectionSchema = Joi.object({
         'string.empty': 'Thumbnail is required.',
         'string.uri': 'Thumbnail must be a valid URL.',
       })
-});
+}).or('description', 'thumbnail');;

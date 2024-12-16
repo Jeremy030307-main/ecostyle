@@ -1,3 +1,15 @@
+export const COLLECTIONS = {
+    PRODUCT: 'product',
+    STOCK: 'stock',
+    COLOR: 'color',
+    CATEGORY: 'category',
+    SUBCATEGORY: 'subcategory',
+    COLLECTION: 'collection',
+    COLLECTION_HISTROY: "history",
+    USER: "user"
+};
+  
+ 
 function convertFirestoreTimestampToISO(firestoreTimestamp) {
     if (!firestoreTimestamp || !firestoreTimestamp._seconds) {
         throw new Error("Invalid Firestore Timestamp format");
