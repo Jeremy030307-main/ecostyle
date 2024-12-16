@@ -1,7 +1,7 @@
 import express from 'express';
 import { authenticate, isAdmin } from './middleware.js';
 
-import { newUser, updateUser, deleteUser, getUser, setAdmin } from './userController.js';
+import { newUser, updateUser, deleteUser, getUser, setAdmin } from '../controllers/userController.js';
 
 const userRouter = express.Router();
 

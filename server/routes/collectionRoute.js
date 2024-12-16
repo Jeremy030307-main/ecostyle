@@ -1,16 +1,21 @@
 import express from 'express';
-import { authenticate, isAdmin } from '../authentication/middleware.js';
-import { addCollection } from '../controllers/collectionController.js';
-
+import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import {getCollection, getCollections, addCollection, deleteCollection, updateCollection, updateCollectionStatus, getCollectionDetail } from '../controllers/collectionController.js';
+import { newCollectionSchema, updateCollectionSchema } from '../schema/collectionSchema.js';
 
 const collectionRouter = express.Router();
 
-// collectionRouter.get('/', getCategories);
+collectionRouter.get('/', getCollections);
+collectionRouter.get('/:id', getCollection);
 
-// collectionRouter.get('/:id', getCategory);
+// -------- Admin Route --------------
+collectionRouter.get('/:id/admin', getCollectionDetail)
 
-collectionRouter.post('/', addCollection)
+collectionRouter.post('/',validateRequest(newCollectionSchema), addCollection)
 
-// collectionRouter.delete('/:id', deleteCategory)
+collectionRouter.put('/:id',validateRequest(updateCollectionSchema), updateCollection)
+collectionRouter.put('/:id/:status', updateCollectionStatus)
+
+collectionRouter.delete('/:id/', deleteCollection)
 
 export default collectionRouter;

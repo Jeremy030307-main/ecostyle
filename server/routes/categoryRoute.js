@@ -1,16 +1,21 @@
 import express from 'express';
-import { authenticate, isAdmin } from '../authentication/middleware.js';
+import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { getCategories, addCategory, deleteCategory} from '../controllers/categoryController.js';
+import Joi from "joi";
 
-import { getCategories, getCategory, addCategory, deleteCategory} from '../controllers/categoryController.js';
+// Define a schema for validation
+const categorySchema = Joi.object({
+    name: Joi.string().min(1).required()
+});
 
 const categoryRouter = express.Router();
 
-categoryRouter.get('/', getCategories);
+categoryRouter.get('/:id?', getCategories);
+// categoryRouter.get('/:id', getCategory);
 
-categoryRouter.get('/:id', getCategory);
+// -------- Admin Route --------------
+categoryRouter.post('/:parentID?', addCategory)
 
-categoryRouter.post('/',isAdmin, addCategory)
-
-categoryRouter.delete('/:id',isAdmin, deleteCategory)
+categoryRouter.delete('/:id', deleteCategory)
 
 export default categoryRouter;

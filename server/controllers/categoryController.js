@@ -1,28 +1,48 @@
-const categoryCollection = 'category'
-const subCategory = "subcategory"
 import { json } from "express";
 import { db } from "../firebase.js";
+import admin from 'firebase-admin'
 
-const convertIdToPath = (categoryID) => {
+const categoryCollection = 'category'
+const subCategoryCollection = "subcategory"
+
+const convertIdToRef = (categoryID) => {
 
     const pathSegments = categoryID.split('_'); // split the parent id in between _
-
+    let path = null
     let tmp = pathSegments[0]
-    let path = db.collection(categoryCollection).doc(tmp)
+    path = db.collection(categoryCollection).doc(tmp)
     pathSegments.slice(1).forEach((segment, index) => {
         tmp += '_' + segment
-        path = path.collection(subCategory).doc(tmp)
+        path = path.collection(subCategoryCollection).doc(tmp)
     });
 
+    console.log(path.path)
     return path
 }
+
+export const checkCategory = async (body) => {
+    try {
+        // Reference to the document in the "category" collection
+        const categoryRef = convertIdToRef(body.category);
+        const categoryDoc = await categoryRef.get();
+ 
+        if (!categoryDoc.exists) {
+            return { isValid: false, errorMessage: 'Category does not exist' };
+          }
+        
+          return { isValid: true, errorMessage: null };  // Valid category
+    } catch (error) {
+        console.error('Error checking category:', error);
+        throw new Error(`Unable to check category existence: ${error.message}`);
+    }
+};
 
 export const getCategories = async (req, res) => {
 
     // Helper function to get subcategories recursively
     async function getSubcategories(categoryDocRef) {
         // Get subcollections of the category document (i.e., "subcategory")
-        const subcategorySnapshot = await db.doc(categoryDocRef.path).collection(subCategory).get();
+        const subcategorySnapshot = await db.doc(categoryDocRef.path).collection(subCategoryCollection).get();
     
         let subcategories = [];
     
@@ -43,19 +63,38 @@ export const getCategories = async (req, res) => {
     }
 
     try {
-        // Fetch top-level categories
-        const categorySnapshot = await db.collection(categoryCollection).get();
 
-        let categories = [];
+        const categoryID = req.params.id;
+        let categories = null;
 
-        // Iterate through each document in the "category" collection
-        for (const categoryDoc of categorySnapshot.docs) {
-            const categoryData = {
-                id: categoryDoc.id,
-                ...categoryDoc.data(),
-                subcategories: await getSubcategories(categoryDoc.ref), // Get subcategories recursively
+        if (!categoryID){
+            // Fetch top-level categories
+            const categorySnapshot = await db.collection(categoryCollection).get();
+
+            categories = [];
+
+            // Iterate through each document in the "category" collection
+            for (const categoryDoc of categorySnapshot.docs) {
+                const categoryData = {
+                    id: categoryDoc.id,
+                    ...categoryDoc.data(),
+                    subcategories: await getSubcategories(categoryDoc.ref), // Get subcategories recursively
+                };
+                categories.push(categoryData);
+            }
+        } else {
+            const docRef = convertIdToRef(categoryID)
+
+            const categorySnapshot = await docRef.get();
+            if (categorySnapshot.empty) {
+                res.status(400).send('No Collection found');
+            } 
+
+            categories = {
+                id: categorySnapshot.id,
+                ...categorySnapshot.data(),
+                subcategories: await getSubcategories(categorySnapshot.ref) // Get subcategories recursively
             };
-            categories.push(categoryData);
         }
 
         // Send the result as the response
@@ -67,51 +106,57 @@ export const getCategories = async (req, res) => {
     }
 };
 
-export const getCategory = async (req, res) => {
-
-    try {
-
-        const categoryID = req.params.id; // Split the wildcard path
-
-        const q = db.collection('product').where("category", "array-contains", categoryID)
-
-        const querySnapshot = await q.get();
-        const productArray = querySnapshot.docs.map((doc) => {
-            const {category, collection, ...productData} = doc.data();
-      
-            return {
-              id: doc.id,
-              ...productData,
-            };
-          });
-      
-        res.status(200).send(productArray);
-
-    } catch (error) {
-        res.status(400).send(error.message)
-    }
-};
-
 // ---------- Admin action ------------------
+
 export const addCategory = async (req, res, next) => {
-    try{ 
-        const {name, parentId} = req.body;
 
-        let categoryID = name.replace(/\s+/g, '').toLowerCase();
+    const addCategoryToFirestore = async (data, parentID, batch) => {
 
-        if (!!parentId) {
-            categoryID = parentId + "_" + categoryID
+        const {name,code, subcategory, ...categoryData} = data;
+        
+        if (!name) {
+          throw new Error("Invalid category data. 'name' field is required.");
+        }
+    
+        let categoryID = code;
+        if (!!parentID) {
+            categoryID = parentID + "_" + categoryID
         };
+        
+        // Step 1: Add the main category document
+        const path = convertIdToRef(categoryID);
+        batch.set(path, {name: name, ...categoryData})
+        // await path.create({name: name, ...categoryData});
+        console.log(`Added category: ${data.name} in collection: ${path.path}`);
+      
+        // Step 2: Process subcategory if it exists
+        if (!!subcategory) {
+            if (Array.isArray(subcategory)) {
+                for (const sub of subcategory) {
+                    await addCategoryToFirestore(sub, categoryID, batch);
+                }
+            } else {
+                // If subcategory is not an array, return array
+                throw new Error("Subcategory have to be an array.");
+            }
+        }
+    };
 
-        const path = convertIdToPath(categoryID);
-        console.log(path.path)
-        await path.create({name: name});
+    try{ 
+        const data = req.body;
+        const parentId = req.params.parentID;
+        const batch = db.batch();
+
+        await addCategoryToFirestore(data, parentId, batch);
+        await batch.commit(); 
 
         res.status(200).send("Category created");
-
     } catch (error) {
         res.status(400).send(error.message)
     }   
+}
+
+export const updateCategory = async (req, res) => {
 }
 
 export const deleteCategory = async(req, res, next) => {
@@ -130,8 +175,7 @@ export const deleteCategory = async(req, res, next) => {
                     await deleteDocumentRecursively(subDoc.ref);
                 }
             }
-    
-            // Delete the current document (once its subcollections are deleted)
+
             await docRef.delete();
             console.log(`Deleted document: ${docRef.path}`);
         } catch (error) {
@@ -142,18 +186,25 @@ export const deleteCategory = async(req, res, next) => {
     try {
         const categoryId = req.params.id;
 
-        // Check if categoryIds is an array and if it is nested (array of arrays)
         if (!categoryId) {
             return res.status(400).send({ error: 'Missing CategoryID' });
         }
 
-        const path = convertIdToPath(categoryId);
+        // Check if any product under this category
+        const q = db.collection("product")
+                    .where("category", ">=", categoryId)
+                    .where("category", "<", categoryId + "\uf8ff")
+        const querySnapshot = await q.count().get();
 
-        console.log(path.path)
+        if (querySnapshot.data().count > 0){
+            return res.status(400).send({error: "Cateogry unable to remove.", message: `There are ${querySnapshot.data().count} products under this collection.`})
+        };
+
+        const path = convertIdToRef(categoryId);
         await deleteDocumentRecursively(path);
         res.status(200).send("Category Delete Successfully");
+
       } catch (error) {
         res.status(400).send(error.message);
       }
 };
-
