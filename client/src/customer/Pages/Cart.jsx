@@ -9,27 +9,32 @@ const Cart = () => {
 
   return (
     <div className="cart-container">
-      <h1>Your Cart</h1>
+      <div className="breadcrumbs">
+        <span>Home</span> / <span>Cart</span>
+      </div>
+      <h1 className="cart-title">Your Cart</h1>
       {cartItems.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (
         <div className="cart-content">
           <div className="cart-items">
-            {cartItems.map((item) => (
-              <div key={item.id} className="cart-item">
-                <img src={item.image} alt={item.name} className="cart-item-image" />
-                <div className="cart-item-details">
-                  <h2 className="cart-item-name">{item.name}</h2>
-                  <p className="cart-item-id">#{item.id} / {item.color} / {item.size}</p>
-                </div>
-                <div className="cart-item-price-details">
-                  <p className="cart-item-price">${item.price}</p>
-                  <div className="cart-item-quantity">
-                    <span>x {item.quantity}</span>
+            {cartItems.map((item, index) => (
+              <div key={item.id}>
+                <div className="cart-item">
+                  <img src={item.image} alt={item.name} className="cart-item-image" />
+                  <div className="cart-item-details">
+                    <h2 className="cart-item-name">{item.name}</h2>
+                    <p className="cart-item-id">#{item.id} / {item.color} / {item.size}</p>
                   </div>
-                  <p className="cart-item-total">${(item.price * item.quantity).toFixed(2)}</p>
-                  <button onClick={() => removeItemFromCart(item)} className="remove-btn">Remove</button>
+                  <div className="cart-item-price-details">
+                    <p className="cart-item-price">${item.price}</p>
+                    <div className="cart-item-quantity">
+                      <span>x {item.quantity}</span>
+                    </div>
+                    <p className="cart-item-total">${(item.price * item.quantity).toFixed(2)}</p>
+                  </div>
                 </div>
+                {index < cartItems.length - 1 && <hr className="divider" />}
               </div>
             ))}
           </div>
