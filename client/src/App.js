@@ -1,5 +1,7 @@
 import './App.css';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { CartProvider } from './CartContext.js'; // Import CartProvider
+
 import Customer from './customer/customer';
 import Shop from './customer/Pages/Shop';
 import EcoPoint from './customer/Pages/EcoPoint';
@@ -15,9 +17,8 @@ import AdminRoutes from './authentication/protectedRoute';
 
 
 function App() {
-
   return (
-    <div>
+    <CartProvider>  {/* Wrap the entire app in CartProvider */}
       <BrowserRouter>
           <Routes>
             <Route path='/' element={<Customer/>}>
@@ -26,7 +27,7 @@ function App() {
               <Route path='eco-point' element={<EcoPoint/>}></Route>
               <Route path='about' element={<About/>}></Route>
               <Route path='wishlist' element={<Wishlist/>}></Route>
-              <Route path='cart' element={<Cart/>}></Route>
+              <Route path='cart' element={<Cart />} /> {/* Cart page */}
               <Route path='account' element={<Accout/>}></Route>
               <Route path='product' element={<Product/>}></Route>
               <Route path='login' element={<LoginSignUp/>}></Route>
@@ -38,7 +39,8 @@ function App() {
 
           </Routes>
       </BrowserRouter>
-    </div>
+    </CartProvider>
+    
   );
 }
 
