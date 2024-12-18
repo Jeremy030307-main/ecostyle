@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import './Checkout.css';
+import React, { useState, useEffect } from 'react';
+import './Checkout.css'; // Make sure to update this CSS file
 
 const Checkout = () => {
-  const [step, setStep] = useState('shipping'); // shipping | payment
-  const [tab, setTab] = useState('savedAddress'); // savedAddress | newAddress
-  const [addresses, setAddresses] = useState([]); // List of saved addresses
+  const [step, setStep] = useState('shipping'); // 'shipping' | 'payment'
+  const [tab, setTab] = useState('newAddress'); // Only allow new addresses
+  const [addresses, setAddresses] = useState([]); // List of saved addresses (will be empty)
   const [selectedAddress, setSelectedAddress] = useState(null);
 
   const [newAddress, setNewAddress] = useState({
@@ -18,19 +18,21 @@ const Checkout = () => {
     phone: '',
   });
 
-  const [cart, setCart] = useState([
-    { name: 'Eco* Shorts', price: 37.50, quantity: 1 },
-    { name: 'Eco* Basic Tee', price: 140.00, quantity: 1 },
-  ]); // Example items in the cart
+  const [cart, setCart] = useState([]); // Initially empty cart
+  const [errors, setErrors] = useState({});
 
-  const [errors, setErrors] = useState({}); // Validation errors
+  // Fetch dynamic cart items (example from localStorage or API)
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCart(storedCart);
+  }, []);
 
-  // Function to calculate the subtotal
+  // Calculate the subtotal
   const calculateSubtotal = () => {
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
   };
 
-  // Validate address form
+  // Validate the address form
   const validateAddress = () => {
     const errors = {};
     Object.entries(newAddress).forEach(([key, value]) => {
@@ -40,12 +42,12 @@ const Checkout = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Add New Address
+  // Handle adding a new address
   const handleAddAddress = () => {
     if (validateAddress()) {
       setAddresses([...addresses, newAddress]);
       setSelectedAddress(newAddress);
-      setStep('payment'); // Proceed to payment after adding address
+      setStep('payment'); // Move to the payment section after adding the address
       setErrors({});
     }
   };
@@ -59,46 +61,28 @@ const Checkout = () => {
         <div className="shipping-section">
           <h2>Shipping</h2>
           <div className="tab-header">
-            <button className={tab === 'savedAddress' ? 'active' : ''} onClick={() => setTab('savedAddress')}>
-              Saved Address
-            </button>
-            <button className={tab === 'newAddress' ? 'active' : ''} onClick={() => setTab('newAddress')}>
+            <button className={tab === 'newAddress' ? 'active' : ''}>
               New Address
             </button>
           </div>
 
-          {tab === 'savedAddress' && (
-            <div className="saved-address-section">
-              <div className="saved-address-card">
-                <h3>Home</h3>
-                <p>456 Elm Street, Suite 3</p>
-                <p>Los Angeles, CA, 90001</p>
-                <p>(601) 243-7760</p>
+          {/* New Address Form */}
+          <div className="form-group">
+            {Object.entries(newAddress).map(([key, value]) => (
+              <div key={key} className="form-field">
+                <input
+                  type="text"
+                  placeholder={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                  value={value}
+                  onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
+                />
+                {errors[key] && <span className="error">{errors[key]}</span>}
               </div>
-              <button className="continue-btn" onClick={() => setStep('payment')}>
-                Continue To Payment
-              </button>
-            </div>
-          )}
-
-          {tab === 'newAddress' && (
-            <div className="form-group">
-              {Object.entries(newAddress).map(([key, value]) => (
-                <div key={key} className="form-field">
-                  <input
-                    type="text"
-                    placeholder={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                    value={value}
-                    onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
-                  />
-                  {errors[key] && <span className="error">{errors[key]}</span>}
-                </div>
-              ))}
-              <button className="continue-btn" onClick={handleAddAddress}>
-                Save Address & Continue
-              </button>
-            </div>
-          )}
+            ))}
+            <button className="continue-btn" onClick={handleAddAddress}>
+              Save Address & Continue
+            </button>
+          </div>
         </div>
       )}
 
@@ -107,7 +91,7 @@ const Checkout = () => {
         <div className="payment-section">
           <h2>Payment Details</h2>
           <div className="form-group">
-            {/* Your payment form here */}
+            {/* Payment form (leave blank for now) */}
           </div>
           <button className="continue-btn">
             Save Card & Place Order
@@ -118,12 +102,16 @@ const Checkout = () => {
       {/* Order Summary */}
       <div className="order-summary">
         <h2>Order Summary</h2>
-        {cart.map((item, index) => (
-          <div className="item" key={index}>
-            <p>{item.name}</p>
-            <p>${(item.price * item.quantity).toFixed(2)}</p>
-          </div>
-        ))}
+        {cart.length === 0 ? (
+          <p>Your cart is empty</p>
+        ) : (
+          cart.map((item, index) => (
+            <div className="item" key={index}>
+              <p>{item.name}</p>
+              <p>${(item.price * item.quantity).toFixed(2)}</p>
+            </div>
+          ))
+        )}
         <p>Subtotal: ${calculateSubtotal()}</p>
         <p>Shipping: Free</p>
         <h3>Total: ${calculateSubtotal()}</h3>
