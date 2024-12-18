@@ -3,7 +3,7 @@ import { useAuth } from '../../authentication/authContext';
 import { Navigate } from "react-router-dom";
 
 
-const Accout = () => {
+const Account = () => {
 
   const { isAuthenticated, logout,user } = useAuth()
 
@@ -22,4 +22,4 @@ const Accout = () => {
   )
 }
 
-export default Accout
+export default Account

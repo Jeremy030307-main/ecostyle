@@ -6,11 +6,12 @@ import EcoPoint from './customer/Pages/EcoPoint';
 import About from './customer/Pages/About';
 import Cart from './customer/Pages/Cart';
 import Wishlist from './customer/Pages/Wishlist'; 
-import Accout from './customer/Pages/Accout';
+import Account from './customer/Pages/Account';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
 import LoginSignUp from './customer/Pages/LoginSignUp';
+// import NotFound from './customer/Pages/NotFound';
 
 import AdminRoutes from './authentication/protectedRoute';
 import { AuthProvider } from './authentication/authContext';
@@ -30,7 +31,7 @@ function App() {
                 <Route path='about' element={<About/>}></Route>
                 <Route path='wishlist' element={<Wishlist/>}></Route>
                 <Route path='cart' element={<Cart/>}></Route>
-                <Route path='account' element={<Accout/>}></Route>
+                <Route path='account' element={<Account/>}></Route>
                 <Route path='product' element={<Product/>}></Route>
                 <Route path='login' element={<LoginSignUp/>}></Route>
               </Route>
@@ -39,6 +40,7 @@ function App() {
             <Route element={<AdminRoutes/>}>
               <Route path='/admin' element={<Admin/>}></Route>
             </Route>
+            {/* <Route path='*' element={<NotFound/>}></Route> */}
 
           </Routes>
         </AuthProvider>
