@@ -1,6 +1,8 @@
 import './App.css';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import Customer from './customer/customer';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Shop from './customer/Pages/Shop';
 import EcoPoint from './customer/Pages/EcoPoint';
 import About from './customer/Pages/About';

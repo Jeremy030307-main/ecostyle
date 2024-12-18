@@ -121,78 +121,100 @@ body {
     color: #ffffff;
 }
 
+
 /* Team Section */
 /* Team Section */
 .about-team {
-    padding: 40px 10%;
-    background-color: #ffffff;
-  }
+  padding: 60px 5%; /* Add spacing around the section */
+  background-color: #f8f9fa; /* Light grey background for clean look */
+}
+
+.about-team .section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2c3e50; /* Dark grey for title */
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+/* Team Member Cards */
+.team-member {
+  background-color: #ffffff; /* Clean white background */
+  text-align: center;
+  border-radius: 16px; /* Smooth rounded corners */
+  padding: 30px 20px; /* Adequate space inside */
+  margin: 15px; /* Spacing between cards */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.team-member img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 4px solid #e0e0e0; /* Light border around the image */
+}
+
+.team-member h4 {
+  font-size: 1.4rem; /* Slightly larger for prominence */
+  color: #2c3e50; /* Dark grey for name */
+  margin-bottom: 10px;
+}
+
+.team-member p {
+  font-size: 1rem;
+  color: #7f8c8d; /* Neutral grey for role description */
+  margin-bottom: 10px;
+}
+
+.team-member:hover {
+  transform: translateY(-10px); /* Smooth hover effect */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+  background-color: #f4f9ff; /* Subtle light blue hover background */
+}
+
+/* Social Icons */
+.team-socials {
+  display: flex;
+  justify-content: center;
+  gap: 12px; /* Space between icons */
+  margin-top: 10px;
+}
+
+.team-socials span {
+  cursor: pointer;
+  font-size: 1.5rem; /* Slightly larger icons */
+  color: #95a5a6; /* Neutral grey for default */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.team-socials span:hover {
+  color: #3498db; /* Highlight blue on hover */
+  transform: scale(1.2); /* Slight zoom effect */
+}
+
+/* Slick Dots */
+.slick-dots {
+  bottom: -20px; /* Adjust position below slides */
+}
+
+.slick-dots li button:before {
+  font-size: 14px; /* Larger dots */
+  color: #ccc; /* Inactive dots */
+}
+
+.slick-dots li.slick-active button:before {
+  color: #3498db; /* Blue for active dot */
+}
+
+/* Additional Fix: Smooth spacing for shadow edges */
+.team-member-container {
+  margin: 0 10px; /* Prevent shadow clipping */
+}
+
   
-  .about-team .section-title {
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 2.5rem;
-    color: #2c3e50;
-  }
-  
-  .team-member {
-    background-color: #f4f4f4;
-    text-align: center;
-    border-radius: 8px;
-    padding: 20px;
-    margin: 0 10px; /* Add spacing between slides */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .team-member img {
-    width: 120px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 50%;
-    margin-bottom: 15px;
-  }
-  
-  .team-member h4 {
-    font-size: 1.3rem;
-    color: #2c3e50;
-    margin-bottom: 5px;
-  }
-  
-  .team-member p {
-    color: #777;
-    font-size: 1rem;
-  }
-  
-  .team-member:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .team-socials span {
-    margin: 0 5px;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: #555;
-    transition: color 0.3s ease;
-  }
-  
-  .team-socials span:hover {
-    color: #e74c3c;
-  }
-  
-  /* Slick Dots */
-  .slick-dots {
-    bottom: -30px;
-  }
-  
-  .slick-dots li button:before {
-    font-size: 12px;
-    color: #ccc;
-  }
-  
-  .slick-dots li.slick-active button:before {
-    color: #e74c3c;
-  }
   
   
 /* Services Section */

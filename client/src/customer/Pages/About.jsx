@@ -13,6 +13,7 @@ import serviceIcon from "../Components/Assets/account.svg";
 import guaranteeIcon from "../Components/Assets/wishlist.svg";
 
 
+
 const teamMembers = [
   { id: 1, name: "Tom Cruise", role: "Founder & Chairman", image: team1 },
   { id: 2, name: "Emma Watson", role: "Managing Director", image: team2 },
