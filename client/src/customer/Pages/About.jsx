@@ -24,7 +24,6 @@ const teamMembers = [
 
 const About = () => {
   const [activeCard, setActiveCard] = useState(null);
-  const [currentBatch, setCurrentBatch] = useState(0);
 
   const stats = [
     { id: 1, value: "10.5k", description: "Sellers active on our site" },
