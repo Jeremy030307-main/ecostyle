@@ -1,29 +1,82 @@
-import React from 'react';
-import './About.css';
-import bannerImage from '../Components/Assets/form-bg.png'; // Example image
-import team1 from '../Components/Assets/Product_1.png'; // Replace with actual team images
-import team2 from '../Components/Assets/Product_2.png';
-import team3 from '../Components/Assets/Product_3.png';
-import deliveryIcon from '../Components/Assets/cart.svg'; // Example icons
-import serviceIcon from '../Components/Assets/account.svg';
-import guaranteeIcon from '../Components/Assets/wishlist.svg';
+import React, { useState, useEffect } from "react";
+import Slider  from "react-slick";
+import "./About.css";
+import bannerImage from "../Components/Assets/figma_image_1.jpeg";
+import team1 from "../Components/Assets/old_ceo.jpeg";
+import team2 from "../Components/Assets/female_ceo.jpeg";
+import team3 from "../Components/Assets/new_ceo.jpeg";
+import team4 from "../Components/Assets/ceo1.png";
+import team5 from "../Components/Assets/ceo2.png";
+import team6 from "../Components/Assets/ceo3.png";
+import deliveryIcon from "../Components/Assets/cart.svg";
+import serviceIcon from "../Components/Assets/account.svg";
+import guaranteeIcon from "../Components/Assets/wishlist.svg";
+
+
+const teamMembers = [
+  { id: 1, name: "Tom Cruise", role: "Founder & Chairman", image: team1 },
+  { id: 2, name: "Emma Watson", role: "Managing Director", image: team2 },
+  { id: 3, name: "Will Smith", role: "Product Designer", image: team3 },
+  { id: 4, name: "Robert Downey", role: "Marketing Head", image: team4 },
+  { id: 5, name: "Scarlett Johansson", role: "HR Manager", image: team5 },
+  { id: 6, name: "Chris Evans", role: "Sales Lead", image: team6 },
+];
 
 const About = () => {
+  const [activeCard, setActiveCard] = useState(null);
+  const [currentBatch, setCurrentBatch] = useState(0);
+
+  const stats = [
+    { id: 1, value: "10.5k", description: "Sellers active on our site" },
+    { id: 2, value: "33k", description: "Monthly Product Sale" },
+    { id: 3, value: "45.5k", description: "Customers active on our site" },
+    { id: 4, value: "25k", description: "Annual gross sale" },
+  ];
+
+  const settings = {
+    dots: true, // Show navigation dots
+    infinite: true, // Loop the slides
+    speed: 500, // Transition speed
+    slidesToShow: 3, // Number of slides to show at a time
+    slidesToScroll: 1, // Number of slides to scroll
+    autoplay: true, // Auto-scroll the slider
+    autoplaySpeed: 10000, // Rotate every 10 seconds
+    responsive: [
+      {
+        breakpoint: 1024, // Tablet
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600, // Mobile
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
+  };
+  
+  
+
   return (
     <>
-
       {/* Header Section */}
       <section className="about-header">
         <div className="about-text">
           <h1>Our Story</h1>
           <p>
-            Launched in 2015, EcoStyle is South Asia's premier online shopping marketplace
-            with an active presence in Bangladesh. Supported by wide-ranging solutions, 
-            we serve millions of customers.
+            Launched in 2015, EcoStyle is South Asia's premier online shopping
+            marketplace with an active presence in Bangladesh. Supported by
+            wide-ranging solutions, we serve millions of customers.
           </p>
           <p>
-            EcoStyle offers over 1 million products, tailored marketing, and diverse 
-            categories to meet your needs.
+            EcoStyle offers over 1 million products, tailored marketing, and
+            diverse categories to meet your needs.
           </p>
         </div>
         <div className="about-image">
@@ -33,41 +86,33 @@ const About = () => {
 
       {/* Stats Section */}
       <section className="about-stats">
-        <div className="stat-card">
-          <h3>10.5k</h3>
-          <p>Sellers active on our site</p>
-        </div>
-        <div className="stat-card highlight">
-          <h3>33k</h3>
-          <p>Monthly Product Sale</p>
-        </div>
-        <div className="stat-card">
-          <h3>45.5k</h3>
-          <p>Customer active on our site</p>
-        </div>
-        <div className="stat-card">
-          <h3>25k</h3>
-          <p>Annual gross sale in our site</p>
-        </div>
+        {stats.map((stat) => (
+          <div
+            key={stat.id}
+            className={`stat-card ${activeCard === stat.id ? "active" : ""}`}
+            onClick={() => setActiveCard(stat.id)}
+          >
+            <h3>{stat.value}</h3>
+            <p>{stat.description}</p>
+          </div>
+        ))}
       </section>
 
       {/* Team Section */}
       <section className="about-team">
-        <div className="team-member">
-          <img src={team1} alt="Tom Cruise" />
-          <h4>Tom Cruise</h4>
-          <p>Founder & Chairman</p>
-        </div>
-        <div className="team-member">
-          <img src={team2} alt="Emma Watson" />
-          <h4>Emma Watson</h4>
-          <p>Managing Director</p>
-        </div>
-        <div className="team-member">
-          <img src={team3} alt="Will Smith" />
-          <h4>Will Smith</h4>
-          <p>Product Designer</p>
-        </div>
+        <h2 className="section-title">Meet Our Team</h2>
+        <Slider {...settings}>
+          {teamMembers.map((member) => (
+            <div key={member.id} className="team-member">
+              <img src={member.image} alt={member.name} />
+              <h4>{member.name}</h4>
+              <p>{member.role}</p>
+              <div className="team-socials">
+                <span>🐦</span> <span>📷</span> <span>🔗</span>
+              </div>
+            </div>
+          ))}
+        </Slider>
       </section>
 
       {/* Services Section */}
