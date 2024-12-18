@@ -26,17 +26,45 @@ const Checkout = () => {
     name: '',
   });
 
+  const [errors, setErrors] = useState({}); // Validation errors
+
+  // Validate address form
+  const validateAddress = () => {
+    const errors = {};
+    Object.entries(newAddress).forEach(([key, value]) => {
+      if (!value.trim()) errors[key] = 'This field is required';
+    });
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Validate card form
+  const validateCard = () => {
+    const errors = {};
+    Object.entries(newCard).forEach(([key, value]) => {
+      if (!value.trim()) errors[key] = 'This field is required';
+    });
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   // Add New Address
   const handleAddAddress = () => {
-    setAddresses([...addresses, newAddress]);
-    setSelectedAddress(newAddress);
-    setStep('payment'); // Proceed to payment after adding address
+    if (validateAddress()) {
+      setAddresses([...addresses, newAddress]);
+      setSelectedAddress(newAddress);
+      setStep('payment'); // Proceed to payment after adding address
+      setErrors({});
+    }
   };
 
   // Add New Card
   const handleAddCard = () => {
-    setCards([...cards, newCard]);
-    setSelectedCard(newCard);
+    if (validateCard()) {
+      setCards([...cards, newCard]);
+      setSelectedCard(newCard);
+      alert('Order placed successfully!');
+    }
   };
 
   return (
@@ -46,59 +74,19 @@ const Checkout = () => {
       {/* Shipping Section */}
       {step === 'shipping' && (
         <div className="shipping-section">
-          <h2>Shipping</h2>
-          <div className="tabs">
-            <span className="active-tab">New Address</span>
-          </div>
+          <h2>Shipping Address</h2>
           <div className="form-group">
-            <input
-              type="text"
-              placeholder="First Name"
-              value={newAddress.firstName}
-              onChange={(e) => setNewAddress({ ...newAddress, firstName: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Last Name"
-              value={newAddress.lastName}
-              onChange={(e) => setNewAddress({ ...newAddress, lastName: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Address 1"
-              value={newAddress.address1}
-              onChange={(e) => setNewAddress({ ...newAddress, address1: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Address 2"
-              value={newAddress.address2}
-              onChange={(e) => setNewAddress({ ...newAddress, address2: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="City"
-              value={newAddress.city}
-              onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="State"
-              value={newAddress.state}
-              onChange={(e) => setNewAddress({ ...newAddress, state: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Postal Code"
-              value={newAddress.postalCode}
-              onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Phone"
-              value={newAddress.phone}
-              onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
-            />
+            {Object.entries(newAddress).map(([key, value]) => (
+              <div key={key} className="form-field">
+                <input
+                  type="text"
+                  placeholder={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                  value={value}
+                  onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
+                />
+                {errors[key] && <span className="error">{errors[key]}</span>}
+              </div>
+            ))}
           </div>
           <button className="continue-btn" onClick={handleAddAddress}>
             Save Address & Continue
@@ -109,68 +97,25 @@ const Checkout = () => {
       {/* Payment Section */}
       {step === 'payment' && (
         <div className="payment-section">
-          <h2>Payment</h2>
-          <div className="tabs">
-            <span className="active-tab">New Card</span>
-          </div>
+          <h2>Payment Details</h2>
           <div className="form-group">
-            <input
-              type="text"
-              placeholder="Card Number"
-              value={newCard.cardNumber}
-              onChange={(e) => setNewCard({ ...newCard, cardNumber: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Expiry Date (MM/YY)"
-              value={newCard.expiry}
-              onChange={(e) => setNewCard({ ...newCard, expiry: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="CVV"
-              value={newCard.cvv}
-              onChange={(e) => setNewCard({ ...newCard, cvv: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Name on Card"
-              value={newCard.name}
-              onChange={(e) => setNewCard({ ...newCard, name: e.target.value })}
-            />
+            {Object.entries(newCard).map(([key, value]) => (
+              <div key={key} className="form-field">
+                <input
+                  type="text"
+                  placeholder={key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+                  value={value}
+                  onChange={(e) => setNewCard({ ...newCard, [key]: e.target.value })}
+                />
+                {errors[key] && <span className="error">{errors[key]}</span>}
+              </div>
+            ))}
           </div>
           <button className="continue-btn" onClick={handleAddCard}>
             Save Card & Place Order
           </button>
         </div>
       )}
-
-      {/* Saved Address & Card Summary */}
-      <div className="summary-section">
-        <h2>Order Summary</h2>
-        {selectedAddress && (
-          <div className="summary-address">
-            <h3>Shipping Address:</h3>
-            <p>
-              {selectedAddress.firstName} {selectedAddress.lastName} <br />
-              {selectedAddress.address1}, {selectedAddress.address2} <br />
-              {selectedAddress.city}, {selectedAddress.state} - {selectedAddress.postalCode} <br />
-              {selectedAddress.phone}
-            </p>
-          </div>
-        )}
-
-        {selectedCard && (
-          <div className="summary-card">
-            <h3>Payment Method:</h3>
-            <p>
-              Card: **** **** **** {selectedCard.cardNumber.slice(-4)} <br />
-              Expiry: {selectedCard.expiry} <br />
-              Name: {selectedCard.name}
-            </p>
-          </div>
-        )}
-      </div>
     </div>
   );
 };
