@@ -14,7 +14,7 @@ import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 import AdminRoutes from './authentication/protectedRoute';
-
+import Checkout from './customer/Pages/Checkout';
 
 function App() {
   return (
@@ -31,12 +31,12 @@ function App() {
               <Route path='account' element={<Accout/>}></Route>
               <Route path='product' element={<Product/>}></Route>
               <Route path='login' element={<LoginSignUp/>}></Route>
+              <Route path='checkout' element={<Checkout />} /> {/* Checkout page */}
             </Route>
             
             <Route element={<AdminRoutes/>}>
               <Route path='/admin' element={<Admin/>}></Route>
             </Route>
-
           </Routes>
       </BrowserRouter>
     </CartProvider>
