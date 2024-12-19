@@ -8,7 +8,8 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Calculate total price of all items in the cart
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+  // const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleCheckout = () => {
     navigate('/checkout'); // Navigate to the Checkout page
@@ -72,7 +73,7 @@ const Cart = () => {
           {/* Order Summary Section */}
           <div className="order-summary">
             <h2>Order Summary</h2>
-            <p>{cartItems.length} items subtotal</p>
+            <p>{totalQuantity} items subtotal</p>
             <div className="order-total">
               <h3>Order Total</h3>
               <p>${totalPrice}</p>
