@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './Cart.css';
 
 const Cart = () => {
-  const { cartItems, removeItemFromCart } = useCart();
+  const { cartItems, removeItemFromCart, updateItemQuantity } = useCart();
   const navigate = useNavigate();
 
   // Calculate total price of all items in the cart
@@ -31,14 +31,37 @@ const Cart = () => {
                   <img src={item.image} alt={item.name} className="cart-item-image" />
                   <div className="cart-item-details">
                     <h2 className="cart-item-name">{item.name}</h2>
-                    <p className="cart-item-id">#{item.id} / {item.color} / {item.size}</p>
+                    <p className="cart-item-id">
+                      #{item.id} / {item.color} / {item.size}
+                    </p>
                   </div>
                   <div className="cart-item-price-details">
                     <p className="cart-item-price">${item.price}</p>
-                    <div className="cart-item-quantity">
-                      <span>x {item.quantity}</span>
+                    <div className="cart-item-quantity-controls">
+                      <button
+                        className="quantity-btn"
+                        onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                      >
+                        -
+                      </button>
+                      <span className="cart-item-quantity">{item.quantity}</span>
+                      <button
+                        className="quantity-btn"
+                        onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                      >
+                        +
+                      </button>
                     </div>
-                    <p className="cart-item-total">${(item.price * item.quantity).toFixed(2)}</p>
+                    <p className="cart-item-total">
+                      ${(item.price * item.quantity).toFixed(2)}
+                    </p>
+                    <button
+                      className="remove-item-btn"
+                      onClick={() => removeItemFromCart(item.id)}
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
                 {index < cartItems.length - 1 && <hr className="divider" />}
@@ -55,7 +78,7 @@ const Cart = () => {
               <p>${totalPrice}</p>
             </div>
             <button className="checkout-btn" onClick={handleCheckout}>
-            Checkout
+              Checkout
             </button>
           </div>
         </div>
