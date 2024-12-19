@@ -8,8 +8,7 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Calculate total price of all items in the cart
-  // const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
-  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalQuantity= cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
 
   const handleCheckout = () => {
     navigate('/checkout'); // Navigate to the Checkout page
