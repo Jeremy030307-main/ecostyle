@@ -82,6 +82,21 @@ body {
   font-weight: bold;
 }
 
+.cart-item-quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add gap to increase space between the buttons */
+}
+
+.quantity-btn {
+  padding: 5px 10px; /* Adjust the padding for button size */
+  font-size: 1rem; /* Adjust font size if needed */
+}
+
+.cart-item-quantity {
+  padding: 0 10px; /* Add padding around the quantity number */
+}
+
 .divider {
   border: none;
   border-top: 1px solid #ddd;
