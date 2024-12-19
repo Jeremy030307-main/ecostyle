@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './Checkout.css'; // Make sure to update this CSS file
+import './Checkout.css';
 
 const Checkout = () => {
   const [step, setStep] = useState('shipping'); // 'shipping' | 'payment'
-  const [tab, setTab] = useState('newAddress'); // Only allow new addresses
-  const [addresses, setAddresses] = useState([]); // List of saved addresses (will be empty)
-  const [selectedAddress, setSelectedAddress] = useState(null);
-
   const [newAddress, setNewAddress] = useState({
     firstName: '',
     lastName: '',
@@ -17,11 +13,10 @@ const Checkout = () => {
     state: '',
     phone: '',
   });
-
   const [cart, setCart] = useState([]); // Initially empty cart
   const [errors, setErrors] = useState({});
 
-  // Fetch dynamic cart items (example from localStorage or API)
+  // Fetch dynamic cart items
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     setCart(storedCart);
@@ -45,8 +40,6 @@ const Checkout = () => {
   // Handle adding a new address
   const handleAddAddress = () => {
     if (validateAddress()) {
-      setAddresses([...addresses, newAddress]);
-      setSelectedAddress(newAddress);
       setStep('payment'); // Move to the payment section after adding the address
       setErrors({});
     }
@@ -60,13 +53,6 @@ const Checkout = () => {
       {step === 'shipping' && (
         <div className="shipping-section">
           <h2>Shipping</h2>
-          <div className="tab-header">
-            <button className={tab === 'newAddress' ? 'active' : ''}>
-              New Address
-            </button>
-          </div>
-
-          {/* New Address Form */}
           <div className="form-group">
             {Object.entries(newAddress).map(([key, value]) => (
               <div key={key} className="form-field">
@@ -93,28 +79,24 @@ const Checkout = () => {
           <div className="form-group">
             {/* Payment form (leave blank for now) */}
           </div>
-          <button className="continue-btn">
-            Save Card & Place Order
-          </button>
+          <button className="continue-btn">Save Card & Place Order</button>
         </div>
       )}
 
       {/* Order Summary */}
       <div className="order-summary">
         <h2>Order Summary</h2>
-        {cart.length === 0 ? (
-          <p>Your cart is empty</p>
-        ) : (
-          cart.map((item, index) => (
-            <div className="item" key={index}>
-              <p>{item.name}</p>
-              <p>${(item.price * item.quantity).toFixed(2)}</p>
-            </div>
-          ))
-        )}
+        {cart.map((item) => (
+          <div className="item" key={item.id}>
+            <p>{item.name}</p>
+            <p>${(item.price * item.quantity).toFixed(2)}</p>
+          </div>
+        ))}
         <p>Subtotal: ${calculateSubtotal()}</p>
-        <p>Shipping: Free</p>
-        <h3>Total: ${calculateSubtotal()}</h3>
+        <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
+        <h3>Total: ${
+          (parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)).toFixed(2)
+        }</h3>
       </div>
     </div>
   );
