@@ -121,15 +121,14 @@ body {
 .order-summary {
   flex: 1;
   background-color: #f9f9f9;
-  padding: 20px;
+  padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  align-self: flex-start; /* Ensure the order summary stays at the top */
 }
 
 .order-summary h2 {
   font-size: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 10x;
 }
 
 .order-summary p {
@@ -142,6 +141,10 @@ body {
   justify-content: space-between;
   margin-top: 10px;
   font-weight: bold;
+}
+
+.order-total p {
+  margin-right: 30px; /* Added spacing between the text and price */
 }
 
 .checkout-btn {
