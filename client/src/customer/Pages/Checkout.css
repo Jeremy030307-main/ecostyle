@@ -1,147 +1,133 @@
-/* Global Styling */
-body {
+/* Checkout.css */
+
+.checkout-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
   font-family: Arial, sans-serif;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.shipping-section,
+.payment-section {
   background-color: #f7f7f7;
-  margin: 0;
-  padding: 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 20px auto;
-  background: #fff;
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-/* Header Section */
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-}
-
-.header h1 {
-  font-size: 24px;
-  color: #333;
-}
-
-/* Flex Layout for Sections */
-.checkout-content {
-  display: flex;
-  gap: 20px;
-}
-
-/* Left Section: Form Area */
-.form-section {
-  flex: 3;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.form-section h2 {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #555;
-}
-
-.input-group {
-  margin-bottom: 15px;
-}
-
-.input-group label {
-  display: block;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.input-group input,
-.input-group select {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-.input-group input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
-}
-
-/* Right Section: Summary */
-.summary-section {
-  flex: 2;
-  padding: 20px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.summary-section h2 {
-  font-size: 18px;
-  margin-bottom: 15px;
-  color: #333;
-}
-
-.order-summary {
+  border-radius: 10px;
+  width: 60%;
   margin-bottom: 20px;
 }
 
-.order-summary div {
-  display: flex;
-  justify-content: space-between;
+h2 {
+  font-size: 1.5rem;
   margin-bottom: 10px;
-  font-size: 14px;
-  color: #666;
 }
 
-.order-summary div span {
-  font-weight: bold;
-  color: #333;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Total Price */
-.total {
-  font-size: 16px;
-  font-weight: bold;
-  color: #007bff;
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input[type="text"] {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+}
+
+.continue-btn {
+  padding: 10px 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
   margin-top: 10px;
 }
 
-/* Buttons */
-.button {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 10px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #007bff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.continue-btn:hover {
+  background-color: #444;
+}
+
+.order-summary {
+  background-color: #f7f7f7;
+  padding: 20px;
+  border-radius: 10px;
+  width: 30%;
+}
+
+.order-summary h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.item p {
+  margin: 0;
+}
+
+.order-summary p {
+  margin: 10px 0;
+}
+
+.order-summary h3 {
+  font-size: 1.2rem;
   margin-top: 20px;
-  text-transform: uppercase;
 }
 
-.button:hover {
-  background-color: #0056b3;
+button.cancel-btn {
+  background-color: white;
+  color: black;
+  border: 2px solid black;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .checkout-content {
-      flex-direction: column;
+button.cancel-btn:hover {
+  background-color: black;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  .checkout-container {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 40px;
+  }
+
+  .shipping-section,
+  .payment-section {
+    width: 45%;
+  }
+
+  .order-summary {
+    width: 25%;
   }
 }
