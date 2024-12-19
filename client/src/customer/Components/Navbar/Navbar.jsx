@@ -73,8 +73,7 @@ const Navbar = () => {
                 <Link to='/wishlist'><img onClick={() => {setMenu("wishlist")}} src={wishlist_icon} alt="" /></Link>
                 <Link to='/cart'><img onClick={() => {setMenu("cart")}} src={cart_icon} alt="" /></Link>
                 {/* Display the total number of items in the cart */}
-                {totalItems > 0 && <div className="nav-cart-count">{totalItems}</div>}
-                <div className='nav-cart-count'>0</div>
+                <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
                 <Link to= {(isAuthenticated === true) ? '/account':'/login'}><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
                 {(admin === true) ? <Link to='/admin'><img onClick={() => {setMenu("admin")}} src={admin_icon} alt="" /></Link> : <></>}
                 
