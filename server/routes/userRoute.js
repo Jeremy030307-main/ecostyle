@@ -3,16 +3,17 @@ import { authenticate, isAdmin } from './middleware.js';
 
 import { newUser, updateUser, deleteUser, getUser, setAdmin } from '../controllers/userController.js';
 
-const userRouter = express.Router();
+const publicUserRouter = express.Router();
+const adminUserRouter = express.Router();
 
-userRouter.get('/:id', getUser)
+publicUserRouter.get('/:id', getUser)
 
-userRouter.post('/:id',authenticate, newUser)
+publicUserRouter.post('/:id',authenticate, newUser)
 
-userRouter.put('/:id/admin',isAdmin, setAdmin)
+adminUserRouter.patch('/:id/set-admin', setAdmin)
 
-userRouter.put('/:id',authenticate, updateUser)
+publicUserRouter.patch('/:id',authenticate, updateUser)
 
-userRouter.delete('/delete/:id',authenticate, deleteUser)
+publicUserRouter.delete('/:id',authenticate, deleteUser)
 
-export default userRouter;
+export {publicUserRouter,adminUserRouter};

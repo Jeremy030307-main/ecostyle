@@ -37,3 +37,5 @@ export function formatFirestoreTimestamps(data) {
 
     return formattedData;
 }
+
+export const message = (message) => ({ error: message });

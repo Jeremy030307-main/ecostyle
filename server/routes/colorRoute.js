@@ -2,8 +2,9 @@ import express from 'express';
 import { authenticate, isAdmin, validateRequest } from './middleware.js';
 import { addcolor } from '../controllers/colorController.js';
 
-const colorRouter = express.Router();
+const publicColorRouter = express.Router();
+const adminColorRouter = express.Router();
 
-colorRouter.post("/", addcolor)
+adminColorRouter.post("/", addcolor)
 
-export default colorRouter;
+export {publicColorRouter,adminColorRouter };

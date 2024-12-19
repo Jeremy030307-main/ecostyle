@@ -3,14 +3,14 @@ import { authenticate, isAdmin, validateRequest } from './middleware.js';
 import { getCategories, addCategory, deleteCategory} from '../controllers/categoryController.js';
 import { categorySchema } from '../schema/categorySchema.js';
 
+const publicCategoryRouter = express.Router();
+const adminCategoryRouter = express.Router();
 
-const categoryRouter = express.Router();
-
-categoryRouter.get('/:id?', getCategories);
+publicCategoryRouter.get('/:id?', getCategories);
 
 // -------- Admin Route --------------
-categoryRouter.post('/:parentID?',validateRequest(categorySchema), addCategory)
+adminCategoryRouter.post('/:parentID?',validateRequest(categorySchema), addCategory)
 
-categoryRouter.delete('/:id', deleteCategory)
+adminCategoryRouter.delete('/:id', deleteCategory)
 
-export default categoryRouter;
+export {publicCategoryRouter,adminCategoryRouter };

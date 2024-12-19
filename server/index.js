@@ -5,11 +5,9 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
 import config from './config.js';
-import productRoute from './routes/productRoute.js';
-import userRouter from './routes/userRoute.js';
-import categoryRouter from './routes/categoryRoute.js';
-import collectionRouter from './routes/collectionRoute.js';
-import colorRouter from './routes/colorRoute.js';
+import publicRouter from './routes/publicRoute.js';
+import adminRouter from './routes/adminRoute.js';
+import { isAdmin } from './routes/middleware.js';
 
 const app = express();
 
@@ -53,11 +51,8 @@ const swaggerDocs = swaggerJSDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //routes
-app.use('/product', productRoute);
-app.use('/user', userRouter);
-app.use('/category',categoryRouter);
-app.use('/collection',collectionRouter);
-app.use("/color", colorRouter)
+app.use('/', publicRouter);
+app.use('/admin', adminRouter);
 
 app.listen(config.port, () =>
   console.log(`Server is live @ ${config.hostUrl}`),

@@ -1,7 +1,7 @@
 
 import { db } from "../firebase.js";
 import admin from 'firebase-admin'
-import { COLLECTIONS } from "./utility.js";
+import { COLLECTIONS, message } from "./utility.js";
 
 const getVariantDetails = async (variantData) => {
   try{
@@ -47,11 +47,11 @@ const checkStock = async (stockData) => {
 }
 
 const getProductData = async (productID, t = null) => {
-  const productRef = db.collection(productCollection).doc(productID);
+  const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
   const productSnapshot = t ? await t.get(productRef) : await productRef.get();
 
   if (!productSnapshot.exists) {
-    throw new Error("No Product Found.");
+    throw new Error("No Product Found."); 
   }
   return productSnapshot.data();
 };
@@ -59,36 +59,38 @@ const getProductData = async (productID, t = null) => {
 // get all products
 export const getProducts = async (req, res, next) => {
   try {
+    // Extract query parameters for filtering and sorting
+    const { search, size, category, collection, color, order, sortBy, orderBy } = req.query;
+    
     const productsSnapshot = await db.collection(COLLECTIONS.PRODUCT).get();
 
     if (productsSnapshot.empty) {
-      res.status(400).send('No Products found');
-    } else {
-      const products = await Promise.all(
-        productsSnapshot.docs
-        .filter((doc) => doc.id !== "productID")
-        .map(async (doc) => {
-          const productData = doc.data();
-  
-          // Fetch colors: list of document IDs
-          const variant = await getVariantDetails(productData.variant);
-  
-          return {
-            id: doc.id,
-            name: productData.name,
-            price: productData.price,
-            variant: variant, 
-            size: productData.size,
-            rating: productData.rating || null,
-            reviewCount: productData.reviewCount || null
-          };
-        })
-      );
+      return res.status(404).send(message('No Products found'));
+    }
+    const products = await Promise.all(
+      productsSnapshot.docs
+      .filter((doc) => doc.id !== "productID")
+      .map(async (doc) => {
+        const productData = doc.data();
+
+        // Fetch colors: list of document IDs
+        const variant = await getVariantDetails(productData.variant);
+
+        return {
+          id: doc.id,
+          name: productData.name,
+          price: productData.price,
+          variant: variant, 
+          size: productData.size,
+          rating: productData.rating || null,
+          reviewCount: productData.reviewCount || null
+        };
+      })
+    );
       
       res.status(200).send(products);
-    }
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(500).send(message(error.message));
   }
 };
 
@@ -98,30 +100,31 @@ export const getProduct = async (req, res, next) => {
     const id = req.params.id;
     const data = await db.collection(COLLECTIONS.PRODUCT).doc(id).get();
 
-    if (data.exists) {
-      const productData = data.data();
-      const variant = await getVariantDetails(productData.variant)
-
-      // Replace the category field with the list of IDs
-      const cleanedData = {
-        id: data .id,
-        name: productData.name,
-        details: productData.details,
-        price: productData.price,
-        variant: variant,
-        size: productData.size,
-        rating: productData.rating || null,
-        reviewCount: productData.reviewCount || null
-      };
-
-      res.status(200).send(cleanedData);
-    } else {
-      res.status(404).send('Product not found');
+    if (!data.exists) {
+      return res.status(404).send(message('Product not found'));
     }
+    const productData = data.data();
+    const variant = await getVariantDetails(productData.variant)
+
+    // Replace the category field with the list of IDs
+    const cleanedData = {
+      id: data .id,
+      name: productData.name,
+      details: productData.details,
+      price: productData.price,
+      variant: variant,
+      size: productData.size,
+      rating: productData.rating || null,
+      reviewCount: productData.reviewCount || null
+    };
+
+    res.status(200).send(cleanedData);
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(500).send(message(error.message));
   }
 }; 
+
+
 
 // ---------- Admin action ------------------
 
@@ -164,10 +167,9 @@ export const createProduct = async (req, res) => {
       };
     })
 
-
-    res.status(200).send('product created successfully');
+    res.status(200).send(message('product created successfully'));
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(500).send(message(error.message));
   }
 };
 
@@ -175,7 +177,13 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const productID = req.params.id;
+    const productExist = await getProductData(productID);
+    console.log("fdfdfdfdf");
+    if (!productExist){
+      res.status(400).send(message(`Product ${productID} does not exist.`))
+    }
     const productData = req.body;
+    
 
     const newProductData = {
       updatedAt: admin.firestore.Timestamp.now(),
@@ -183,10 +191,10 @@ export const updateProduct = async (req, res) => {
     }
 
     await db.collection(COLLECTIONS.PRODUCT).doc(productID).update(newProductData);
-    res.status(200).send("Product Updated Succesfully.");
+    res.status(200).send(message("Product Updated Succesfully."));
 
   } catch (error) {
-    res.status(400).send(`Product Failed to Update: ${error.message}`);
+    res.status(500).send(message(`${error.message}`));
   }
 };
 
@@ -219,13 +227,13 @@ export const deleteProduct = async (req, res, next) => {
 
     }).then((result) => {
       // Handle successful transaction
-      res.status(200).send(result); // Send success message
+      res.status(200).send(message(result)); // Send success message
     }).catch((error) => {
       // Handle errors from transaction
-      res.status(400).send(`Product Failed To Delete: ${error.message}`);
+      res.status(400).send(message(`Product Failed To Delete: ${error.message}`));
     });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(500).send(message(error.message));
   }
 };
 
@@ -239,7 +247,12 @@ export const addVariant = async (req, res) => {
     // Run Firestore transaction
     await db.runTransaction(async (t) => {
 
-      const productData = getProductData(productID, t);
+      const productData = await getProductData(productID, t);
+
+      if (!productData) {
+        throw new Error(`Product ${productID} does not exist.`)
+      }
+      console.log(productData)
       const productVariants = [...new Set(productData.variant.map((data) => data.color))];
       console.log(productVariants);
 
@@ -272,14 +285,14 @@ export const addVariant = async (req, res) => {
       }
     }).then((result) => {
       // Handle successful transaction
-      res.status(200).send(result); // Send success message
+      res.status(200).send(message(result)); // Send success message
     }).catch((error) => {
       // Handle errors from transaction
-      res.status(400).send(`New Variant Failed to Create: ${error.message}`);
+      res.status(400).send(message(`New Variant Failed to Create: ${error.message}`));
     });
   } catch (error) {
     // Catch any errors outside of the transaction
-    res.status(400).send(`New Variant Failed to Create: ${error.message}`);
+    res.status(500).send(message(error.message));
   }
 };
 
@@ -294,6 +307,10 @@ export const updateVariant = async (req, res) => {
     await db.runTransaction(async (t) => {
 
       const productData = await getProductData(productID, t);
+      if (!productData) {
+        throw new Error(`Product ${productID} does not exist.`)
+      }
+
       const variantToRemove = productData.variant.find((variant) => variant.color === variantData.color);
 
       if (!variantToRemove) {
@@ -313,14 +330,14 @@ export const updateVariant = async (req, res) => {
 
     }).then((result) => {
       // Handle successful transaction
-      res.status(200).send(result); // Send success message
+      res.status(200).send(message(result)); // Send success message
     }).catch((error) => {
       // Handle errors from transaction
-      res.status(400).send(`New Variant Failed to Create: ${error.message}`);
+      res.status(400).send(message(`${error.message}`));
     });
   } catch (error) {
     // Catch any errors outside of the transaction
-    res.status(400).send(`New Variant Failed to Create: ${error.message}`);
+    res.status(400).send(message(error.message));
   }
 };
 
@@ -334,6 +351,9 @@ export const deleteVariant = async (req, res) => {
     // Run Firestore transaction
     await db.runTransaction(async (t) => {
       const productData = await getProductData(productID, t);
+      if (!productData) {
+        throw new Error(`Product ${productID} does not exist.`)
+      }
 
       // Querying the stock collection for each variant
       const stockSnapshot = await db.collection(COLLECTIONS.STOCK)
@@ -367,14 +387,14 @@ export const deleteVariant = async (req, res) => {
 
     }).then((result) => {
       // Handle successful transaction
-      res.status(200).send(result); // Send success message
+      res.status(200).send(message(result)); // Send success message
     }).catch((error) => {
       // Handle errors from transaction
-      res.status(400).send(`New Variant Failed to Delete: ${error.message}`);
+      res.status(400).send(message(error.message));
     });
   } catch (error) {
     // Catch any errors outside of the transaction
-    res.status(400).send(`New Variant Failed to Delete: ${error.message}`);
+    res.status(400).send(message(error.message));
   }
 };
 
@@ -389,6 +409,10 @@ export const updateSize = async (req, res)=> {
     await db.runTransaction(async (t) => {
 
       const productData = await getProductData(productID, t);
+      if (!productData) {
+        throw new Error(`Product ${productID} does not exist.`)
+      }
+
       const productVariants = [...new Set(productData.variant.map((data) => data.color))];
       const productSize = productData.size;
 
@@ -419,14 +443,14 @@ export const updateSize = async (req, res)=> {
       }
     }).then((result) => {
       // Handle successful transaction
-      res.status(200).send(result); // Send success message
+      res.status(200).send(message(result)); // Send success message
     }).catch((error) => {
       // Handle errors from transaction
-      res.status(400).send(`New Size Failed to Create: ${error.message}`);
+      res.status(400).send(message(error.message));
     });
   } catch (error) {
     // Catch any errors outside of the transaction
-    res.status(400).send(`New Size Failed to Create: ${error.message}`);
+    res.status(400).send(message(error.message));
   }
 };
 
@@ -447,6 +471,10 @@ export const deleteSize = async (req, res) => {
     await db.runTransaction(async (t) => {
 
       const productData = await getProductData(productID, t);
+      if (!productData) {
+        throw new Error(`Product ${productID} does not exist.`)
+      }
+
       const productSize = productData.size;
 
       // Check if size exists in the product sizes
@@ -485,12 +513,12 @@ export const deleteSize = async (req, res) => {
       }
     })
     .then((result) => {
-      res.status(200).send(result);
+      res.status(200).send(message(result));
     })
     .catch((error) => {
-      res.status(400).send(`Size Failed to Delete: ${error.message}`);
+      res.status(400).send(message(error.message));
     });
   } catch (error) {
-    res.status(400).send(`Size Failed to Delete: ${error.message}`);
+    res.status(400).send(message(error.message));
   }
 };

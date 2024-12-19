@@ -17,25 +17,26 @@ import { checkCategory } from '../controllers/categoryController.js';
 import { checkCollection } from '../controllers/collectionController.js';
 import { checkColor } from '../controllers/colorController.js';
 
-const productRouter = express.Router();
+const publicProductRouter = express.Router();
+const adminProductRouter = express.Router();
 
-productRouter.get('/', getProducts);
-productRouter.get('/:id', getProduct);
+publicProductRouter.get('/', getProducts);
+publicProductRouter.get('/:id', getProduct);
 
 // -------- Admin Route --------------
 
 // product
-productRouter.post('/', validateRequest(productSchema, checkCategory, checkCollection), createProduct);
-productRouter.put('/:id',validateRequest(updateProductSchema, checkCategory, checkCollection), updateProduct);
-productRouter.delete('/:id', deleteProduct);
+adminProductRouter.post('/', validateRequest(productSchema, checkCategory, checkCollection), createProduct);
+adminProductRouter.put('/:id',validateRequest(updateProductSchema, checkCategory, checkCollection), updateProduct);
+adminProductRouter.delete('/:id', deleteProduct);
 
 // variant
-productRouter.post('/:id/variant', validateRequest(variantSchema, checkColor), addVariant);
-productRouter.put('/:id/variant', validateRequest(variantSchema), updateVariant);
-productRouter.delete('/:productID/variant/:variantID', deleteVariant);
+adminProductRouter.post('/:id/variant', validateRequest(variantSchema, checkColor), addVariant);
+adminProductRouter.put('/:id/variant', validateRequest(variantSchema), updateVariant);
+adminProductRouter.delete('/:productID/variant/:variantID', deleteVariant);
 
 // size
-productRouter.put('/:productID/size/:size', updateSize);
-productRouter.delete('/:productID/size/:size', deleteSize);
+adminProductRouter.patch('/:productID/size/:size', updateSize);
+adminProductRouter.delete('/:productID/size/:size', deleteSize);
 
-export default productRouter;
+export {publicProductRouter, adminProductRouter};

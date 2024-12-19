@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './LoginSignUp.css';
 import formImage from '../Components/Assets/form-bg.png'
 import logo from '../Components/Assets/logo_image.png'
@@ -9,8 +9,16 @@ const LoginSignUp = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const formRef = useRef(null);
-  const [state, setState] = useState(false);
+  const [isAuthenticated, setAuthenticated] = useState(false)
 
+  useEffect(() => {
+    const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
+      setAuthenticated(!!user); // Set to true if user exists, otherwise false
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   // Toggle between Login and Sign-Up views 
   const toggleForm = () => {
@@ -37,21 +45,15 @@ const LoginSignUp = () => {
     if (isSignUp){
       const fname = formData.get('fname');
       const lname = formData.get('lname');
-      const result  = AuthenticationManager.signUp(fname, lname, email, password)
-      setState(result)
+      await AuthenticationManager.signUp(fname, lname, email, password)
 
     } else {
-      const result = await AuthenticationManager.signIn(email, password)
-      setState(result)
-      
-      console.log(state)
-      if (state === false){
-        formRef.current.reset()};
+      await AuthenticationManager.signIn(email, password)
     }
   };
 
-  if (state === true) {
-    return <Navigate to="/" />; // Redirect to home page
+  if (isAuthenticated === true) {
+    return <Navigate to="/" replace />; // Redirect to home page
   }
 
   return (

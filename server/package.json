@@ -24,7 +24,8 @@
     "firebase-admin": "^12.7.0",
     "joi": "^17.13.3",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
