@@ -13,14 +13,7 @@ const Checkout = () => {
     state: '',
     phone: '',
   });
-  const [cart, setCart] = useState([]); // Initially empty cart
   const [errors, setErrors] = useState({});
-
-  // Fetch dynamic cart items
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    setCart(storedCart);
-  }, []);
 
   // Calculate the subtotal
   const calculateSubtotal = () => {
