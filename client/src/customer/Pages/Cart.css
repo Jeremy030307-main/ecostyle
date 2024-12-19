@@ -15,8 +15,8 @@ body {
 /* Cart Container */
 .cart-container {
   display: flex;
-  justify-content: space-between;
-  gap: 30px;
+  justify-content: center; /* Changed from space-between to center */
+  gap: 20px;
   max-width: 1200px;
   margin: 40px auto;
   padding: 0 20px;
@@ -24,7 +24,7 @@ body {
 
 /* Left Section: Cart Items */
 .cart-items {
-  width: 60%;
+  width: 58%; /* Adjusted from 60% */
 }
 
 .cart-item {
@@ -74,7 +74,7 @@ body {
 
 /* Right Section: Order Summary */
 .order-summary {
-  width: 35%;
+  width: 34%; /* Adjusted from 35% */
   background-color: #f9f9f9;
   padding: 25px;
   border-radius: 8px;
@@ -154,4 +154,3 @@ body {
     margin-bottom: 10px;
   }
 }
-
