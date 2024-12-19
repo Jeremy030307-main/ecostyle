@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 const getHeaders = () => {
 
     const App_Key = "randomKey";
@@ -20,6 +18,7 @@ class ApiMethods {
             const options = {
                 method: method,
                 headers: getHeaders(), // Make sure getHeaders() is defined correctly
+                credentials: 'include',
             };
     
             // Add the body only for methods that allow it (like POST or PUT)
@@ -31,7 +30,20 @@ class ApiMethods {
                 .then(res => {
                     // Check if the response is ok (status in the range 200-299)
                     if (!res.ok) {
-                        return reject(new Error(`HTTP error! status: ${res.status}`));
+                        // Try to parse the error message from the response body
+                        return res.json()
+                            .then((errorResponse) => {
+                                // If there's a 'message' property, use it in the error
+                                const errorMessage = errorResponse.error || errorResponse;
+                                return reject(new Error(`HTTP error! Status: ${res.status}, Message: ${errorMessage}`));
+                                })
+                            .catch(err => {
+                                reject(new Error(`HTTP error! Status: ${res.status}.`));
+                            })
+                    }
+
+                    if (res.status === 204) {
+                        return resolve("Deletion Completed"); // Resolve with null for 204 responses
                     }
     
                     // Try to parse JSON; handle cases where response might not be JSON
@@ -60,77 +72,12 @@ class ApiMethods {
     static delete(url){
         return this.apiRequest('DELETE', url);
     }
+
+    static patch(url, data){
+        return this.apiRequest('PATCH', url, data)
+    }
 };
 
-const GET = (url) => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await ApiMethods.get(url);
-                setData(response);
-            } catch (error) {
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, [url]);
-
-    return { data, loading, error };
-};
-
-const POST = (url, body) => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await ApiMethods.post(url, body);
-                setData(response);
-            } catch (error) {
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, [body, url]);
-
-    return { data, loading, error };
-};
-
-const DELETE = (url) => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await ApiMethods.delete(url);
-                setData(response);
-            } catch (error) {
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchProducts();
-    }, [url]);
-
-    return { data, loading, error };
-}
-
-export {GET, POST, DELETE, ApiMethods}
+export {ApiMethods}
 
 

@@ -11,9 +11,7 @@ import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
 import LoginSignUp from './customer/Pages/LoginSignUp';
-
 import AdminRoutes from './authentication/protectedRoute';
-import { AuthProvider } from './authentication/authContext';
 
 
 function App() {
@@ -21,27 +19,24 @@ function App() {
   return (
     <div>
       <BrowserRouter>
-        <AuthProvider>
           <Routes>
-              <Route path='/' element={<Customer/>}>
-                <Route path='' element={<Home/>}></Route>
-                <Route path='shop' element={<Shop/>}></Route>
-                <Route path='eco-point' element={<EcoPoint/>}></Route>
-                <Route path='about' element={<About/>}></Route>
-                <Route path='wishlist' element={<Wishlist/>}></Route>
-                <Route path='cart' element={<Cart/>}></Route>
-                <Route path='account' element={<Accout/>}></Route>
-                <Route path='product' element={<Product/>}></Route>
-                <Route path='login' element={<LoginSignUp/>}></Route>
-              </Route>
-
+            <Route path='/' element={<Customer/>}>
+              <Route path='' element={<Home/>}></Route>
+              <Route path='shop' element={<Shop/>}></Route>
+              <Route path='eco-point' element={<EcoPoint/>}></Route>
+              <Route path='about' element={<About/>}></Route>
+              <Route path='wishlist' element={<Wishlist/>}></Route>
+              <Route path='cart' element={<Cart/>}></Route>
+              <Route path='account' element={<Accout/>}></Route>
+              <Route path='product' element={<Product/>}></Route>
+              <Route path='login' element={<LoginSignUp/>}></Route>
+            </Route>
             
-            <Route element={<AdminRoutes/>}>
-              <Route path='/admin' element={<Admin/>}></Route>
+            <Route path='/admin' element={<AdminRoutes/>}>
+              
             </Route>
 
           </Routes>
-        </AuthProvider>
       </BrowserRouter>
     </div>
   );
