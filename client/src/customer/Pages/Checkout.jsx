@@ -14,13 +14,16 @@ const Checkout = () => {
     postalCode: '',
     state: '',
     phone: '',
+    tag: 'Home',
   });
+  const [savedAddresses, setSavedAddresses] = useState([]); // List of saved addresses
   const [errors, setErrors] = useState({});
   const [paymentDetails, setPaymentDetails] = useState({
     cardNumber: '',
     expiry: '',
     cvv: '',
   });
+  const [selectedTag, setSelectedTag] = useState('Home'); // Default tag for selection
 
   // Calculate the subtotal
   const calculateSubtotal = () => {
@@ -40,7 +43,18 @@ const Checkout = () => {
   // Handle adding a new address
   const handleAddAddress = () => {
     if (validateAddress()) {
-      setStep('payment'); // Move to the payment section after adding the address
+      setSavedAddresses([...savedAddresses, { ...newAddress }]);
+      setNewAddress({
+        firstName: '',
+        lastName: '',
+        address1: '',
+        address2: '',
+        city: '',
+        postalCode: '',
+        state: '',
+        phone: '',
+        tag: 'Home',
+      });
       setErrors({});
     }
   };
@@ -63,6 +77,11 @@ const Checkout = () => {
     }
   };
 
+  // Filter saved addresses based on selected tag
+  const filteredAddress = savedAddresses.find(
+    (address) => address.tag === selectedTag
+  );
+
   return (
     <div className="checkout-container">
       <h1>Checkout</h1>
@@ -71,22 +90,65 @@ const Checkout = () => {
       {step === 'shipping' && (
         <div className="shipping-section">
           <h2>Shipping Address</h2>
+
+          {/* Saved Addresses */}
+          {savedAddresses.length === 0 ? (
+            <p className="no-address">No saved addresses found. Please add a new address.</p>
+          ) : (
+            <div className="saved-addresses">
+              <select
+                value={selectedTag}
+                onChange={(e) => setSelectedTag(e.target.value)}
+              >
+                {savedAddresses.map((address, index) => (
+                  <option key={index} value={address.tag}>
+                    {address.tag}
+                  </option>
+                ))}
+              </select>
+
+              {filteredAddress && (
+                <div className="saved-address">
+                  <p>{filteredAddress.firstName} {filteredAddress.lastName}</p>
+                  <p>{filteredAddress.address1}, {filteredAddress.address2}</p>
+                  <p>{filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}</p>
+                  <p>{filteredAddress.phone}</p>
+                  <span className="tag">{filteredAddress.tag}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* New Address Form */}
           <div className="form-group">
             {Object.entries(newAddress).map(([key, value]) => (
-              <div key={key} className="form-field">
-                <input
-                  type="text"
-                  placeholder={
-                    key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())
-                  }
-                  value={value}
-                  onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
-                />
-                {errors[key] && <span className="error">{errors[key]}</span>}
-              </div>
+              key !== 'tag' && (
+                <div key={key} className="form-field">
+                  <input
+                    type="text"
+                    placeholder={
+                      key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())
+                    }
+                    value={value}
+                    onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
+                  />
+                  {errors[key] && <span className="error">{errors[key]}</span>}
+                </div>
+              )
             ))}
+            <select
+              value={newAddress.tag}
+              onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
+            >
+              <option value="Home">Home</option>
+              <option value="Work">Work</option>
+              <option value="Other">Other</option>
+            </select>
             <button className="continue-btn" onClick={handleAddAddress}>
-              Save Address & Continue
+              Save Address
+            </button>
+            <button className="continue-btn" onClick={() => setStep('payment')}>
+              Continue to Payment
             </button>
           </div>
         </div>
