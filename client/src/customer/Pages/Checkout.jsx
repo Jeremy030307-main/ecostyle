@@ -14,7 +14,7 @@ const Checkout = () => {
     postalCode: '',
     state: '',
     phone: '',
-    tag: 'Home',
+    tag: '', // Custom tag for new address
   });
   const [savedAddresses, setSavedAddresses] = useState([]); // List of saved addresses
   const [errors, setErrors] = useState({});
@@ -23,7 +23,8 @@ const Checkout = () => {
     expiry: '',
     cvv: '',
   });
-  const [selectedTag, setSelectedTag] = useState('Home'); // Default tag for selection
+  const [selectedTag, setSelectedTag] = useState(''); // Selected tag to filter saved addresses
+  const [activeTab, setActiveTab] = useState('saved'); // 'saved' | 'new'
 
   // Calculate the subtotal
   const calculateSubtotal = () => {
@@ -53,11 +54,21 @@ const Checkout = () => {
         postalCode: '',
         state: '',
         phone: '',
-        tag: 'Home',
+        tag: '',
       });
       setErrors({});
     }
   };
+
+  // Handle selecting address from dropdown in saved addresses tab
+  const handleAddressSelection = (e) => {
+    setSelectedTag(e.target.value);
+  };
+
+  // Filter saved addresses based on selected tag
+  const filteredAddress = savedAddresses.find(
+    (address) => address.tag === selectedTag
+  );
 
   // Validate payment details
   const validatePaymentDetails = () => {
@@ -77,29 +88,41 @@ const Checkout = () => {
     }
   };
 
-  // Filter saved addresses based on selected tag
-  const filteredAddress = savedAddresses.find(
-    (address) => address.tag === selectedTag
-  );
-
   return (
     <div className="checkout-container">
       <h1>Checkout</h1>
+
+      {/* Tab Navigation */}
+      <div className="tabs">
+        <button
+          className={activeTab === 'saved' ? 'active' : ''}
+          onClick={() => setActiveTab('saved')}
+        >
+          Saved Addresses
+        </button>
+        <button
+          className={activeTab === 'new' ? 'active' : ''}
+          onClick={() => setActiveTab('new')}
+        >
+          New Address
+        </button>
+      </div>
 
       {/* Shipping Section */}
       {step === 'shipping' && (
         <div className="shipping-section">
           <h2>Shipping Address</h2>
 
-          {/* Saved Addresses */}
-          {savedAddresses.length === 0 ? (
-            <p className="no-address">No saved addresses found. Please add a new address.</p>
-          ) : (
+          {/* Tab Content for Saved Addresses */}
+          {activeTab === 'saved' && savedAddresses.length > 0 && (
             <div className="saved-addresses">
+              {/* Dropdown for selecting address by tag */}
               <select
                 value={selectedTag}
-                onChange={(e) => setSelectedTag(e.target.value)}
+                onChange={handleAddressSelection}
+                disabled={savedAddresses.length === 0}
               >
+                <option value="">Select Address</option>
                 {savedAddresses.map((address, index) => (
                   <option key={index} value={address.tag}>
                     {address.tag}
@@ -119,38 +142,49 @@ const Checkout = () => {
             </div>
           )}
 
-          {/* New Address Form */}
-          <div className="form-group">
-            {Object.entries(newAddress).map(([key, value]) => (
-              key !== 'tag' && (
-                <div key={key} className="form-field">
-                  <input
-                    type="text"
-                    placeholder={
-                      key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())
-                    }
-                    value={value}
-                    onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
-                  />
-                  {errors[key] && <span className="error">{errors[key]}</span>}
-                </div>
-              )
-            ))}
-            <select
-              value={newAddress.tag}
-              onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
-            >
-              <option value="Home">Home</option>
-              <option value="Work">Work</option>
-              <option value="Other">Other</option>
-            </select>
-            <button className="continue-btn" onClick={handleAddAddress}>
-              Save Address
-            </button>
-            <button className="continue-btn" onClick={() => setStep('payment')}>
-              Continue to Payment
-            </button>
-          </div>
+          {/* Tab Content for New Address */}
+          {activeTab === 'new' && (
+            <div className="form-group">
+              {Object.entries(newAddress).map(([key, value]) => (
+                key !== 'tag' && (
+                  <div key={key} className="form-field">
+                    <input
+                      type="text"
+                      placeholder={
+                        key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())
+                      }
+                      value={value}
+                      onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
+                    />
+                    {errors[key] && <span className="error">{errors[key]}</span>}
+                  </div>
+                )
+              ))}
+
+              <div className="form-field">
+                <input
+                  type="text"
+                  placeholder="Custom Tag (e.g., My Home, Parents' Home)"
+                  value={newAddress.tag}
+                  onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
+                />
+                {errors.tag && <span className="error">{errors.tag}</span>}
+              </div>
+
+              <button className="continue-btn" onClick={handleAddAddress}>
+                Save Address
+              </button>
+            </div>
+          )}
+
+          {/* Continue to Payment Button */}
+          <button
+            className="continue-btn"
+            onClick={() => setStep('payment')}
+            disabled={!selectedTag && activeTab === 'saved'}
+          >
+            Continue to Payment
+          </button>
         </div>
       )}
 
