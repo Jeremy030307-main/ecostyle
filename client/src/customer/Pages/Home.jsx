@@ -19,8 +19,8 @@ const Home = () => {
     useEffect(() => {
         const fetchCategory = async () => {
             try {
-              await deleteSize("ES00002", "2XL") 
-              // console.log(data)
+              const data = await getProduct("", {category : "MEN"});
+              console.log(data)
                 
             } catch (err) {
                 setError(err.message); // Handle error

@@ -1,5 +1,5 @@
 import { db } from "../firebase.js";
-import { COLLECTIONS } from "./utility.js";
+import { COLLECTIONS } from "./utility.js"; 
 
 export const checkColor = async (body) => {
     try {
