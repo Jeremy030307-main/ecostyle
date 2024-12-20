@@ -1,4 +1,7 @@
 import './Shop.css'; // Reuse the same CSS as Home.jsx
+import Product_1 from '../Components/Assets/Product_1.png'
+import Product_2 from '../Components/Assets/Product_2.png'
+import Product_3 from '../Components/Assets/Product_3.png'
 import { useLocation } from 'react-router-dom'; // To access the passed category
 import { useNavigate } from 'react-router-dom';
 
@@ -43,11 +46,25 @@ const Shop = () => {
         </nav>
       </aside>
 
-      {/* Main Content */}
-      <main className="main-content">
-        {/* Blank space for now */}
+     {/* Main Content */}
+     <main className="main-content">
         <h1>Welcome to the {category} Shop</h1>
         <p>The main content will go here in the future.</p>
+
+        {/* Product Cards Section */}
+        <div className="product-grid">
+          <div className="product-card">
+            <img src={Product_1} alt="Green Jacket" />
+          </div>
+
+          <div className="product-card">
+            <img src={Product_2} alt="Gray Hoodie" />
+          </div>
+
+          <div className="product-card">
+            <img src={Product_3} alt="Gray T-Shirt" />
+          </div>
+        </div>
       </main>
     </div>
   );
