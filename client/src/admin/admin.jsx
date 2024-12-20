@@ -3,6 +3,8 @@ import Navbar from "./Components/Navbar/Navbar"
 import { Outlet } from "react-router-dom"
 import "./admin.css"
 
+export const currency = '$'
+
 const Admin = () => {
   return (
     <div>
