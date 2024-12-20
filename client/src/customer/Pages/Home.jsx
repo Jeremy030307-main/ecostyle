@@ -7,7 +7,7 @@ import search_icon from '../Components/Assets/search_icon.png'
 import flash_sale_icon from '../Components/Assets/flash_sale_rectangle.png'
 import { useState, useEffect } from 'react';
 import { addProduct, addSize, addVariant, deleteProduct, deleteSize, deleteVariant, getProduct, updateProduct, updateVariant } from '../../apiManager/methods/productMethods';
-
+import { useNavigate } from 'react-router-dom'; 
 // import add_to_fav_script from '../Components/Scripts/add_to_fav_button.js'
 
 const Home = () => {
@@ -15,7 +15,11 @@ const Home = () => {
     const [categoryData, setCategoryData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // Initialize navigate
 
+    const handleNavigation = (category) => {
+      navigate('/shop', { state: { category } }); // Pass category data to Shop page
+    };
     useEffect(() => {
         const fetchCategory = async () => {
             try {
@@ -45,9 +49,15 @@ const Home = () => {
         </div>
         <nav>
             <ul>
-                <li><a href="#">Women's Fashion</a></li>
-                <li><a href="#">Men's Fashion</a></li>
-                <li><a href="#">Kids</a></li>
+                <li>
+                  <button onClick={() => handleNavigation("Women's Fashion")}>Women's Fashion</button>
+                </li>
+                <li>
+                <button onClick={() => handleNavigation("Men's Fashion")}>Men's Fashion</button>
+                </li>
+                <li>
+                <button onClick={() => handleNavigation("Kids")}>Kids</button>
+                </li>
             </ul>
         </nav>
       </aside>
