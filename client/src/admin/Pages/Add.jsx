@@ -20,7 +20,6 @@ const Add = () => {
 
 
   return (
-    // <Navbar/>
     <form className="add-form">
       <div>
         <p className="upload-section">Upload Image</p>
@@ -83,23 +82,33 @@ const Add = () => {
       <div>
         <p className="upload-section">Product Sizes</p>
         <div className="size-options">
-          <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter(item => item !== "S") : [...prev,"S"])} className="size-option">S</div>
-          <div onClick={()=>setSizes(prev => prev.includes("M") ? prev.filter(item => item !== "M") : [...prev,"M"])} className="size-option">M</div>
-          <div onClick={()=>setSizes(prev => prev.includes("L") ? prev.filter(item => item !== "L") : [...prev,"L"])} className="size-option">L</div>
-          <div onClick={()=>setSizes(prev => prev.includes("XL") ? prev.filter(item => item !== "XL") : [...prev,"XL"])} className="size-option">XL</div>
-          <div onClick={()=>setSizes(prev => prev.includes("XXL") ? prev.filter(item => item !== "XXL") : [...prev,"XXL"])} className="size-option">XXL</div>
+          <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter(item => item !== "S") : [...prev,"S"])} className="size-option">
+            <p className={`${sizes.includes("S") ? "bg-green-100" : "bg-slate-200"}`}>S</p>
+          </div>
+          <div onClick={()=>setSizes(prev => prev.includes("M") ? prev.filter(item => item !== "M") : [...prev,"M"])} className="size-option">
+            <p className={`${sizes.includes("M") ? "bg-green-100" : "bg-slate-200"}`}>M</p>
+          </div>
+          <div onClick={()=>setSizes(prev => prev.includes("L") ? prev.filter(item => item !== "L") : [...prev,"L"])} className="size-option">
+            <p className={`${sizes.includes("L") ? "bg-green-100" : "bg-slate-200"}`}>L</p>
+          </div>
+          <div onClick={()=>setSizes(prev => prev.includes("XL") ? prev.filter(item => item !== "XL") : [...prev,"XL"])} className="size-option">
+            <p className={`${sizes.includes("XL") ? "bg-green-100" : "bg-slate-200"}`}>XL</p>
+          </div>
+          <div onClick={()=>setSizes(prev => prev.includes("XXL") ? prev.filter(item => item !== "XXL") : [...prev,"XXL"])} className="size-option">
+            <p className={`${sizes.includes("XXL") ? "bg-green-100" : "bg-slate-200"}`}>XXL</p>
+          </div>
         </div>
       </div>
 
       <div className="bestseller-section">
-        <input type="checkbox" id="bestseller" />
+        <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id="bestseller" />
         <label htmlFor="bestseller">Add to bestseller</label>
       </div>
 
       <button type="submit" className="submit-button">ADD</button>
     </form>
 
-  )
+  );
 }
 
 export default Add

@@ -38,12 +38,13 @@ function App() {
                 <Route path='login' element={<LoginSignUp/>}></Route>
               </Route>
 
-            
-            <Route element={<AdminRoutes/>}>
-              <Route path='/admin' element={<Admin/>}></Route>
-              <Route path='/add' element={<Add/>}></Route>
-              <Route path='/products' element={<Products/>}></Route>
-              <Route path='/orders' element={<Orders/>}></Route>
+              
+            <Route path='/admin' element={<AdminRoutes/>}>
+              <Route path='' element={<Admin/>}>
+                <Route path='add' element={<Add/>}></Route>
+                <Route path='products' element={<Products/>}></Route>
+                <Route path='orders' element={<Orders/>}></Route>
+              </Route>
             </Route>
 
           </Routes>

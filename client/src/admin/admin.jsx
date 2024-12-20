@@ -1,15 +1,22 @@
-import Navbar from "./Components/Navbar/Navbar";
-import Sidebar from "./Components/Sidebar/Sidebar";
+import Sidebar from "./Components/Sidebar/Sidebar"
+import Navbar from "./Components/Navbar/Navbar"
 import { Outlet } from "react-router-dom"
+import "./admin.css"
 
 const Admin = () => {
   return (
     <div>
       <Navbar/>
       <hr/>
-      <Sidebar/>
-      <Outlet/>
+      <div className="content-wrapper">
+        <Sidebar/>
+        <div className="main-content">
+          <Outlet/>
+        </div>
+      </div>
+
     </div>
+    
   );
 }
  
