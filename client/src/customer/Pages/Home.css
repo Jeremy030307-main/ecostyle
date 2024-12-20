@@ -44,8 +44,8 @@ body, html {
 
 /* Hover effect */
 .sidebar nav ul li button:hover {
-    background-color: #f0f0f0; /* Slight gray background on hover */
-    color: #007bff; /* Change text color on hover */
+    color: #ff0000; /* Change text color on hover */
+    font-size: 28px;
 }
 
 /* Search bar with icon */
