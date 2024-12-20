@@ -34,8 +34,8 @@ function App() {
               <Route path='checkout' element={<Checkout />} /> {/* Checkout page */}
             </Route>
             
-            <Route element={<AdminRoutes/>}>
-              <Route path='/admin' element={<Admin/>}></Route>
+            <Route path='/admin' element={<AdminRoutes/>}>
+              
             </Route>
           </Routes>
       </BrowserRouter>

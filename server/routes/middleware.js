@@ -1,25 +1,6 @@
 // Import the Firebase Admin SDK
 import admin from 'firebase-admin';
 
-import jwt from "jsonwebtoken";
-import { db } from '../firebase.js';
-
-/**
- * @swagger
- * components:
- *   responses:
- *     UnauthorizedError:
- *       description: Unauthorized access due to invalid credentials or lack of authentication.
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               message:
- *                 type: string
- *                 example: "You are not authorized to access this resource."
- */
-
 // authenticate that the user has an account and currently log in
 const authenticate = async (req, res, next) => {
 
@@ -42,7 +23,6 @@ const authenticate = async (req, res, next) => {
         res.status(401).json({ message: "Invalid token" });
     }
 };
-
 
 const isAdmin = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -69,4 +49,31 @@ const isAdmin = async (req, res, next) => {
     }
 };
 
-export { authenticate, isAdmin }
+const validateRequest = (schema, ...args) => async (req, res, next) => {
+
+  const { error, value } = await schema.validate(req.body);
+    
+  if (error) {
+    // Return a list of validation errors
+    return res.status(400).send(error.details.map(e => e.message));
+  }
+
+  const results = await Promise.all(
+    args.map(async (fn) => {
+      const result = await fn(req.body);
+      return result;  // Return both the validation status and any potential error message
+    })
+  );
+
+  // Extract error messages for any failed validations
+  const errorMessages = results.filter(result => !result.isValid).map(result => result.errorMessage);
+
+  // If any validations failed, return the error messages
+  if (errorMessages.length > 0) {
+    return res.status(400).send(errorMessages);
+  }
+
+  next();
+};
+
+export { authenticate, isAdmin, validateRequest }

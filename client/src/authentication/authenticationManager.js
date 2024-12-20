@@ -1,5 +1,3 @@
-// import { ApiMethods } from '../apiManager/ApiMethods'; 
-
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 
@@ -19,30 +17,40 @@ const app = initializeApp(firebaseConfig);
 class AuthenticationManager {
 
     static auth = getAuth(app);
-    
+
+    static getCurrentUser = () => {
+        const currentUser = this.auth.currentUser;
+
+        if (!currentUser) {
+            console.warn("No authenticated user found");
+            throw new Error("No authenticated user found");
+        }
+
+        return currentUser
+    }
+
     static signUp = async(fname, lname, email, password) => {
 
         createUserWithEmailAndPassword(this.auth, email, password)
             .then((userCredential) => {
                 // Signed up 
                 console.log("User sign up successful")
-                return true
             })
             .catch((error) => {
                 console.log("User failed to sign in.")
-                return false
             });
     }
 
     static signIn = async (email, password) => {
-        try {
-            const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
-            console.log("User Sign In Successful");
-            return true; // Return true on success
-        } catch (error) {
-            console.log("User failed to sign in:", error.message);
-            return false; // Return false on failure
-        }
+        signInWithEmailAndPassword(this.auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                console.log("User sign up successful")
+            })
+            .catch((error) => {
+                console.log("User failed to sign in.")
+            });
     };
 
     static signOut = async() => {

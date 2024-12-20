@@ -34,3 +34,10 @@
     *   name: User
     *   description: User management operations
 */
+
+/**
+ * @swagger
+ * tags:
+ *   name: Collection
+ *   description: API for managing collections
+ */

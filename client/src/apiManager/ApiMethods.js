@@ -30,7 +30,20 @@ class ApiMethods {
                 .then(res => {
                     // Check if the response is ok (status in the range 200-299)
                     if (!res.ok) {
-                        return reject(new Error(`HTTP error! status: ${res.status}`));
+                        // Try to parse the error message from the response body
+                        return res.json()
+                            .then((errorResponse) => {
+                                // If there's a 'message' property, use it in the error
+                                const errorMessage = errorResponse.error || errorResponse;
+                                return reject(new Error(`HTTP error! Status: ${res.status}, Message: ${errorMessage}`));
+                                })
+                            .catch(err => {
+                                reject(new Error(`HTTP error! Status: ${res.status}.`));
+                            })
+                    }
+
+                    if (res.status === 204) {
+                        return resolve("Deletion Completed"); // Resolve with null for 204 responses
                     }
     
                     // Try to parse JSON; handle cases where response might not be JSON
@@ -58,6 +71,10 @@ class ApiMethods {
     
     static delete(url){
         return this.apiRequest('DELETE', url);
+    }
+
+    static patch(url, data){
+        return this.apiRequest('PATCH', url, data)
     }
 };
 

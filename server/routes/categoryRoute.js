@@ -1,16 +1,16 @@
 import express from 'express';
-import { authenticate, isAdmin } from '../authentication/middleware.js';
+import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { getCategories, addCategory, deleteCategory} from '../controllers/categoryController.js';
+import { categorySchema } from '../schema/categorySchema.js';
 
-import { getCategories, getCategory, addCategory, deleteCategory} from '../controllers/categoryController.js';
+const publicCategoryRouter = express.Router();
+const adminCategoryRouter = express.Router();
 
-const categoryRouter = express.Router();
+publicCategoryRouter.get('/:id?', getCategories);
 
-categoryRouter.get('/', getCategories);
+// -------- Admin Route --------------
+adminCategoryRouter.post('/:parentID?',validateRequest(categorySchema), addCategory)
 
-categoryRouter.get('/*', getCategory);
+adminCategoryRouter.delete('/:id', deleteCategory)
 
-categoryRouter.post('/new',isAdmin, addCategory)
-
-categoryRouter.delete('/delete',isAdmin, deleteCategory)
-
-export default categoryRouter;
+export {publicCategoryRouter,adminCategoryRouter };

@@ -1,4 +1,3 @@
-import React from 'react'
 import './Home.css';
 import Product_1 from '../Components/Assets/Product_1.png'
 import Product_2 from '../Components/Assets/Product_2.png'
@@ -6,9 +5,33 @@ import Product_3 from '../Components/Assets/Product_3.png'
 import Product_4 from '../Components/Assets/Product_4.png'
 import search_icon from '../Components/Assets/search_icon.png'
 import flash_sale_icon from '../Components/Assets/flash_sale_rectangle.png'
+import { useState, useEffect } from 'react';
+import { addProduct, addSize, addVariant, deleteProduct, deleteSize, deleteVariant, getProduct, updateProduct, updateVariant } from '../../apiManager/methods/productMethods';
+
 // import add_to_fav_script from '../Components/Scripts/add_to_fav_button.js'
 
 const Home = () => {
+
+    const [categoryData, setCategoryData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+              await deleteSize("ES00002", "2XL") 
+              // console.log(data)
+                
+            } catch (err) {
+                setError(err.message); // Handle error
+                console.error(err);
+            } finally {
+                setLoading(false); // Stop loading when request is done
+            }
+        };
+
+        fetchCategory(); // Fetch data when component mounts or categoryID changes
+    }, []); // Dependency array: only rerun if categoryID changes
 
   return (
     <div className="container">
