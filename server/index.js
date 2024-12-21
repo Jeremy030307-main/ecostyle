@@ -52,7 +52,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 //routes
 app.use('/', publicRouter);
-app.use('/admin',isAdmin, adminRouter);
+app.use('/admin', adminRouter);
 
 app.listen(config.port, () =>
   console.log(`Server is live @ ${config.hostUrl}`),
