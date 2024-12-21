@@ -1,60 +1,52 @@
-import './Shop.css'; // Reuse the same CSS as Home.jsx
-import { useLocation } from 'react-router-dom'; // To access the passed category
-import { useNavigate } from 'react-router-dom';
+import './Shop.css';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import search_icon from '../Components/Assets/search_icon.png'
-import { getProduct } from '../../apiManager/methods/productMethods'; // Import the API call
+import search_icon from '../Components/Assets/search_icon.png';
+import { getProduct } from '../../apiManager/methods/productMethods';
 
 const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Default category is set to 'Women's Fashion' if no category is passed
   const initialCategory = location.state?.category || "Women's Fashion";
   const [category, setCategory] = useState(initialCategory);
-
-  // State to store products
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(''); // State for handling errors
+  const [error, setError] = useState('');
 
-  // Function to fetch products based on the category
   const fetchCategory = async (category) => {
     try {
-      setLoading(true); // Start loading
-      setError(''); // Clear previous errors
+      setLoading(true);
+      setError('');
       console.log(`Fetching products for category: ${category}`);
 
-      // Fetch products for the selected category
       const data = await getProduct("", { category });
-      setProducts(data || []); // Assuming `data` is the product array
+      console.log('Fetched products:', data);
+      setProducts(data || []);
     } catch (err) {
-      setError(err.message); // Handle error
-      console.error(err);
+      setError(err.message);
+      console.error('Error fetching products:', err);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
-  // Use useEffect to fetch products when category changes
   useEffect(() => {
-    fetchCategory(category); // Fetch products whenever category changes
-  }, [category]); // Dependency array includes category
+    fetchCategory(category);
+  }, [category]);
 
-  // Function to handle navigation and change category
   const handleNavigation = (category) => {
-    setCategory(category); // Update category state
-    navigate('/shop', { state: { category } }); // Navigate with the selected category
+    setCategory(category);
+    navigate('/shop', { state: { category } });
   };
 
   return (
     <div className="container">
-      {/* <!-- Sidebar --> */}
       <aside className="sidebar">
         <div className="search">
           <div className="search-wrapper">
-            <img src={search_icon} className="search_icon" alt=""></img>
-            <input type="text" placeholder="What are you looking for?"></input>
+            <img src={search_icon} className="search_icon" alt="" />
+            <input type="text" placeholder="What are you looking for?" />
           </div>
         </div>
         <nav>
@@ -78,21 +70,15 @@ const Shop = () => {
         </nav>
       </aside>
 
-      {/* Main Content */}
       <main className="main-content">
         <h1>Welcome to {category}!</h1>
 
-        {/* Loading State */}
         {loading && <p>Loading products...</p>}
-
-        {/* Error Handling */}
         {error && <p className="error">{error}</p>}
-
-        {/* Product Cards Section */}
         {!loading && products.length === 0 && <p>No products found.</p>}
 
         <div className="product-grid">
-          {products?.length > 0 && products.map((product) => (
+          {products.map((product) => (
             <div className="product-card" key={product.id}>
               <img src={product.thumbnail || '/placeholder.png'} alt={product.name} />
               <h3>{product.name}</h3>

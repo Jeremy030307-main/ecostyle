@@ -1,5 +1,5 @@
+import './MyAccount.css';
 import React, { useState, useEffect } from 'react';
-import './Home.css';
 import { useNavigate } from 'react-router-dom';
 
 const MyAccount = () => {

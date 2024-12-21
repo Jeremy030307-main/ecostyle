@@ -46,6 +46,7 @@ body, html {
 .sidebar nav ul li button:hover {
     color: #ff0000; /* Change text color on hover */
     font-size: 28px;
+    transition: 0.3s, font-size 0.3s;
 }
 
 /* Search bar with icon */
