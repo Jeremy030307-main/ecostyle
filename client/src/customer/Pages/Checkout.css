@@ -15,13 +15,12 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
+  flex-direction: column; /* Stack everything vertically */
   gap: 20px;
-  flex-wrap: wrap;
 }
 
 /* Left Section: Shipping and Payment */
 .left-section {
-  flex: 2;  /* Takes up more space than the right section */
   background-color: #fff;
   padding: 20px;
   margin-bottom: 20px;
@@ -32,7 +31,7 @@ body {
 .checkout-title {
   font-size: 32px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .shipping-section h2 {
@@ -91,7 +90,7 @@ body {
 button {
   padding: 10px 15px;
   font-size: 16px;
-  color: #fff;
+  color: #000;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -104,7 +103,6 @@ button:hover {
 
 /* Right Section: Order Summary */
 .right-section {
-  flex: 1;  /* Takes up less space compared to the left section */
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
