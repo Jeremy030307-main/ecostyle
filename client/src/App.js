@@ -10,7 +10,7 @@ import Accout from './customer/Pages/Accout';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
-import Orders from './customer/Pages/Orders';
+import MyAccount from './customer/Pages/MyAccount';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 import AdminRoutes from './authentication/protectedRoute';
 
@@ -31,7 +31,7 @@ function App() {
               <Route path='account' element={<Accout/>}></Route>
               <Route path='product' element={<Product/>}></Route>
               <Route path='login' element={<LoginSignUp/>}></Route>
-              <Route path='orders' element={<Orders/>}></Route>
+              <Route path='myaccount' element={<MyAccount/>}></Route>
             </Route>
             
             <Route path='/admin' element={<AdminRoutes/>}>

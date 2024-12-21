@@ -78,7 +78,7 @@ const Navbar = () => {
                     {isDropdownOpen && (
                         <div className="dropdown">
                             <NoDecorationLink to='/login' onClick={() => setDropdownOpen(false)}>Login</NoDecorationLink>
-                            <NoDecorationLink to='/orders' onClick={() => setDropdownOpen(false)}>Orders</NoDecorationLink>
+                            <NoDecorationLink to='/myaccount' onClick={() => setDropdownOpen(false)}>My Account</NoDecorationLink>
                         </div>
                     )}
                 </div>
