@@ -1,23 +1,44 @@
-const getHeaders = () => {
+import AuthenticationManager from "../authentication/authenticationManager";
+
+const getHeaders = async () => {
+    let currentUser = null;
+    let authToken = null;
+
+    try {
+        currentUser = await AuthenticationManager.getCurrentUser();
+        if (currentUser) {
+            // Await the promise to get the actual token
+            authToken = await currentUser.getIdToken() || null;
+        } else {
+            console.log("No authenticated user found.");
+        }
+    } catch (error) {
+        console.log("Error fetching authenticated user:", error);
+    }
 
     const App_Key = "randomKey";
-    const authToken = localStorage.getItem('authToken') || null;
 
-    return {
+    // Return headers only if authToken exists
+    const headers = {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
         'App-Key': App_Key,
     };
+
+    // Only add Authorization if authToken is not null
+    if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    return headers;
 };
 
 class ApiMethods {
     
     static apiRequest(method, url, body = null) {
 
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const options = {
                 method: method,
-                headers: getHeaders(), // Make sure getHeaders() is defined correctly
+                headers: await getHeaders(), // Make sure getHeaders() is defined correctly
                 credentials: 'include',
             };
     
