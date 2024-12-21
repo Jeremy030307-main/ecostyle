@@ -17,14 +17,12 @@ import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
-import { AuthProvider } from './authentication/authContext';
 
 
 function App() {
   return (
     <div>
       <BrowserRouter>
-        <AuthProvider>
           <Routes>
               <Route path='/' element={<Customer/>}>
                 <Route path='' element={<Home/>}></Route>
@@ -48,7 +46,6 @@ function App() {
             </Route>
 
           </Routes>
-        </AuthProvider>
       </BrowserRouter>
     </div>
   );

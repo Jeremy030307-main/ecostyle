@@ -1,67 +1,70 @@
-import { ApiMethods } from '../apiManager/ApiMethods'; 
+import { initializeApp } from 'firebase/app';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+
+// Firebase project configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyDblWMU63OZ7WPafTuNrIW30BVwChM7JOI",
+    authDomain: "ecostyle-f6ae5.firebaseapp.com",
+    projectId: "ecostyle-f6ae5",
+    storageBucket: "ecostyle-f6ae5.firebasestorage.app",
+    messagingSenderId: "366491565308",
+    appId: "1:366491565308:web:cbffe5fa3ebd46a36beb79"
+  };
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 class AuthenticationManager {
-    
+
+    static auth = getAuth(app);
+
+    static getCurrentUser = () => {
+        const currentUser = this.auth.currentUser;
+
+        if (!currentUser) {
+            console.warn("No authenticated user found");
+            throw new Error("No authenticated user found");
+        }
+
+        return currentUser
+    }
+
     static signUp = async(fname, lname, email, password) => {
 
-        // const { login } = useAuth();
-        const body = {
-            firstName: fname,
-            lastName: lname,
-            email: email,
-            password: password
-        };
-
-        let tokenID = null
-
-        try {
-            const response = await ApiMethods.post("/user/signUp", body);
-            tokenID = response;
-            return tokenID
-        } catch (error) {
-            console.log('error', error)
-            return tokenID
-        }
+        createUserWithEmailAndPassword(this.auth, email, password)
+            .then((userCredential) => {
+                // Signed up 
+                console.log("User sign up successful")
+            })
+            .catch((error) => {
+                console.log("User failed to sign in.")
+            });
     }
 
     static signIn = async (email, password) => {
-
-        const body = {
-            email: email,
-            password: password
-        }
-        let signInToken = null
-
-        try {
-            const response = await ApiMethods.post("/user/signIn", body);
-            signInToken = response;
-            return signInToken
-        } catch (error) {
-            console.log('error', error)
-            return signInToken
-        }
+        signInWithEmailAndPassword(this.auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                console.log("User sign up successful")
+            })
+            .catch((error) => {
+                console.log("User failed to sign in.")
+            });
     };
 
     static signOut = async() => {
 
-        try {
-            await ApiMethods.delete("/user/signOut")
+        try{
+            const logout = await signOut(this.auth)
+            console.log("User Sign Out")
+            return true
         } catch (error) {
-            console.log("error", error)
+            // An error happened.
+            console.log("User sign out fail", error)
+            return false
         }
-    }
-
-    static getUser = async(id) => {
-
-        let user = null
-        try {
-            user = await ApiMethods.get(`/user/${id}`)
-        } catch (error) {
-            console.log('error', error)
-        }
-
-        return user
     }
 }
 
-export default AuthenticationManager
+export default AuthenticationManager;
