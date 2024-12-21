@@ -21,21 +21,22 @@ const Home = () => {
       navigate('/shop', { state: { category } }); // Pass category data to Shop page
     };
     useEffect(() => {
-        const fetchCategory = async () => {
-            try {
-              await deleteSize("ES00002", "2XL") 
-              // console.log(data)
-                
-            } catch (err) {
-                setError(err.message); // Handle error
-                console.error(err);
-            } finally {
-                setLoading(false); // Stop loading when request is done
-            }
-        };
+      const fetchCategory = async () => {
+          try {
+            const data = await getProduct("", {category : "MEN"});
+            console.log(data)
+              
+          } catch (err) {
+              setError(err.message); // Handle error
+              console.error(err);
+          } finally {
+              setLoading(false); // Stop loading when request is done
+          }
+      };
 
-        fetchCategory(); // Fetch data when component mounts or categoryID changes
-    }, []); // Dependency array: only rerun if categoryID changes
+      fetchCategory(); // Fetch data when component mounts or categoryID changes
+  }, []); // Dependency array: only rerun if categoryID changes
+
 
   return (
     <div className="container">
