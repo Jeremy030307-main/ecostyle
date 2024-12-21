@@ -16,6 +16,7 @@ body {
   margin: 0 auto;
   display: flex;
   justify-content: space-between; /* Ensures sections are side by side */
+  gap: 20px; /* Added gap between left and right sections */
 }
 
 /* Left Section: Shipping and Payment */
@@ -29,8 +30,10 @@ body {
 }
 
 .shipping-section h2 {
-  font-size: 24px;
-  margin-bottom: 15px;
+  font-size: 28px; /* Matches the heading size from the image */
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 20px;
 }
 
 /* Tab navigation */
@@ -58,7 +61,6 @@ body {
   font-weight: bold;
 }
 
-/* Content for tabs */
 .tab-content {
   display: none;
 }
@@ -81,18 +83,37 @@ body {
   margin-top: 10px;
 }
 
+/* Buttons */
 button {
-  padding: 10px 15px;
+  padding: 12px 18px;
   font-size: 16px;
-  color: #242222;
+  background-color: #000; /* Matches black button background from image */
+  color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  font-weight: bold;
 }
 
 button:hover {
-  background-color: #1106064d;
+  background-color: #333;
+}
+
+.continue-button {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.cancel-order button {
+  background-color: #ff4d4d;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.cancel-order button:hover {
+  background-color: #cc0000;
 }
 
 /* Right Section: Order Summary */
@@ -106,17 +127,18 @@ button:hover {
 
 .right-section h2 {
   font-size: 24px;
+  font-weight: bold;
   margin-bottom: 15px;
 }
 
 .order-summary-item {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .order-summary-item img {
-  max-width: 50px;
+  max-width: 60px;
   margin-right: 10px;
 }
 
@@ -132,17 +154,19 @@ button:hover {
   margin-top: 20px;
 }
 
-.cancel-order {
-  margin-top: 20px;
-  text-align: center;
+.order-summary-total span {
+  color: #000;
 }
 
-.cancel-order button {
-  width: 100%;
-  background-color: #ff4d4d;
-  color: #fff;
-}
+/* Adjustments for mobile responsiveness */
+@media (max-width: 768px) {
+  .checkout-container {
+    flex-direction: column;
+  }
 
-.cancel-order button:hover {
-  background-color: #cc0000;
+  .left-section, .right-section {
+    flex: 1;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
 }
