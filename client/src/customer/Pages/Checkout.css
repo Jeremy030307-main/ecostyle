@@ -12,13 +12,15 @@ body {
 }
 
 .checkout-container {
+  display: flex; /* This sets the shipping and summary sections side by side */
   max-width: 1200px;
   margin: 0 auto;
+  gap: 20px; /* Adds space between the two sections */
 }
 
 /* Left Section: Shipping and Payment */
 .left-section {
-  max-width: 100%; /* Full width */
+  flex: 1; /* This makes the left section take up more space */
   background-color: #fff;
   padding: 20px;
   margin-bottom: 20px;
@@ -82,7 +84,7 @@ body {
 button {
   padding: 10px 15px;
   font-size: 16px;
-  background-color: #000;
+  background-color: #4CAF50; /* Updated to a green color */
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -91,11 +93,12 @@ button {
 }
 
 button:hover {
-  background-color: #333;
+  background-color: #45a049; /* Slightly darker green on hover */
 }
 
 /* Right Section: Order Summary */
 .right-section {
+  flex: 0 0 30%; /* This restricts the order summary width to 30% */
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
