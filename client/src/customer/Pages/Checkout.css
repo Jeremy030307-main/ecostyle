@@ -92,10 +92,13 @@ h3 {
   outline: none;
 }
 
-.error {
-  color: #e74c3c;
-  font-size: 12px;
-  margin-top: 5px;
+.saved-addresses select {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
 }
 
 /* Buttons */
@@ -162,8 +165,23 @@ h3 {
   color: #666;
 }
 
-.order-summary .item p {
-  margin: 0;
+.order-summary .item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.order-summary .item .details {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-summary .item .details .name {
+  font-size: 14px;
+  color: #333;
 }
 
 .order-summary p {
@@ -177,14 +195,9 @@ h3 {
   color: #333;
 }
 
-/* Dropdown Styling */
-.saved-addresses select {
-  width: 100%;
-  padding: 12px;
-  font-size: 14px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-bottom: 15px;
+.order-summary .total {
+  font-size: 18px;
+  font-weight: bold;
 }
 
 /* Mobile Responsiveness */
