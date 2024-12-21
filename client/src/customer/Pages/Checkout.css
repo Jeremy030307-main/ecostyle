@@ -12,20 +12,16 @@ body {
 }
 
 .checkout-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
   max-width: 1200px;
   margin: 0 auto;
 }
 
 /* Left Section: Shipping and Payment */
 .left-section {
-  flex: 1;
-  max-width: 65%;
+  max-width: 100%; /* Full width */
   background-color: #fff;
   padding: 20px;
-  margin-right: 20px;
+  margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
@@ -35,6 +31,7 @@ body {
   margin-bottom: 15px;
 }
 
+/* Tab navigation */
 .tabs {
   display: flex;
   border-bottom: 2px solid #ddd;
@@ -42,12 +39,14 @@ body {
 }
 
 .tab-button {
+  flex: 1; /* Equal width for each tab */
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   background: none;
   border: none;
   outline: none;
+  text-align: center;
   border-bottom: 2px solid transparent;
   transition: border-color 0.3s;
 }
@@ -57,6 +56,7 @@ body {
   font-weight: bold;
 }
 
+/* Content for tabs */
 .tab-content {
   display: none;
 }
@@ -96,11 +96,11 @@ button:hover {
 
 /* Right Section: Order Summary */
 .right-section {
-  max-width: 30%;
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
 
 .right-section h2 {
