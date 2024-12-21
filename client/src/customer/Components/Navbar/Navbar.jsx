@@ -21,6 +21,7 @@ const Navbar = () => {
     const [menu,setMenu] = useState("");
     const [admin, setAdmin] = useState(false);
     const [isAuthenticated, setAuthenticated] = useState(false)
+    const [isDropdownOpen, setDropdownOpen] = useState(false); // State to track dropdown visibility
     const location = useLocation(); // Get the current location
 
     // Monitor authentication state
@@ -50,6 +51,11 @@ const Navbar = () => {
         const lastSegment = pathSegments[pathSegments.length - 1] || "home";
         setMenu(lastSegment);
     }, [location.pathname]); // Run effect only when the path changes
+
+    // Toggle dropdown visibility
+    const toggleDropdown = () => {
+      setDropdownOpen(!isDropdownOpen);
+  };
     
     return (
         <div className="navbar">
@@ -67,9 +73,16 @@ const Navbar = () => {
                 <Link to='/wishlist'><img onClick={() => {setMenu("wishlist")}} src={wishlist_icon} alt="" /></Link>
                 <Link to='/cart'><img onClick={() => {setMenu("cart")}} src={cart_icon} alt="" /></Link>
                 <div className='nav-cart-count'>0</div>
-                <Link to= {(isAuthenticated === true) ? '/account':'/login'}><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
-                {(admin === true) ? <Link to='/admin'><img onClick={() => {setMenu("admin")}} src={admin_icon} alt="" /></Link> : <></>}
-                
+                <div className="profile-menu">
+                    <img onClick={toggleDropdown} src={account_icon} alt="" />
+                    {isDropdownOpen && (
+                        <div className="dropdown">
+                            <NoDecorationLink to='/login' onClick={() => setDropdownOpen(false)}>Login</NoDecorationLink>
+                            <NoDecorationLink to='/orders' onClick={() => setDropdownOpen(false)}>Orders</NoDecorationLink>
+                        </div>
+                    )}
+                </div>
+                {(admin === true) ? <Link to='/admin'><img onClick={() => { setMenu("admin") }} src={admin_icon} alt="" /></Link> : <></>}
             </div>
         </div>
     );

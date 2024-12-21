@@ -58,3 +58,30 @@
     background: rgb(236, 81, 53);
     color: white;
 }
+
+.profile-menu {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000;
+}
+
+.dropdown a {
+    display: block;
+    padding: 8px 16px;
+    color: #626262;
+    text-decoration: none;
+}
+
+.dropdown a:hover {
+    background-color: #f0f0f0;
+}

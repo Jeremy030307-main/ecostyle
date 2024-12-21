@@ -2,6 +2,7 @@ import './Shop.css'; // Reuse the same CSS as Home.jsx
 import { useLocation } from 'react-router-dom'; // To access the passed category
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import search_icon from '../Components/Assets/search_icon.png'
 import { getProduct } from '../../apiManager/methods/productMethods'; // Import the API call
 
 const Shop = () => {
@@ -48,11 +49,12 @@ const Shop = () => {
 
   return (
     <div className="container">
-      {/* Sidebar */}
+      {/* <!-- Sidebar --> */}
       <aside className="sidebar">
         <div className="search">
           <div className="search-wrapper">
-            <input type="text" placeholder="What are you looking for?" />
+            <img src={search_icon} className="search_icon" alt=""></img>
+            <input type="text" placeholder="What are you looking for?"></input>
           </div>
         </div>
         <nav>
