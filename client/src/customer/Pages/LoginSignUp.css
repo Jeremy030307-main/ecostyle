@@ -1,0 +1,134 @@
+.form-container{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    height: 500px;
+    margin: auto;
+    border-radius: 12px;
+    background-color: #fff;
+    padding: 50px;
+}
+
+.form-image {
+    display: block;
+    flex-basis: 100%;
+}
+
+.form-image img{
+    width: 80%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 20;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    margin-left: 10px;
+    width: 70%;
+}
+
+.form-header{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header img {
+    width: 60px;
+    height: auto;
+}
+
+.form-header h1{
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.field-wrap{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 48px;
+}
+
+.form-field{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.form-field input{
+    width: 100%;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #181824;
+    font-size: 14px;
+    font-weight: 300;
+    transition: 300ms ease;
+}
+
+.form-field input::placeholder {
+    visibility: hidden;
+}
+
+.form-field input:focus{
+    outline: none;
+    box-shadow: 0 1px 0 0 #17A375;
+    border-color: #17A375;
+}
+
+.form-field input:focus::placeholder {
+    visibility: visible;
+}
+
+.field-label{
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: 300ms ease;
+}
+
+.field-label label{
+    display: block;
+    font-size: 14px;
+    color: #b0b0b0;
+}
+
+.form-field input:focus + .field-label,
+.form-field input:not(:placeholder-shown) + .field-label{
+    transform: translateY(-27px);
+    visibility: visible;
+}
+
+.form-field input:focus + .field-label label{
+    font-weight: 500;
+    color: initial;
+}
+
+.submit-btn {
+    padding: 12px 18px;
+    border: none;
+    align-self: flex-start;
+    background-color: #17A375;
+    color: #fff;
+    border-radius: 12px;
+    transition: 300ms ease;
+}
+
+.submit-btn:hover{
+    cursor: pointer;
+    background-color: #f1f1f1;
+    color: #17A375;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);;
+}
+
+.toggleSignIn{
+    text-decoration: underline;
+    color: #17A375;
+}
+
+.toggleSignIn:hover{
+    cursor: pointer;
+}
