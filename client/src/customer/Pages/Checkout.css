@@ -1,136 +1,141 @@
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #ffffff;
+  background-color: #f5f5f5;
 }
 
 .checkout-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
   max-width: 1200px;
-  margin: 40px auto;
-}
-
-.shipping-section,
-.order-summary {
+  margin: 0 auto;
   background-color: #ffffff;
-  border: none;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.shipping-section {
-  flex: 3;
+.shipping-section, .order-summary {
+  background-color: #f9fafb;
+  border: 1px solid #dcdcdc;
+  border-radius: 10px;
+  padding: 20px;
 }
 
-.order-summary {
-  flex: 1;
-}
-
-h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #000000;
+.shipping-section h2, .order-summary h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: #333333;
+  border-bottom: 2px solid #e6e6e6;
+  padding-bottom: 10px;
 }
 
 .tabs {
   display: flex;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.tab-button {
-  padding: 12px;
-  flex: 1;
-  font-size: 16px;
-  font-weight: 600;
-  color: #000000;
-  text-align: center;
-  cursor: pointer;
-  border-bottom: 3px solid transparent;
-}
-
-.tab-button.active {
-  border-bottom: 3px solid #333333;
-}
-
-.tab-button:hover {
-  background-color: #f7f7f7;
-}
-
-.form-group {
-  margin-top: 20px;
-}
-
-.form-field {
-  margin-bottom: 15px;
-}
-
-.form-field input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #dcdcdc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.continue-btn {
-  width: 100%;
-  padding: 15px;
-  background-color: #000000;
-  color: #ffffff;
-  text-align: center;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
-.continue-btn:hover {
-  background-color: #333333;
-}
-
-.order-summary h2 {
-  font-size: 24px;
-  border-bottom: 2px solid #f2f2f2;
-  padding-bottom: 15px;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
-.order-item {
+.tab-button {
+  flex: 1;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border: 1px solid #dcdcdc;
+  cursor: pointer;
+  border-radius: 8px;
+  text-align: center;
+  color: #333333;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.tab-button.active, .continue-btn, .cancel-order button {
+  background-color: #333333;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+}
+
+.tab-button:hover, .continue-btn:hover, .cancel-order button:hover {
+  background-color: #555555;
+  border-color: #bcbcbc;
+}
+
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 calc(50% - 20px);
+}
+
+.form-field.half-width {
+  flex: 1 1 calc(25% - 20px);
+}
+
+.form-field label {
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #555555;
+  font-weight: bold;
+}
+
+.form-field input {
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.error {
+  color: #d9363e;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.continue-btn, .cancel-order button {
+  padding: 15px 30px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.order-summary .item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
 }
 
-.order-item p {
+.order-summary .item p {
+  margin: 0;
   font-size: 16px;
-  color: #000000;
-}
-
-.order-summary p {
-  font-size: 16px;
+  color: #555555;
 }
 
 .order-summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
   font-size: 18px;
   font-weight: bold;
-  margin-top: 10px;
+  color: #333333;
 }
 
-.cancel-order button {
-  width: 100%;
-  padding: 15px;
-  background-color: #ff3e3e;
-  color: white;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.cancel-order button:hover {
-  background-color: #d93636;
+.order-summary h3 {
+  font-size: 22px;
+  color: #000000;
+  text-align: right;
 }
