@@ -7,7 +7,7 @@ body {
 
 .cart-container {
   padding: 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -105,7 +105,8 @@ body {
 
 /* Order Summary */
 .cart-order-summary {
-  flex: 2.5;
+  flex: 3;
+  min-width: 400px;
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
