@@ -74,6 +74,10 @@ body {
   flex: 1 1 calc(50% - 20px);
 }
 
+.form-field.half-width {
+  flex: 1 1 calc(25% - 20px);
+}
+
 .form-field label {
   margin-bottom: 5px;
   font-size: 16px;
