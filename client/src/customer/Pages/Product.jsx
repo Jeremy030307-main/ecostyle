@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Product.css'; // CSS file for styling
 
 const Product = () => {
   const location = useLocation();
   const product = location.state?.product;
+
+  // State to track the selected variant's image
+  const [selectedImage, setSelectedImage] = useState(
+    product?.variant[0]?.image || '/placeholder.png'
+  );
 
   if (!product) {
     return <p>Product not found!</p>;
@@ -16,7 +21,7 @@ const Product = () => {
         {/* Left Section: Main Product Image */}
         <div className="product-image-section">
           <img
-            src={product.variant[0]?.image || '/placeholder.png'}
+            src={selectedImage}
             alt={product.name}
             className="main-product-image"
           />
@@ -54,6 +59,7 @@ const Product = () => {
                   className="color-swatch"
                   style={{ backgroundColor: variant.colorCode }}
                   title={variant.name}
+                  onClick={() => setSelectedImage(variant.image)} // Update selected image on color click
                 ></div>
               ))
             ) : (
@@ -65,7 +71,11 @@ const Product = () => {
           <h2>Variants</h2>
           <div className="product-variants">
             {product.variant.map((variant) => (
-              <div key={variant.id} className="variant-item">
+              <div
+                key={variant.id}
+                className="variant-item"
+                onClick={() => setSelectedImage(variant.image)} // Update selected image on variant click
+              >
                 <img
                   src={variant.image}
                   alt={variant.name}

@@ -71,6 +71,7 @@
   .product-variants {
     display: flex;
     gap: 1rem;
+    cursor: pointer;
   }
   .variant-item {
     text-align: center;
