@@ -20,7 +20,7 @@ const Shop = () => {
       setError('');
       console.log(`Fetching products for category: ${category}`);
 
-      const data = await getProduct("", { category });
+      const data = await getProduct("");
       console.log('Fetched products:', data);
       setProducts(data || []);
     } catch (err) {
@@ -80,7 +80,16 @@ const Shop = () => {
         <div className="product-grid">
           {products.map((product) => (
             <div className="product-card" key={product.id}>
-              <img src={product.thumbnail || '/placeholder.png'} alt={product.name} />
+              <img
+                src={
+                  product.variant?.[0]?.image || '/default-image.png'
+                } // Display the first variant's image or a default image
+                alt={product.name}
+                onError={(e) => {
+                  e.target.onerror = null; // Prevents infinite loop if default image also fails
+                  e.target.src = '/default-image.png'; // Fallback to default image
+                }}
+              />
               <h3>{product.name}</h3>
               <p>${product.price.toFixed(2)}</p>
             </div>
