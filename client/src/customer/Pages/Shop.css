@@ -13,7 +13,7 @@ body, html {
 
 /* Sidebar styles */
 .sidebar {
-    width: 450px; /* Same width as in home.css */
+    width: 250px; /* Adjust the width to make it smaller */
     background-color: #fff;
     padding: 20px;
     border-right: 1px solid #ddd;
@@ -74,10 +74,10 @@ body, html {
 }
 
 /* Shop Page Content */
+/* Update main content max-width to accommodate the new sidebar width */
 .main-content {
-    flex: 1; /* Ensures the content takes up the remaining space */
-    padding: 30px;
-    max-width: calc(100% - 450px); /* Aligns the size of the main content to exclude sidebar */
+    max-width: calc(100% - 250px); /* Update this value to match the new sidebar width */
+    padding: 10px;
 }
 
 /* Product Grid */
@@ -100,9 +100,81 @@ body, html {
 }
 
 .product-card img {
-    width: 100%;
-    display: block;
+    width: 100%; /* Ensures the image scales to the card width */
+    height: auto; /* Maintains the aspect ratio of the image */
+    max-height: 200px; /* Set a maximum height to keep consistency */
+    object-fit: cover; /* Ensures the image fills the space proportionally */
+    margin-bottom: 10px; /* Adds some spacing below the image */
 }
+
+/* Color Swatches */
+.color-swatches {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    justify-content: center; /* Align swatches horizontally */
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; /* Circular swatches */
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: transform 0.2s, border 0.2s;
+}
+
+.color-swatch:hover {
+    transform: scale(1.2);
+    border: 2px solid #000; /* Highlight swatch on hover */
+}
+
+/* Rating and Review Count */
+.rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.stars {
+    color: #ffa500; /* Star color */
+    font-weight: bold;
+}
+
+.review-count {
+    font-size: 12px;
+    color: #888; /* Grey text for review count */
+}
+
+/* Product Card: Ensure Layout */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Product Name */
+.product-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 0;
+    text-align: center;
+}
+
+/* Product Price */
+.product-price {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
 
 .discount {
     position: absolute;

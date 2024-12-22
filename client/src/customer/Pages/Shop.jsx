@@ -80,21 +80,40 @@ const Shop = () => {
         <div className="product-grid">
           {products.map((product) => (
             <div className="product-card" key={product.id}>
+              {/* Display the first variant's image */}
               <img
-                src={
-                  product.variant?.[0]?.image || '/default-image.png'
-                } // Display the first variant's image or a default image
+                src={product.variant[0]?.image || '/placeholder.png'}
                 alt={product.name}
-                onError={(e) => {
-                  e.target.onerror = null; // Prevents infinite loop if default image also fails
-                  e.target.src = '/default-image.png'; // Fallback to default image
-                }}
+                className="product-image"
               />
-              <h3>{product.name}</h3>
-              <p>${product.price.toFixed(2)}</p>
+
+              {/* Product Name */}
+              <h3 className="product-name">{product.name}</h3>
+
+              {/* Price */}
+              <p className="product-price">${product.price.toFixed(2)}</p>
+
+              {/* Variants: Color Swatches */}
+              <div className="color-swatches">
+                {product.variant.map((variant) => (
+                  <div
+                    key={variant.id}
+                    className="color-swatch"
+                    style={{ backgroundColor: variant.colorCode }}
+                    title={variant.name}
+                  />
+                ))}
+              </div>
+
+              {/* Rating and Review Count */}
+              <div className="rating">
+                <span className="stars">⭐ {product.rating || 'No rating'}</span>
+                <span className="review-count">({product.reviewCount || 0})</span>
+              </div>
             </div>
           ))}
         </div>
+
       </main>
     </div>
   );
