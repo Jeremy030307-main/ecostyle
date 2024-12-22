@@ -88,9 +88,9 @@ const Checkout = () => {
     const [month, year] = paymentDetails.expiry.split('/').map(num => parseInt(num));
     const expiryDate = new Date(`20${year}`, month - 1);
 
-    if (!paymentDetails.cardNumber.trim() || isNaN(paymentDetails.cardNumber)) errors.cardNumber = 'Card number is required and should be numeric';
-    if (!paymentDetails.expiry.trim() || expiryDate < currentDate) errors.expiry = 'Expiry date should not be in the past';
-    if (!paymentDetails.cvv.trim() || isNaN(paymentDetails.cvv)) errors.cvv = 'CVV is required and should be numeric';
+    if (!paymentDetails.cardNumber.trim() || isNaN(paymentDetails.cardNumber)) errors.cardNumber = 'Invalid credit card number';
+    if (!paymentDetails.expiry.trim() || expiryDate < currentDate) errors.expiry = 'Card has expired. Please enter a valid expiry date';
+    if (!paymentDetails.cvv.trim() || isNaN(paymentDetails.cvv)) errors.cvv = 'Invalid CVV';
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
@@ -196,8 +196,8 @@ const Checkout = () => {
         <button onClick={handleCancelOrder}>Cancel Order</button>
       </div>
 
-      {/* Payment Section */}
-      <div className="payment-section">
+      {/* Payment Details */}
+      <div className="payment-details">
         <h2>Payment Details</h2>
         <div className="form-group">
           <input
