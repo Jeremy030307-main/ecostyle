@@ -80,6 +80,14 @@ const Checkout = () => {
     return Object.keys(errors).length === 0;
   };
 
+  // Handle Place Order
+  const handlePlaceOrder = () => {
+    if (validatePaymentDetails()) {
+      // Place order logic here (e.g., save order, send to API, etc.)
+      alert('Order placed successfully!');
+    }
+  };
+
   return (
     <div className="checkout-container">
       <h1>Checkout</h1>
