@@ -73,11 +73,11 @@ const Cart = () => {
           </div>
 
           {/* Order Summary Section */}
-          <div className="order-summary">
+          <div className="cart-order-summary">
             <h2>Order Summary</h2>
             {/* Update this line to show total quantity */}
             <p>{totalQuantity} items subtotal</p>
-            <div className="order-total">
+            <div className="cart-order-total">
               <h3>Order Total</h3>
               <p>${totalPrice}</p>
             </div>
