@@ -1,0 +1,108 @@
+/* Main Container */
+.product-page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Main Content Layout */
+  .product-main-content {
+    display: flex;
+    gap: 2rem;
+  }
+  
+  /* Left Section: Main Product Image */
+  .product-image-section {
+    flex: 1;
+  }
+  .main-product-image {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  /* Right Section: Product Details */
+  .product-details-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .product-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem; /* Add space between name and price */
+    }
+
+    .product-price {
+        font-size: 1.5rem;
+        color: #555;
+        margin-top: 0; /* Remove extra space above price */
+    }
+  .product-sizes,
+  .product-colors {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .size-button {
+    padding: 0.5rem 1rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .size-button:hover {
+    background-color: #e0e0e0;
+  }
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  .color-swatch:hover {
+    border-color: #000;
+  }
+  
+  /* Variants Section */
+  .product-variants {
+    display: flex;
+    gap: 1rem;
+  }
+  .variant-item {
+    text-align: center;
+  }
+  .variant-image {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  /* Reviews Section */
+  .reviews-section {
+    margin-top: 2rem;
+  }
+  .review-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  .review-header {
+    font-weight: bold;
+  }
+  .review-details {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  .review-text {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+  

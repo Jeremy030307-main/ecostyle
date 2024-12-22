@@ -1,6 +1,6 @@
-import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
-
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import './Product.css'; // CSS file for styling
 
 const Product = () => {
   const location = useLocation();
@@ -11,29 +11,92 @@ const Product = () => {
   }
 
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <img
-        src={product.variant[0]?.image || '/placeholder.png'}
-        alt={product.name}
-        style={{ width: '300px' }}
-      />
-      <p>Price: ${product.price.toFixed(2)}</p>
-      <p>Rating: ⭐ {product.rating || 'No rating'}</p>
-      <p>Reviews: {product.reviewCount || 0}</p>
-      <h2>Variants:</h2>
-      <ul>
-        {product.variant.map((variant) => (
-          <li key={variant.id}>
-            <span style={{ backgroundColor: variant.colorCode }}>
-              {variant.name}
-            </span>
-          </li>
-        ))}
-      </ul>
+    <div className="product-page-container">
+      <div className="product-main-content">
+        {/* Left Section: Main Product Image */}
+        <div className="product-image-section">
+          <img
+            src={product.variant[0]?.image || '/placeholder.png'}
+            alt={product.name}
+            className="main-product-image"
+          />
+        </div>
+
+        {/* Right Section: Product Details */}
+        <div className="product-details-section">
+          {/* Product Name */}
+          <h1 className="product-name">{product.name}</h1>
+
+          {/* Product Price */}
+          <p className="product-price">${product.price.toFixed(2)}</p>
+
+          {/* Available Sizes */}
+          <h2>Available Sizes</h2>
+          <div className="product-sizes">
+            {product.size && product.size.length > 0 ? (
+              product.size.map((size, index) => (
+                <button key={index} className="size-button">
+                  {size}
+                </button>
+              ))
+            ) : (
+              <p>No sizes available</p>
+            )}
+          </div>
+
+          {/* Available Colors */}
+          <h2>Available Colors</h2>
+          <div className="product-colors">
+            {product.variant && product.variant.length > 0 ? (
+              product.variant.map((variant) => (
+                <div
+                  key={variant.id}
+                  className="color-swatch"
+                  style={{ backgroundColor: variant.colorCode }}
+                  title={variant.name}
+                ></div>
+              ))
+            ) : (
+              <p>No colors available</p>
+            )}
+          </div>
+
+          {/* Variants Section */}
+          <h2>Variants</h2>
+          <div className="product-variants">
+            {product.variant.map((variant) => (
+              <div key={variant.id} className="variant-item">
+                <img
+                  src={variant.image}
+                  alt={variant.name}
+                  className="variant-image"
+                />
+                <p>{variant.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="reviews-section">
+        <h2>Customer Reviews</h2>
+        {product.reviews && product.reviews.length > 0 ? (
+          product.reviews.map((review, index) => (
+            <div key={index} className="review-item">
+              <p className="review-header">{review.user}</p>
+              <p className="review-details">
+                Height: {review.height} | Weight: {review.weight}
+              </p>
+              <p className="review-text">{review.text}</p>
+            </div>
+          ))
+        ) : (
+          <p>No reviews available</p>
+        )}
+      </div>
     </div>
   );
 };
-
 
 export default Product;
