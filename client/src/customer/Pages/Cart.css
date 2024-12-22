@@ -104,7 +104,7 @@ body {
 }
 
 /* Order Summary */
-.order-summary {
+.cart-order-summary {
   flex: 1;
   background-color: #f9f9f9;
   padding: 20px;
@@ -112,7 +112,7 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.order-summary h2 {
+.cart-order-summary h2 {
   font-size: 20px;
   margin-bottom: 15px;
 }
@@ -122,7 +122,7 @@ body {
   margin-bottom: 10px;
 }
 
-.order-total {
+.cart-order-total {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
