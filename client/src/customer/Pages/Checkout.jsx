@@ -31,7 +31,6 @@ const Checkout = () => {
 
   // Cancel Order function: keep cart items, reset subtotal to 0 and redirect to home
   const handleCancelOrder = () => {
-    setCartItems([]); // Reset the cart items
     alert('Order Canceled!');
     navigate('/'); // Redirect to home page
   };
