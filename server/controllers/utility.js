@@ -6,7 +6,8 @@ export const COLLECTIONS = {
     SUBCATEGORY: 'subcategory',
     COLLECTION: 'collection',
     COLLECTION_HISTROY: "history",
-    USER: "user"
+    USER: "user",
+    REVIEW: "review"
 };
   
  
