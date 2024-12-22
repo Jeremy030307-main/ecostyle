@@ -105,7 +105,7 @@ body {
 
 /* Order Summary */
 .cart-order-summary {
-  flex: 3;
+  flex: 2;
   min-width: 400px;
   background-color: #f9f9f9;
   padding: 20px;
