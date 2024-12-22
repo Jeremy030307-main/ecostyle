@@ -253,6 +253,9 @@ const Checkout = () => {
             parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
           ).toFixed(2)}
         </h3>
+        <div className="cancel-order">
+          <button onClick={() => alert('Order Canceled!')}>Cancel Order</button>
+        </div>
       </div>
     </div>
   );
