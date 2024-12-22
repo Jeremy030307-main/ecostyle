@@ -35,12 +35,11 @@ function App() {
             </Route>
             
             <Route path='/admin' element={<AdminRoutes/>}>
-              
+               {/* Your admin routes */}
             </Route>
           </Routes>
       </BrowserRouter>
     </CartProvider>
-    
   );
 }
 
