@@ -3,8 +3,8 @@ import { useCart } from '../../CartContext.js';
 import './Checkout.css';
 
 const Checkout = () => {
-  const { cartItems } = useCart(); // Access cart items from CartContext
-  const [step, setStep] = useState('shipping'); // 'shipping' | 'payment'
+  const { cartItems, setCartItems } = useCart();
+  const [step, setStep] = useState('shipping');
   const [newAddress, setNewAddress] = useState({
     firstName: '',
     lastName: '',
@@ -14,24 +14,30 @@ const Checkout = () => {
     postalCode: '',
     state: '',
     phone: '',
-    tag: '', // Custom tag for new address
+    tag: '',
   });
-  const [savedAddresses, setSavedAddresses] = useState([]); // List of saved addresses
+  const [savedAddresses, setSavedAddresses] = useState([]);
   const [errors, setErrors] = useState({});
   const [paymentDetails, setPaymentDetails] = useState({
     cardNumber: '',
     expiry: '',
     cvv: '',
   });
-  const [selectedTag, setSelectedTag] = useState(''); // Selected tag to filter saved addresses
-  const [activeTab, setActiveTab] = useState('saved'); // 'saved' | 'new'
+  const [selectedTag, setSelectedTag] = useState('');
+  const [activeTab, setActiveTab] = useState('saved');
 
-  // Calculate the subtotal
+  // Reset cart when order is canceled
+  const handleCancelOrder = () => {
+    setCartItems([]); // Reset the cart items
+    alert('Order Canceled!');
+  };
+
+  // Calculate the subtotal of the cart
   const calculateSubtotal = () => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
   };
 
-  // Validate the address form
+  // Validate the shipping address
   const validateAddress = () => {
     const errors = {};
     Object.entries(newAddress).forEach(([key, value]) => {
@@ -41,7 +47,7 @@ const Checkout = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle adding a new address
+  // Add new address to saved addresses
   const handleAddAddress = () => {
     if (validateAddress()) {
       setSavedAddresses([...savedAddresses, { ...newAddress }]);
@@ -60,12 +66,12 @@ const Checkout = () => {
     }
   };
 
-  // Handle selecting address from dropdown in saved addresses tab
+  // Handle address selection
   const handleAddressSelection = (e) => {
     setSelectedTag(e.target.value);
   };
 
-  // Filter saved addresses based on selected tag
+  // Get the filtered address based on the selected tag
   const filteredAddress = savedAddresses.find(
     (address) => address.tag === selectedTag
   );
@@ -73,17 +79,21 @@ const Checkout = () => {
   // Validate payment details
   const validatePaymentDetails = () => {
     const errors = {};
-    if (!paymentDetails.cardNumber.trim()) errors.cardNumber = 'Card number is required';
-    if (!paymentDetails.expiry.trim()) errors.expiry = 'Expiry date is required';
-    if (!paymentDetails.cvv.trim()) errors.cvv = 'CVV is required';
+    const currentDate = new Date();
+    const [month, year] = paymentDetails.expiry.split('/').map(num => parseInt(num));
+    const expiryDate = new Date(`20${year}`, month - 1);
+
+    if (!paymentDetails.cardNumber.trim() || isNaN(paymentDetails.cardNumber)) errors.cardNumber = 'Card number is required and should be numeric';
+    if (!paymentDetails.expiry.trim() || expiryDate < currentDate) errors.expiry = 'Expiry date should not be in the past';
+    if (!paymentDetails.cvv.trim() || isNaN(paymentDetails.cvv)) errors.cvv = 'CVV is required and should be numeric';
+
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  // Handle Place Order
+  // Place the order after validation
   const handlePlaceOrder = () => {
     if (validatePaymentDetails()) {
-      // Place order logic here (e.g., save order, send to API, etc.)
       alert('Order placed successfully!');
     }
   };
@@ -116,7 +126,6 @@ const Checkout = () => {
           {/* Tab Content for Saved Addresses */}
           {activeTab === 'saved' && savedAddresses.length > 0 && (
             <div className="saved-addresses">
-              {/* Dropdown for selecting address by tag */}
               <select
                 value={selectedTag}
                 onChange={handleAddressSelection}
@@ -130,18 +139,11 @@ const Checkout = () => {
                 ))}
               </select>
 
-              {/* Display Selected Address */}
               {filteredAddress && (
                 <div className="saved-address">
-                  <p>
-                    {filteredAddress.firstName} {filteredAddress.lastName}
-                  </p>
-                  <p>
-                    {filteredAddress.address1}, {filteredAddress.address2}
-                  </p>
-                  <p>
-                    {filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}
-                  </p>
+                  <p>{filteredAddress.firstName} {filteredAddress.lastName}</p>
+                  <p>{filteredAddress.address1}, {filteredAddress.address2}</p>
+                  <p>{filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}</p>
                   <p>{filteredAddress.phone}</p>
                   <span className="tag">{filteredAddress.tag}</span>
                 </div>
@@ -152,7 +154,6 @@ const Checkout = () => {
           {/* Tab Content for New Address */}
           {activeTab === 'new' && (
             <div className="form-group">
-              {/* Loop to Render All New Address Fields */}
               {Object.entries(newAddress).map(([key, value]) => (
                 key !== 'tag' && (
                   <div key={key} className="form-field">
@@ -171,8 +172,6 @@ const Checkout = () => {
                   </div>
                 )
               ))}
-
-              {/* Input for Address Tag */}
               <div className="form-field">
                 <input
                   type="text"
@@ -180,102 +179,56 @@ const Checkout = () => {
                   value={newAddress.tag}
                   onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
                 />
-                {errors.tag && <span className="error">{errors.tag}</span>}
               </div>
-
-              {/* Save Address Button */}
-              <button className="continue-btn" onClick={handleAddAddress}>
-                Save Address
-              </button>
+              <button onClick={handleAddAddress}>Add Address</button>
             </div>
           )}
-
-          {/* Continue to Payment Button */}
-          <button
-            className="continue-btn"
-            onClick={() => setStep('payment')}
-            disabled={!selectedTag && activeTab === 'saved'}
-          >
-            Continue to Payment
-          </button>
-        </div>
-      )}
-
-      {/* Payment Section */}
-      {step === 'payment' && (
-        <div className="payment-section">
-          <h2>Payment Details</h2>
-          <div className="form-group">
-            {/* Card Number Input */}
-            <div className="form-field">
-              <input
-                type="text"
-                placeholder="Card Number"
-                value={paymentDetails.cardNumber}
-                onChange={(e) =>
-                  setPaymentDetails({ ...paymentDetails, cardNumber: e.target.value })
-                }
-              />
-              {errors.cardNumber && <span className="error">{errors.cardNumber}</span>}
-            </div>
-
-            {/* Expiry Date Input */}
-            <div className="form-field">
-              <input
-                type="text"
-                placeholder="Expiry Date (MM/YY)"
-                value={paymentDetails.expiry}
-                onChange={(e) =>
-                  setPaymentDetails({ ...paymentDetails, expiry: e.target.value })
-                }
-              />
-              {errors.expiry && <span className="error">{errors.expiry}</span>}
-            </div>
-
-            {/* CVV Input */}
-            <div className="form-field">
-              <input
-                type="text"
-                placeholder="CVV"
-                value={paymentDetails.cvv}
-                onChange={(e) =>
-                  setPaymentDetails({ ...paymentDetails, cvv: e.target.value })
-                }
-              />
-              {errors.cvv && <span className="error">{errors.cvv}</span>}
-            </div>
-          </div>
-
-          {/* Place Order Button */}
-          <button className="continue-btn" onClick={handlePlaceOrder}>
-            Place Order
-          </button>
         </div>
       )}
 
       {/* Order Summary */}
       <div className="order-summary">
         <h2>Order Summary</h2>
-        {cartItems.map((item) => (
-          <div className="item" key={item.id}>
-            <div>
-              <p>{item.name}</p>
-              <p>{item.color} / {item.size}</p>
-            </div>
-            <p>x {item.quantity}</p>
-            <p>${(item.price * item.quantity).toFixed(2)}</p>
+        {cartItems.map((item, index) => (
+          <div key={index} className="order-item">
+            <p>{item.name} - ${item.price} x {item.quantity}</p>
           </div>
         ))}
         <p>Subtotal: ${calculateSubtotal()}</p>
-        <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
-        <h3>Total: $
-          {(
-            parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
-          ).toFixed(2)}
-        </h3>
-        <div className="cancel-order">
-          <button onClick={() => alert('Order Canceled!')}>Cancel Order</button>
+        <button onClick={handleCancelOrder}>Cancel Order</button>
+      </div>
+
+      {/* Payment Section */}
+      <div className="payment-section">
+        <h2>Payment Details</h2>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Card Number"
+            value={paymentDetails.cardNumber}
+            onChange={(e) => setPaymentDetails({ ...paymentDetails, cardNumber: e.target.value })}
+          />
+          {errors.cardNumber && <span className="error">{errors.cardNumber}</span>}
         </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Expiry Date (MM/YY)"
+            value={paymentDetails.expiry}
+            onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
+          />
+          {errors.expiry && <span className="error">{errors.expiry}</span>}
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="CVV"
+            value={paymentDetails.cvv}
+            onChange={(e) => setPaymentDetails({ ...paymentDetails, cvv: e.target.value })}
+          />
+          {errors.cvv && <span className="error">{errors.cvv}</span>}
+        </div>
+        <button onClick={handlePlaceOrder}>Place Order</button>
       </div>
     </div>
   );
