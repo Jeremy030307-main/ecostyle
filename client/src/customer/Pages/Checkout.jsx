@@ -3,7 +3,7 @@ import { useCart } from '../../CartContext.js';
 import './Checkout.css';
 
 const Checkout = () => {
-  const { cartItems, setCartItems } = useCart();
+  const { cartItems, setCartItems, calculateSubtotal } = useCart();
   const [step, setStep] = useState('shipping');
   const [newAddress, setNewAddress] = useState({
     firstName: '',
@@ -28,13 +28,8 @@ const Checkout = () => {
 
   // Reset cart when order is canceled
   const handleCancelOrder = () => {
-    setCartItems([]); // Reset the cart items
+    setCartItems([]);  // Reset the cart items
     alert('Order Canceled!');
-  };
-
-  // Calculate the subtotal of the cart
-  const calculateSubtotal = () => {
-    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
   };
 
   // Validate the shipping address

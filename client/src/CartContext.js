@@ -27,7 +27,7 @@ export const CartProvider = ({ children }) => {
     setCartItems((prevItems) => prevItems.filter(item => item.id !== productId));
   };
 
-  // Function to update the quantity of an item from the cart
+  // Function to update the quantity of an item in the cart
   const updateItemQuantity = (productId, newQuantity) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -38,9 +38,9 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Function to calculate total price
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  // Function to calculate subtotal
+  const calculateSubtotal = () => {
+    return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
   };
 
   return (
@@ -48,8 +48,8 @@ export const CartProvider = ({ children }) => {
       cartItems,
       addItemToCart,
       removeItemFromCart,
-      updateItemQuantity, 
-      calculateTotal
+      updateItemQuantity,
+      calculateSubtotal
     }}>
       {children}
     </CartContext.Provider>
