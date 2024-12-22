@@ -101,7 +101,7 @@ body, html {
 
 .product-card img {
     width: 100%; /* Ensures the image scales to the card width */
-    height: auto; /* Maintains the aspect ratio of the image */
+    height: 300px; /* Maintains the aspect ratio of the image */
     max-height: 200px; /* Set a maximum height to keep consistency */
     object-fit: cover; /* Ensures the image fills the space proportionally */
     margin-bottom: 10px; /* Adds some spacing below the image */

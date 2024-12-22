@@ -40,6 +40,10 @@ const Shop = () => {
     navigate('/shop', { state: { category } });
   };
 
+  const handleProductClick = (product) => {
+    navigate('/product', { state: { product } });
+  };
+
   return (
     <div className="container">
       <aside className="sidebar">
@@ -79,21 +83,18 @@ const Shop = () => {
 
         <div className="product-grid">
           {products.map((product) => (
-            <div className="product-card" key={product.id}>
-              {/* Display the first variant's image */}
+            <button
+              key={product.id}
+              className="product-card"
+              onClick={() => handleProductClick(product)}
+            >
               <img
                 src={product.variant[0]?.image || '/placeholder.png'}
                 alt={product.name}
                 className="product-image"
               />
-
-              {/* Product Name */}
               <h3 className="product-name">{product.name}</h3>
-
-              {/* Price */}
               <p className="product-price">${product.price.toFixed(2)}</p>
-
-              {/* Variants: Color Swatches */}
               <div className="color-swatches">
                 {product.variant.map((variant) => (
                   <div
@@ -104,16 +105,13 @@ const Shop = () => {
                   />
                 ))}
               </div>
-
-              {/* Rating and Review Count */}
               <div className="rating">
                 <span className="stars">⭐ {product.rating || 'No rating'}</span>
                 <span className="review-count">({product.reviewCount || 0})</span>
               </div>
-            </div>
+            </button>
           ))}
         </div>
-
       </main>
     </div>
   );
