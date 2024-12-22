@@ -105,7 +105,7 @@ body {
 
 /* Order Summary */
 .cart-order-summary {
-  flex: 1.5;
+  flex: 1;
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
