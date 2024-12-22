@@ -6,8 +6,6 @@ body {
 }
 
 .checkout-container {
-  display: flex;
-  flex-direction: column;
   gap: 20px;
   padding: 20px;
   max-width: 1200px;
@@ -24,7 +22,7 @@ body {
   padding: 20px;
 }
 
-.shipping-section h2, .order-summary h2 {
+.shipping-section h2, .chk-order-summary h2 {
   margin-bottom: 15px;
   font-size: 24px;
   color: #333333;
@@ -32,13 +30,13 @@ body {
   padding-bottom: 10px;
 }
 
-.tabs {
+.chk-tabs {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
 }
 
-.tab-button {
+.chk-tab-button {
   flex: 1;
   padding: 15px;
   font-size: 18px;
@@ -52,13 +50,13 @@ body {
   transition: background-color 0.3s ease;
 }
 
-.tab-button.active {
+.chk-tab-button.active {
   background-color: #d6d6d6;
   color: #000000;
   border-color: #bcbcbc;
 }
 
-.tab-button:hover {
+.chk-tab-button:hover {
   background-color: #e8e8e8;
 }
 
@@ -94,30 +92,31 @@ body {
   color: #333333;
 }
 
-.error {
+.chk-error {
   color: #d9363e;
   font-size: 14px;
   margin-top: 5px;
 }
 
-.continue-btn {
+.chk-continue-btn {
   padding: 15px 30px;
   background-color: #333333;
   color: white;
-  font-size: 18px;
-  font-weight: bold;
   border: none;
+  padding: 12px 20px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  align-self: flex-start;
+  font-size: 16px;
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
 }
 
-.continue-btn:hover {
+.chk-continue-btn:hover {
   background-color: #555555;
 }
 
-.order-summary .item {
+.chk-order-summary .item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -126,13 +125,13 @@ body {
   padding-bottom: 10px;
 }
 
-.order-summary .item p {
+.chk-order-summary .item p {
   margin: 0;
   font-size: 16px;
   color: #555555;
 }
 
-.order-summary-total {
+.chk-order-summary-total {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
@@ -141,24 +140,26 @@ body {
   color: #333333;
 }
 
-.order-summary h3 {
+.chk-order-summary h3 {
   font-size: 22px;
   color: #000000;
   text-align: right;
 }
 
-.cancel-order button {
+.chk-cancel-order button {
   padding: 15px 30px;
   background-color: #d9363e;
   color: white;
-  font-size: 18px;
-  font-weight: bold;
   border: none;
+  padding: 12px 20px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 16px;
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
 }
 
-.cancel-order button:hover {
+.chk-cancel-order button:hover {
   background-color: #b02a2d;
 }
