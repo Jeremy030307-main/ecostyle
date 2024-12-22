@@ -46,7 +46,7 @@ export const CartProvider = ({ children }) => {
   return (
     <CartContext.Provider value={{
       cartItems,
-      setCartItems,  // Ensure setCartItems is provided
+      setCartItems,
       addItemToCart,
       removeItemFromCart,
       updateItemQuantity,
