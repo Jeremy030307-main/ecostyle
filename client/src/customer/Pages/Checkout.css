@@ -40,13 +40,13 @@ body {
 
 .tab-button {
   flex: 1;
-  padding: 15px;
-  font-size: 18px;
+  padding: 20px;
+  font-size: 20px;
   font-weight: bold;
   background-color: #f0f0f0;
   border: 1px solid #dcdcdc;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
   text-align: center;
   color: #333333;
   transition: background-color 0.3s ease;
@@ -79,7 +79,7 @@ body {
 }
 
 .form-field label {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-size: 16px;
   color: #555555;
   font-weight: bold;

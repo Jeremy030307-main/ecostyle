@@ -80,14 +80,6 @@ const Checkout = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle placing the order
-  const handlePlaceOrder = () => {
-    if (validatePaymentDetails()) {
-      alert('Order placed successfully!');
-      // Add your logic for order placement here (e.g., API call)
-    }
-  };
-
   return (
     <div className="checkout-container">
       <h1>Checkout</h1>
@@ -98,7 +90,7 @@ const Checkout = () => {
           className={activeTab === 'saved' ? 'active' : ''}
           onClick={() => setActiveTab('saved')}
         >
-          Saved Addresses
+          Saved Address
         </button>
         <button
           className={activeTab === 'new' ? 'active' : ''}
@@ -111,7 +103,7 @@ const Checkout = () => {
       {/* Shipping Section */}
       {step === 'shipping' && (
         <div className="shipping-section">
-          <h2>Shipping Address</h2>
+          <h2>Shipping</h2>
 
           {/* Tab Content for Saved Addresses */}
           {activeTab === 'saved' && savedAddresses.length > 0 && (
@@ -130,11 +122,18 @@ const Checkout = () => {
                 ))}
               </select>
 
+              {/* Display Selected Address */}
               {filteredAddress && (
                 <div className="saved-address">
-                  <p>{filteredAddress.firstName} {filteredAddress.lastName}</p>
-                  <p>{filteredAddress.address1}, {filteredAddress.address2}</p>
-                  <p>{filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}</p>
+                  <p>
+                    {filteredAddress.firstName} {filteredAddress.lastName}
+                  </p>
+                  <p>
+                    {filteredAddress.address1}, {filteredAddress.address2}
+                  </p>
+                  <p>
+                    {filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}
+                  </p>
                   <p>{filteredAddress.phone}</p>
                   <span className="tag">{filteredAddress.tag}</span>
                 </div>
@@ -145,32 +144,38 @@ const Checkout = () => {
           {/* Tab Content for New Address */}
           {activeTab === 'new' && (
             <div className="form-group">
+              {/* Loop to Render All New Address Fields */}
               {Object.entries(newAddress).map(([key, value]) => (
                 key !== 'tag' && (
                   <div key={key} className="form-field">
                     <input
                       type="text"
-                      placeholder={
-                        key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())
+                      placeholder={key
+                        .replace(/([A-Z])/g, ' $1')
+                        .replace(/^./, (str) => str.toUpperCase())
                       }
                       value={value}
-                      onChange={(e) => setNewAddress({ ...newAddress, [key]: e.target.value })}
+                      onChange={(e) =>
+                        setNewAddress({ ...newAddress, [key]: e.target.value })
+                      }
                     />
                     {errors[key] && <span className="error">{errors[key]}</span>}
                   </div>
                 )
               ))}
 
+              {/* Input for Address Tag */}
               <div className="form-field">
                 <input
                   type="text"
-                  placeholder="Custom Tag (e.g., My Home, Parents' Home)"
+                  placeholder="Custom Tag (e.g., Home, Work)"
                   value={newAddress.tag}
                   onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
                 />
                 {errors.tag && <span className="error">{errors.tag}</span>}
               </div>
 
+              {/* Save Address Button */}
               <button className="continue-btn" onClick={handleAddAddress}>
                 Save Address
               </button>
@@ -193,6 +198,7 @@ const Checkout = () => {
         <div className="payment-section">
           <h2>Payment Details</h2>
           <div className="form-group">
+            {/* Card Number Input */}
             <div className="form-field">
               <input
                 type="text"
@@ -204,6 +210,8 @@ const Checkout = () => {
               />
               {errors.cardNumber && <span className="error">{errors.cardNumber}</span>}
             </div>
+
+            {/* Expiry Date Input */}
             <div className="form-field">
               <input
                 type="text"
@@ -215,6 +223,8 @@ const Checkout = () => {
               />
               {errors.expiry && <span className="error">{errors.expiry}</span>}
             </div>
+
+            {/* CVV Input */}
             <div className="form-field">
               <input
                 type="text"
@@ -227,6 +237,8 @@ const Checkout = () => {
               {errors.cvv && <span className="error">{errors.cvv}</span>}
             </div>
           </div>
+
+          {/* Place Order Button */}
           <button className="continue-btn" onClick={handlePlaceOrder}>
             Place Order
           </button>
