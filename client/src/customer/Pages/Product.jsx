@@ -85,6 +85,12 @@ const Product = () => {
               </div>
             ))}
           </div>
+
+          {/* Add to Cart and Favorite Buttons */}
+          <div className="action-buttons">
+            <button className="add-to-cart-btn">Add to Cart</button>
+            <button className="fav-btn">❤️</button>
+          </div>
         </div>
       </div>
 
