@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCart } from '../../CartContext.js';
-import { useNavigate } from 'react-router-dom'; // Importing useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -27,22 +27,20 @@ const Checkout = () => {
   const [selectedTag, setSelectedTag] = useState('');
   const [activeTab, setActiveTab] = useState('saved');
 
-  const navigate = useNavigate(); // Hook for redirection
+  const navigate = useNavigate();
 
-  // Cancel Order function: keep cart items, reset subtotal to 0 and redirect to home
   const handleCancelOrder = () => {
     alert('Order Canceled!');
-    navigate('/'); // Redirect to home page
+    navigate('/');
   };
 
-  // Validate and place order
   const handlePlaceOrder = () => {
     if (validatePaymentDetails()) {
       alert('Order placed successfully!');
+      setCartItems([]);
     }
   };
 
-  // Validate the shipping address
   const validateAddress = () => {
     const errors = {};
     Object.entries(newAddress).forEach(([key, value]) => {
@@ -52,7 +50,6 @@ const Checkout = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Add new address to saved addresses
   const handleAddAddress = () => {
     if (validateAddress()) {
       setSavedAddresses([...savedAddresses, { ...newAddress }]);
@@ -71,17 +68,14 @@ const Checkout = () => {
     }
   };
 
-  // Handle address selection
   const handleAddressSelection = (e) => {
     setSelectedTag(e.target.value);
   };
 
-  // Get the filtered address based on the selected tag
   const filteredAddress = savedAddresses.find(
     (address) => address.tag === selectedTag
   );
 
-  // Validate payment details
   const validatePaymentDetails = () => {
     const errors = {};
     const currentDate = new Date();
@@ -100,34 +94,30 @@ const Checkout = () => {
     <div className="checkout-container">
       <h1>Checkout</h1>
 
-      {/* Tab Navigation */}
       <div className="tabs">
         <button
-          className={activeTab === 'saved' ? 'active' : ''}
+          className={`tab-button ${activeTab === 'saved' ? 'active' : ''}`}
           onClick={() => setActiveTab('saved')}
         >
           Saved Address
         </button>
         <button
-          className={activeTab === 'new' ? 'active' : ''}
+          className={`tab-button ${activeTab === 'new' ? 'active' : ''}`}
           onClick={() => setActiveTab('new')}
         >
           New Address
         </button>
       </div>
 
-      {/* Shipping Section */}
       {step === 'shipping' && (
         <div className="shipping-section">
           <h2>Shipping</h2>
 
-          {/* Tab Content for Saved Addresses */}
           {activeTab === 'saved' && savedAddresses.length > 0 && (
             <div className="saved-addresses">
               <select
                 value={selectedTag}
                 onChange={handleAddressSelection}
-                disabled={savedAddresses.length === 0}
               >
                 <option value="">Select Address</option>
                 {savedAddresses.map((address, index) => (
@@ -149,7 +139,6 @@ const Checkout = () => {
             </div>
           )}
 
-          {/* Tab Content for New Address */}
           {activeTab === 'new' && (
             <div className="form-group">
               {Object.entries(newAddress).map(([key, value]) => (
@@ -178,13 +167,12 @@ const Checkout = () => {
                   onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
                 />
               </div>
-              <button onClick={handleAddAddress}>Add Address</button>
+              <button className="add-address-btn" onClick={handleAddAddress}>Add Address</button>
             </div>
           )}
         </div>
       )}
 
-      {/* Order Summary */}
       <div className="order-summary">
         <h2>Order Summary</h2>
         {cartItems.map((item) => (
@@ -209,7 +197,6 @@ const Checkout = () => {
         </div>
       </div>
 
-      {/* Payment Details */}
       <div className="payment-details">
         <h2>Payment Details</h2>
         <div className="form-group">
@@ -226,6 +213,15 @@ const Checkout = () => {
             type="text"
             placeholder="Expiry Date (MM/YY)"
             value={paymentDetails.expiry}
+            onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
+          />
+          {errors.expiry && <span className="error">{errors.expiry}</span>}
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="CVV"
+            value={paymentDetails.cvv}
             onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
           />
           {errors.expiry && <span className="error">{errors.expiry}</span>}
