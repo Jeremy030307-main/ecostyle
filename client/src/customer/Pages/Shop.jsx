@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import search_icon from '../Components/Assets/search_icon.png';
 import { getProduct } from '../../apiManager/methods/productMethods';
+import { getCategory } from '../../apiManager/methods/categoryMethods';
+
 
 const Shop = () => {
   const location = useLocation();
@@ -11,9 +13,11 @@ const Shop = () => {
   const initialCategory = location.state?.category || "Women's Fashion";
   const [category, setCategory] = useState(initialCategory);
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]); // New state for categories
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Fetch products by category
   const fetchCategory = async (category) => {
     try {
       setLoading(true);
@@ -31,7 +35,19 @@ const Shop = () => {
     }
   };
 
+  // Fetch all categories
+  const fetchCategories = async () => {
+    try {
+      const data = await getCategory();
+      console.log('Fetched categories:', data);
+      setCategories(data || []);
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+    }
+  };
+
   useEffect(() => {
+    fetchCategories(); // Fetch categories on component mount
     fetchCategory(category);
   }, [category]);
 
@@ -55,21 +71,13 @@ const Shop = () => {
         </div>
         <nav>
           <ul>
-            <li>
-              <button onClick={() => handleNavigation("Women's Fashion")}>
-                Women's Fashion
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation("Men's Fashion")}>
-                Men's Fashion
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation("Kids")}>
-                Kids
-              </button>
-            </li>
+            {categories.map((cat) => (
+              <li key={cat.id}>
+                <button onClick={() => handleNavigation(cat.name)}>
+                  {cat.name}
+                </button>
+              </li>
+            ))}
           </ul>
         </nav>
       </aside>

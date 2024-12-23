@@ -13,7 +13,7 @@ body, html {
 
 /* Sidebar styles */
 .sidebar {
-    width: 250px; /* Adjust the width to make it smaller */
+    width: 300px; /* Adjust the width to make it smaller */
     background-color: #fff;
     padding: 20px;
     border-right: 1px solid #ddd;
