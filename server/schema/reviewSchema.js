@@ -9,15 +9,17 @@ export const newReviewSchema = Joi.object({
     }),
 
   rating: Joi.number()
+    .integer() // Ensures the rating is an integer
     .required()
     .min(1)
     .max(5)
     .messages({
       "number.base": "Rating must be a number.",
+      "number.integer": "Rating must be an integer.", // Custom message for non-integer values
       "number.min": "Rating must be at least 1.",
       "number.max": "Rating cannot be more than 5.",
       "any.required": "Rating is required."
-    }),
+   }),
 
   comment: Joi.string()
     .required()
@@ -31,6 +33,7 @@ export const newReviewSchema = Joi.object({
 
 export const updateReviewSchema = Joi.object({
     rating: Joi.number()
+      .integer()
       .min(1)
       .max(5)
       .optional(), // Optional field
