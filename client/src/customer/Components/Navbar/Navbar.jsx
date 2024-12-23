@@ -27,13 +27,17 @@ const Navbar = () => {
   useEffect(() => {
     const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
       if (user) {
-        setAuthenticated(true);
+        if (!user.isAnonymous){
+          console.log("authentication is true")
+          setAuthenticated(true);
+        }
         AuthenticationManager.auth.currentUser
           .getIdTokenResult()
           .then((idTokenResult) => {
             setAdmin(Boolean(idTokenResult.claims.admin));
           })
           .catch(() => setAdmin(false)); // Handle error gracefully
+
       } else {
         setAuthenticated(false);
         setAdmin(false);

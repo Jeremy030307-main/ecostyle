@@ -6,7 +6,8 @@ import Product_4 from '../Components/Assets/Product_4.png'
 import search_icon from '../Components/Assets/search_icon.png'
 import flash_sale_icon from '../Components/Assets/flash_sale_rectangle.png'
 import { useState, useEffect } from 'react';
-import { addProduct, addSize, addVariant, deleteProduct, deleteSize, deleteVariant, getProduct, updateProduct, updateVariant } from '../../apiManager/methods/productMethods';
+import { getProduct } from '../../apiManager/methods/productMethods';
+import { getAllCollection } from '../../apiManager/methods/collectionMethods';
 
 // import add_to_fav_script from '../Components/Scripts/add_to_fav_button.js'
 
@@ -19,7 +20,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategory = async () => {
             try {
-              const data = await getProduct("", {category : "MEN"});
+              const data = await getAllCollection();
               console.log(data)
                 
             } catch (err) {
