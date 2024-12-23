@@ -222,15 +222,6 @@ const Checkout = () => {
             type="text"
             placeholder="CVV"
             value={paymentDetails.cvv}
-            onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
-          />
-          {errors.expiry && <span className="error">{errors.expiry}</span>}
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            placeholder="CVV"
-            value={paymentDetails.cvv}
             onChange={(e) => setPaymentDetails({ ...paymentDetails, cvv: e.target.value })}
           />
           {errors.cvv && <span className="error">{errors.cvv}</span>}
