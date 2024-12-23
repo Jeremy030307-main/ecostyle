@@ -1,8 +1,10 @@
-import './MyAccount.css';
-import React, { useState, useEffect } from 'react';
+// src/pages/Cancellation.js
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './MyAccount.css'; // Import the CSS file for styling
+import Image70 from '../Components/Assets/image_70.png'; // Import image from the specified path
 
-const MyAccount = () => {
+const Cancellation = () => {
     const navigate = useNavigate();
 
     // Handle navigation
@@ -44,12 +46,17 @@ const MyAccount = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="main-con">
-                <h1>My Account</h1>
-                {/* Add orders-related content here */}
+            <main className="main-content">
+                <h1>Cancellation Page</h1>
+                {/* Display the Image and Text */}
+                <div className="cancellation-info">
+                    <img src={Image70} alt="No Cancellations" className="cancellation-image" />
+                    <p>Great to see you're happy with your purchases!</p>
+                    <p>No Cancellations so far!</p>
+                </div>
             </main>
         </div>
     );
 };
 
-export default MyAccount;
+export default Cancellation;

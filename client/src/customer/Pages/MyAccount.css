@@ -72,3 +72,31 @@ body, html {
     width: 100%;
     display: block;
 }
+
+/* Ensure the main content takes up the full height of the page */
+.main-con {
+    display: flex;
+    height: 100vh; 
+    flex-direction: column; 
+    padding: 20px;
+  }
+  
+  /* .cancellation-info should take up all available space */
+  .cancellation-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-self: center; 
+    text-align: center;
+    padding: 2rem;
+    flex-grow: 1; 
+    width: 100%; 
+  }
+  
+  .cancellation-image {
+    max-width: 400px; 
+    width: 100%;
+    margin-bottom: 1rem;
+    font-size: 30px;
+  }
+  

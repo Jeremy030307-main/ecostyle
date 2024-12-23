@@ -76,7 +76,7 @@ body, html {
 /* Shop Page Content */
 /* Update main content max-width to accommodate the new sidebar width */
 .main-content {
-    max-width: calc(100% - 250px); /* Update this value to match the new sidebar width */
+    max-width: calc(100% - 300px); /* Update this value to match the new sidebar width */
     padding: 10px;
 }
 
