@@ -5,56 +5,60 @@ import search_icon from '../Components/Assets/search_icon.png';
 import { getProduct } from '../../apiManager/methods/productMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
 
-
 const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const initialCategory = location.state?.category || "Women's Fashion";
-  const [category, setCategory] = useState(initialCategory);
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]); // New state for categories
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const initialCategory = location.state?.category || "MEN"; // Default to Men's category ID
+  const [categories, setCategories] = useState([]); // State for categories
+  const [products, setProducts] = useState([]); // State for products
+  const [category, setCategory] = useState(initialCategory); // Selected category ID
+  const [loading, setLoading] = useState(false); // Loading state
+  const [error, setError] = useState(''); // Error state
 
-  // Fetch products by category
-  const fetchCategory = async (category) => {
+  // Fetch categories from the API
+  const fetchCategories = async () => {
+    try {
+      const data = await getCategory(); // Fetch categories from API
+      console.log("Fetched categories:", data);
+      setCategories(data || []); // Ensure categories array is set
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    }
+  };
+
+  // Fetch products for a selected category
+  const fetchCategory = async (categoryId) => {
     try {
       setLoading(true);
       setError('');
-      console.log(`Fetching products for category: ${category}`);
+      console.log(`Fetching products for category ID: ${categoryId}`);
 
-      const data = await getProduct("");
-      console.log('Fetched products:', data);
-      setProducts(data || []);
+      const data = await getProduct("", { category: categoryId }); // Pass category ID
+      console.log("Fetched products:", data);
+      setProducts(data || []); // Update products state with fetched data
     } catch (err) {
       setError(err.message);
-      console.error('Error fetching products:', err);
+      console.error("Error fetching products:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch all categories
-  const fetchCategories = async () => {
-    try {
-      const data = await getCategory();
-      console.log('Fetched categories:', data);
-      setCategories(data || []);
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-    }
+  // Handle navigation to shop with a selected category
+  const handleNavigation = (categoryId) => {
+    setCategory(categoryId); // Update selected category ID
+    navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
+    fetchCategory(categoryId); // Fetch products for the selected category
   };
 
+  // Fetch categories and initial products on component mount
   useEffect(() => {
-    fetchCategories(); // Fetch categories on component mount
-    fetchCategory(category);
+    fetchCategories(); // Fetch all categories
+    if (category) {
+      fetchCategory(category); // Fetch products for the initial category
+    }
   }, [category]);
-
-  const handleNavigation = (category) => {
-    setCategory(category);
-    navigate('/shop', { state: { category } });
-  };
 
   const handleProductClick = (product) => {
     navigate('/product', { state: { product } });
@@ -73,7 +77,7 @@ const Shop = () => {
           <ul>
             {categories.map((cat) => (
               <li key={cat.id}>
-                <button onClick={() => handleNavigation(cat.name)}>
+                <button onClick={() => handleNavigation(cat.id)}>
                   {cat.name}
                 </button>
               </li>
@@ -87,7 +91,7 @@ const Shop = () => {
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
-        {!loading && products.length === 0 && <p>No products found.</p>}
+        {!loading && products.length === 0 && <p>No products found for this category.</p>}
 
         <div className="product-grid">
           {products.map((product) => (
