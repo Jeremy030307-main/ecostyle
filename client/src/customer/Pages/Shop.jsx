@@ -80,19 +80,21 @@ const Shop = () => {
         </div>
         <nav>
           <ul>
-            {categories.map((cat) => (
-              <li key={cat.id}>
-                <button onClick={() => handleNavigation(cat.id)}>
-                  {cat.name}
-                </button>
-              </li>
-            ))}
+            <li>
+              <button onClick={() => handleNavigation('WMN')}>Women's Fashion</button>
+            </li>
+            <li>
+              <button onClick={() => handleNavigation('MEN')}>Men's Fashion</button>
+            </li>
+            <li>
+              <button onClick={() => handleNavigation('KIDS')}>Kids</button>
+            </li>
           </ul>
         </nav>
       </aside>
 
       <main className="main-content">
-        <h1>Welcome to {getCategoryHeading()}!</h1>
+        <h1>{getCategoryHeading()} Fashion</h1>
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
