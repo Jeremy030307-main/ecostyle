@@ -64,6 +64,11 @@ const Shop = () => {
     navigate('/product', { state: { product } });
   };
 
+  const getCategoryHeading = () => {
+    const selectedCategory = categories.find((cat) => cat.id === category);
+    return selectedCategory ? selectedCategory.name : "Fashion"; // Default to "Fashion" if category not found
+  };
+
   return (
     <div className="container">
       <aside className="sidebar">
@@ -87,7 +92,7 @@ const Shop = () => {
       </aside>
 
       <main className="main-content">
-        <h1>Welcome to {category}!</h1>
+        <h1>Welcome to {getCategoryHeading()}!</h1>
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
