@@ -12,7 +12,11 @@ const Accout = () => {
 
     AuthenticationManager.auth.onAuthStateChanged((user) => {
       if (user) {
-        setAuthentication(true);
+        if (!user.isAnonymous){
+          setAuthentication(true);
+        } else {
+          setAuthentication(false);
+        }
       } else {
         setAuthentication(false);
       }

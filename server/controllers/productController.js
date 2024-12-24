@@ -1,7 +1,7 @@
 
 import { db } from "../firebase.js";
 import admin from 'firebase-admin'
-import { COLLECTIONS, message } from "./utility.js";
+import { COLLECTIONS, message } from "./utility.js"; 
 
 const getVariantDetails = async (variantData) => {
   try{
@@ -56,17 +56,40 @@ const getProductData = async (productID, t = null) => {
   return productSnapshot.data();
 };
 
-// get all products
+// get all products 
 export const getProducts = async (req, res, next) => {
+  // Extract query parameters for filtering and sorting
+  const { category, collection, color, sortBy, orderBy } = req.query;
+
   try {
-    // Extract query parameters for filtering and sorting
-    const { search, size, category, collection, color, order, sortBy, orderBy } = req.query;
-    
-    const productsSnapshot = await db.collection(COLLECTIONS.PRODUCT).get();
+    let query = db.collection(COLLECTIONS.PRODUCT); 
+
+    if (category){
+      query = query.where('category', ">=", category).where('category', "<=", category + '\uf8ff')
+    };
+
+    if (collection){
+      query = query.where("collection", "==", collection)
+    };
+
+    if (color){
+      query = query.where("color", "array-contains-any", color.split(","))
+    };
+
+    if (sortBy) {
+      if (orderBy === 'asc' || orderBy === 'desc') {
+        query = query.orderBy(sortBy, orderBy); // Apply sorting with specified order
+      } else {
+        query = query.orderBy(sortBy); // Default to ascending order if orderBy is invalid or undefined
+      }
+    }
+
+    const productsSnapshot = await query.get();
 
     if (productsSnapshot.empty) {
       return res.status(404).send(message('No Products found'));
     }
+
     const products = await Promise.all(
       productsSnapshot.docs
       .filter((doc) => doc.id !== "productID")
@@ -80,6 +103,7 @@ export const getProducts = async (req, res, next) => {
           id: doc.id,
           name: productData.name,
           price: productData.price,
+          thumbnail: productData.thumbnail,
           variant: variant, 
           size: productData.size,
           rating: productData.rating || null,
@@ -112,6 +136,7 @@ export const getProduct = async (req, res, next) => {
       name: productData.name,
       details: productData.details,
       price: productData.price,
+      thumbnail: productData.thumbnail,
       variant: variant,
       size: productData.size,
       rating: productData.rating || null,
@@ -123,8 +148,6 @@ export const getProduct = async (req, res, next) => {
     res.status(500).send(message(error.message));
   }
 }; 
-
-
 
 // ---------- Admin action ------------------
 
@@ -141,12 +164,15 @@ export const createProduct = async (req, res) => {
       const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productID);
       const currentTime =  admin.firestore.Timestamp.now()
 
+      const productVariants = [...new Set(variant.map((data) => data.color))];
+
       const newProductData = {
         ...productData,
+        color: productVariants,
         variant: variant,
         createdAt: currentTime, 
         updatedAt: currentTime
-      }
+      };
 
       transaction.create(productRef, newProductData);
       transaction.update(db.collection(COLLECTIONS.PRODUCT).doc("productID"), {code: admin.firestore.FieldValue.increment(1)});
@@ -184,7 +210,6 @@ export const updateProduct = async (req, res) => {
     }
     const productData = req.body;
     
-
     const newProductData = {
       updatedAt: admin.firestore.Timestamp.now(),
       ...productData
@@ -252,16 +277,15 @@ export const addVariant = async (req, res) => {
       if (!productData) {
         throw new Error(`Product ${productID} does not exist.`)
       }
-      console.log(productData)
-      const productVariants = [...new Set(productData.variant.map((data) => data.color))];
-      console.log(productVariants);
 
       // Check if the color already exists in the variants
+      const productVariants = productData.color
       if (!productVariants.includes(variantData.color)) {
         const variantID = variantData.color;
 
         // Add new variant of the product as subcollection
         t.update(productRef, {
+          color: admin.firestore.FieldValue.arrayUnion(variantData.color),
           variant: admin.firestore.FieldValue.arrayUnion(variantData),
         });
 
@@ -354,6 +378,7 @@ export const deleteVariant = async (req, res) => {
       if (!productData) {
         throw new Error(`Product ${productID} does not exist.`)
       }
+      
 
       // Querying the stock collection for each variant
       const stockSnapshot = await db.collection(COLLECTIONS.STOCK)
@@ -370,11 +395,12 @@ export const deleteVariant = async (req, res) => {
 
       const variantToRemove = productData.variant.find((variant) => variant.color === variantID);
       if (!variantToRemove) {
-        new Error(`Variant with color ${colorToRemove} not found.`);
+        new Error(`Variant with color ${variantID} not found.`);
       }
 
       // Use Firestore's arrayRemove method to remove the element
       t.update(productRef, {
+        color: admin.firestore.FieldValue.arrayRemove(variantID),
         variant: admin.firestore.FieldValue.arrayRemove(variantToRemove)
       });
 
