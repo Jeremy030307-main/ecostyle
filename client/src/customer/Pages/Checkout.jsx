@@ -168,7 +168,7 @@ const Checkout = () => {
                 )
               ))}
 
-              <div className="form-field">
+              <div className="form-group">
                 <input
                   type="text"
                   placeholder="Custom Tag (e.g., Home, Work)"
