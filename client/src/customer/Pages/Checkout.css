@@ -208,7 +208,7 @@ h2 {
 .order-summary {
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* Align all items to the right */
+  align-items: flex-start;
 }
 
 .order-summary .subtotal,
