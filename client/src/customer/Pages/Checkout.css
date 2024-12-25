@@ -1,4 +1,6 @@
-/* Checkout.css */
+/* Checkout Page Styles */
+
+/* General Body Styles */
 body {
   font-family: 'Inter', Arial, sans-serif;
   margin: 0;
@@ -7,6 +9,7 @@ body {
   color: #333;
 }
 
+/* Main Container */
 .checkout-container {
   max-width: 800px;
   margin: 50px auto;
@@ -16,45 +19,25 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.tabs {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+/* Section Styling */
+.section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fefefe;
 }
 
-.tab-button {
-  flex: 1;
-  padding: 10px 20px;
-  border: none;
-  background-color: #e0e0e0;
-  color: #333;
-  font-weight: bold;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.tab-button.active {
-  background-color: #333;
-  color: #fff;
-}
-
-.tab-button:hover {
-  background-color: #555;
-  color: #fff;
-}
-
-.shipping-section, .payment-details, .order-summary {
-  margin-top: 20px;
-}
-
+/* Section Titles */
 h2 {
   font-size: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: #222;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 5px;
 }
 
+/* Form Group Styles */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -73,6 +56,13 @@ h2 {
   font-size: 14px;
 }
 
+.form-group input:focus {
+  border-color: #555;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Order Summary */
 .order-summary .item {
   display: flex;
   justify-content: space-between;
@@ -85,8 +75,10 @@ h2 {
   justify-content: space-between;
   font-size: 16px;
   font-weight: bold;
+  color: #444;
 }
 
+/* Action Buttons */
 .action-buttons {
   display: flex;
   justify-content: space-between;
@@ -95,7 +87,6 @@ h2 {
 
 .button {
   padding: 10px 20px;
-  background-color: #333;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -106,5 +97,38 @@ h2 {
 }
 
 .button:hover {
-  background-color: #555;
+  opacity: 0.9;
+}
+
+.button.cancel {
+  background-color: #e74c3c; /* Red color for cancel button */
+}
+
+.button.cancel:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+.button.place-order {
+  background-color: #333; /* Black color for Place Order */
+}
+
+.button.place-order:hover {
+  background-color: #555; /* Darker gray on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 15px;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
