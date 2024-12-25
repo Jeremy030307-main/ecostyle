@@ -1,3 +1,4 @@
+
 /* General Body Styles */
 body {
   font-family: 'Inter', Arial, sans-serif;
@@ -18,7 +19,7 @@ body {
 }
 
 /* Section Styling */
-.checkout-section {
+.section {
   margin-bottom: 30px;
   padding: 20px;
   border: 1px solid #ddd;
@@ -36,12 +37,12 @@ h2 {
 }
 
 /* Tabs */
-.checkout-tabs {
+.tabs {
   display: flex;
   margin-bottom: 30px;
 }
 
-.checkout-tab-button {
+.tab-button {
   background-color: #fff;
   border: 2px solid #ddd;
   padding: 12px 20px;
@@ -53,46 +54,46 @@ h2 {
   transition: all 0.3s ease;
 }
 
-.checkout-tab-button:hover {
+.tab-button:hover {
   background-color: #f1f1f1;
 }
 
-.checkout-tab-button.active {
+.tab-button.active {
   background-color: #333;
   color: #fff;
   border-color: #333;
 }
 
-.checkout-tab-button.active:hover {
+.tab-button.active:hover {
   background-color: #555;
 }
 
 /* Form Group Styles */
-.checkout-form-group {
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.checkout-form-group label {
+.form-group label {
   font-size: 14px;
 }
 
-.checkout-form-group input {
+.form-group input {
   padding: 12px;
   border: 2px solid #ddd;
   border-radius: 6px;
   font-size: 16px;
 }
 
-.checkout-form-group input:focus {
+.form-group input:focus {
   border-color: #007BFF;
   outline: none;
   box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
 }
 
 /* Order Summary */
-.checkout-order-summary .checkout-item {
+.order-summary .item {
   display: flex;
   justify-content: space-between;
   margin-bottom: 15px;
@@ -100,21 +101,21 @@ h2 {
   color: #444;
 }
 
-.checkout-item-info {
+.item-info {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.checkout-item-image {
-  width: 60px;
+.item-image {
+  width: 60px; /* Adjust image size */
   height: 60px;
   object-fit: cover;
   border-radius: 8px;
   margin-right: 15px;
 }
 
-.checkout-order-summary-total {
+.order-summary-total {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
@@ -123,18 +124,19 @@ h2 {
   color: #222;
 }
 
-.checkout-order-total {
-  text-align: right;
+.order-total {
+  text-align: center;
+  align-items: right;
   margin-top: 10px;
-  font-size: 20px; 
+  font-size: 20px; /* Increased font size for Order Total */
 }
 
 /* Cancel Order Button */
-.checkout-cancel-order {
+.cancel-order {
   text-align: left;
 }
 
-.checkout-cancel-order button {
+.cancel-order button {
   background-color: #e74c3c; 
   color: white;
   padding: 15px 25px;
@@ -145,14 +147,14 @@ h2 {
   transition: all 0.3s ease;
 }
 
-.checkout-cancel-order button:hover {
+.cancel-order button:hover {
   background-color: #c0392b;
 }
 
 /* Action Buttons */
-.checkout-button {
+.button {
   padding: 15px 25px;
-  font-size: 18px; 
+  font-size: 18px; /* Increased font size */
   font-weight: bold;
   color: #fff;
   border: none;
@@ -161,12 +163,13 @@ h2 {
   transition: all 0.3s ease;
 }
 
-.checkout-button:hover {
+.button:hover {
   opacity: 0.9;
 }
 
-.checkout-button.place-order {
-  background-color: #333; 
+/* Adjust button alignment, color and remove padding */
+.button.place-order {
+  background-color: #333; /* Black color */
   color: white;
   padding: 15px 25px;
   font-size: 18px;
@@ -176,19 +179,20 @@ h2 {
   transition: all 0.3s ease;
 }
 
-.checkout-button.place-order:hover {
-  background-color: #555; 
+/* Hover effect for button */
+.button.place-order:hover {
+  background-color: #555; /* Darker black */
 }
 
-/* Error messages styling */
-.checkout-error {
+/* Error messages styling (red color, no padding) */
+.error {
   color: red;
   font-size: 14px;
 }
 
-.checkout-add-address-btn {
-  padding: 16px 30px; 
-  font-size: 18px; 
+.add-address-btn {
+  padding: 16px 30px; /* Increased padding */
+  font-size: 18px; /* Increased font size */
   background-color: #333; 
   color: white;
   border: none;
@@ -196,26 +200,26 @@ h2 {
   cursor: pointer;
 }
 
-.checkout-add-address-btn:hover {
+.add-address-btn:hover {
   background-color: #555;
 }
 
 /* Order Summary Alignment */
-.checkout-order-summary {
+.order-summary {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
 }
 
-.checkout-order-summary .checkout-subtotal,
-.checkout-order-summary .checkout-shipping,
-.checkout-order-summary .checkout-order-total {
+.order-summary .subtotal,
+.order-summary .shipping,
+.order-summary .order-total {
   margin-bottom: 10px;
   font-size: 16px;
-  text-align: right; 
+  text-align: right; /* Align text to the right */
 }
 
-.checkout-order-summary .checkout-shipping {
+.order-summary .shipping {
   font-size: 14px;
   color: #555;
 }
@@ -226,37 +230,37 @@ h2 {
     padding: 20px;
   }
 
-  .checkout-tabs {
+  .tabs {
     flex-direction: column;
   }
 
-  .checkout-tab-button {
+  .tab-button {
     width: 100%;
     padding: 16px;
     margin-bottom: 10px;
   }
 
-  .checkout-button {
+  .button {
     width: 100%;
     text-align: center;
   }
 
-  .checkout-action-buttons {
+  .action-buttons {
     flex-direction: column;
     gap: 10px;
   }
 
-  .checkout-order-summary .checkout-item {
+  .order-summary .item {
     font-size: 14px;
   }
 
-  .checkout-item-info {
+  .item-info {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .checkout-item-image {
-    width: 50px; 
+  .item-image {
+    width: 50px; /* Smaller image on mobile */
     height: 50px;
   }
 }
