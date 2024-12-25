@@ -91,18 +91,18 @@ const Checkout = () => {
   };
 
   return (
-    <div className="checkout-container">
-      <h1>Checkout</h1>
+    <div className="checkout-wrapper">
+      <h1 className="checkout-title">Checkout</h1>
 
-      <div className="tabs">
+      <div className="tab-container">
         <button
-          className={`tab-button ${activeTab === 'saved' ? 'active' : ''}`}
+          className={`tab-button ${activeTab === 'saved' ? 'tab-button-active' : ''}`}
           onClick={() => setActiveTab('saved')}
         >
           Saved Address
         </button>
         <button
-          className={`tab-button ${activeTab === 'new' ? 'active' : ''}`}
+          className={`tab-button ${activeTab === 'new' ? 'tab-button-active' : ''}`}
           onClick={() => setActiveTab('new')}
         >
           New Address
@@ -110,12 +110,13 @@ const Checkout = () => {
       </div>
 
       {step === 'shipping' && (
-        <div className="shipping-section">
-          <h2>Shipping</h2>
+        <div className="shipping-step">
+          <h2 className="section-title">Shipping</h2>
 
           {activeTab === 'saved' && savedAddresses.length > 0 && (
-            <div className="saved-addresses">
+            <div className="saved-address-container">
               <select
+                className="saved-address-select"
                 value={selectedTag}
                 onChange={handleAddressSelection}
               >
@@ -128,23 +129,24 @@ const Checkout = () => {
               </select>
 
               {filteredAddress && (
-                <div className="saved-address">
-                  <p>{filteredAddress.firstName} {filteredAddress.lastName}</p>
-                  <p>{filteredAddress.address1}, {filteredAddress.address2}</p>
-                  <p>{filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}</p>
-                  <p>{filteredAddress.phone}</p>
-                  <span className="tag">{filteredAddress.tag}</span>
+                <div className="address-card">
+                  <p className="address-card-text">{filteredAddress.firstName} {filteredAddress.lastName}</p>
+                  <p className="address-card-text">{filteredAddress.address1}, {filteredAddress.address2}</p>
+                  <p className="address-card-text">{filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}</p>
+                  <p className="address-card-text">{filteredAddress.phone}</p>
+                  <span className="address-card-tag">{filteredAddress.tag}</span>
                 </div>
               )}
             </div>
           )}
 
           {activeTab === 'new' && (
-            <div className="form-group">
+            <div className="form-group-container">
               {Object.entries(newAddress).map(([key, value]) => (
                 key !== 'tag' && (
                   <div key={key} className="form-group">
                     <input
+                      className="form-input"
                       type="text"
                       placeholder={key === 'firstName' ? 'First Name' :
                                   key === 'lastName' ? 'Last Name' :
@@ -159,93 +161,86 @@ const Checkout = () => {
                         setNewAddress({ ...newAddress, [key]: e.target.value })
                       }
                     />
-                    {errors[key] && <span className="error">{errors[key]}</span>}
+                    {errors[key] && <span className="error-text">{errors[key]}</span>}
                   </div>
                 )
               ))}
 
               <div className="form-group">
                 <input
+                  className="form-input"
                   type="text"
                   placeholder="Custom Tag (e.g., Home, Work)"
                   value={newAddress.tag}
                   onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
                 />
               </div>
-              <button className="add-address-btn" onClick={handleAddAddress}>Add Address</button>
+              <button className="button-add" onClick={handleAddAddress}>Add Address</button>
             </div>
           )}
         </div>
       )}
 
-      {/* Order Summary Section */}
-      <div className="order-summary">
-        <h2>Order Summary</h2>
-        <div className="cart-items">
+      <div className="order-summary-container">
+        <h2 className="section-title">Order Summary</h2>
+        <div className="cart-items-list">
           {cartItems.map((item, index) => (
-            <div key={item.id} className="cart-item">
+            <div key={item.id} className="cart-item-card">
               <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
-              <div className="cart-item-details">
-                <h2 className="cart-item-name">{item.name}</h2>
-                <p className="cart-item-id">#{item.id} / {item.color} / {item.size}</p>
+              <div className="cart-item-info">
+                <h2 className="cart-item-title">{item.name}</h2>
+                <p className="cart-item-details">#{item.id} / {item.color} / {item.size}</p>
               </div>
-              <div className="cart-item-price-details">
+              <div className="cart-item-price-container">
                 <p className="cart-item-price">${(item.price * item.quantity).toFixed(2)}</p>
-                <div className="cart-item-quantity-controls">
-                  <p className="cart-item-quantity">x {item.quantity}</p>
-                </div>
+                <p className="cart-item-quantity">x {item.quantity}</p>
               </div>
             </div>
           ))}
         </div>
         <div className="order-summary-details">
-          <p>Subtotal: ${calculateSubtotal()}</p>
-          <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
-          <div className="order-total">
-            <h3>Total: $
-              {(
-                parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
-              ).toFixed(2)}
-            </h3>
-          </div>
+          <p className="summary-line">Subtotal: ${calculateSubtotal()}</p>
+          <p className="summary-line">Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
+          <h3 className="summary-total">Total: ${(
+            parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
+          ).toFixed(2)}</h3>
         </div>
-        <div className="cancel-order">
-          <button onClick={handleCancelOrder}>Cancel Order</button>
-        </div>
+        <button className="button-cancel" onClick={handleCancelOrder}>Cancel Order</button>
       </div>
 
-      <div className="payment-details">
-        <h2>Payment Details</h2>
+      <div className="payment-details-container">
+        <h2 className="section-title">Payment Details</h2>
         <div className="form-group">
           <input
+            className="form-input"
             type="text"
             placeholder="Card Number"
             value={paymentDetails.cardNumber}
             onChange={(e) => setPaymentDetails({ ...paymentDetails, cardNumber: e.target.value })}
           />
-          {errors.cardNumber && <span className="error">{errors.cardNumber}</span>}
+          {errors.cardNumber && <span className="error-text">{errors.cardNumber}</span>}
         </div>
         <div className="form-group">
           <input
+            className="form-input"
             type="text"
             placeholder="Expiry Date (MM/YY)"
             value={paymentDetails.expiry}
             onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
           />
-          {errors.expiry && <span className="error">{errors.expiry}</span>}
+          {errors.expiry && <span className="error-text">{errors.expiry}</span>}
         </div>
         <div className="form-group">
           <input
+            className="form-input"
             type="text"
             placeholder="CVV"
             value={paymentDetails.cvv}
             onChange={(e) => setPaymentDetails({ ...paymentDetails, cvv: e.target.value })}
           />
-          {errors.cvv && <span className="error">{errors.cvv}</span>}
+          {errors.cvv && <span className="error-text">{errors.cvv}</span>}
         </div>
-        <div className="place-order">
-          <button className="button place-order" onClick={handlePlaceOrder}>Place Order</button>
-        </div>
+        <button className="button-place-order" onClick={handlePlaceOrder}>Place Order</button>
       </div>
     </div>
   );
