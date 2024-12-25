@@ -244,7 +244,7 @@ const Checkout = () => {
           {errors.cvv && <span className="error">{errors.cvv}</span>}
         </div>
         <div className="place-order">
-          <button className="button place-order-btn" onClick={handlePlaceOrder}>Place Order</button>
+          <button className="button place-order" onClick={handlePlaceOrder}>Place Order</button>
         </div>
       </div>
     </div>

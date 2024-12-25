@@ -169,12 +169,32 @@ h2 {
   opacity: 0.9;
 }
 
+/* Adjust button alignment, color and remove padding */
 .button.place-order {
-  background-color: #333;
+  background-color: #333; /* Black color */
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%; /* Full width for left-aligned button */
+  text-align: left; /* Align text to the left */
+  padding: 0; /* Remove padding */
 }
 
+/* Hover effect for button */
 .button.place-order:hover {
-  background-color: #555;
+  background-color: #555; /* Darker black */
+}
+
+/* Error messages styling (red color, no padding) */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px; /* Adjust margin for spacing */
+  padding: 0; /* No padding */
 }
 
 .add-address-btn {
