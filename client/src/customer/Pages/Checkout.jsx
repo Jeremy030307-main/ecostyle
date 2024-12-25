@@ -146,9 +146,17 @@ const Checkout = () => {
                   <div key={key} className="form-field">
                     <input
                       type="text"
-                      placeholder={key
-                        .replace(/([A-Z])/g, ' $1')
-                        .replace(/^./, (str) => str.toUpperCase())
+                      placeholder={
+                        {
+                          firstName: 'First Name',
+                          lastName: 'Last Name',
+                          address1: 'Address Line 1',
+                          address2: 'Address Line 2 ',
+                          city: 'City',
+                          postalCode: 'Postal Code',
+                          state: 'State',
+                          phone: 'Phone Number',
+                        }[key]
                       }
                       value={value}
                       onChange={(e) =>
@@ -159,6 +167,7 @@ const Checkout = () => {
                   </div>
                 )
               ))}
+
               <div className="form-field">
                 <input
                   type="text"
