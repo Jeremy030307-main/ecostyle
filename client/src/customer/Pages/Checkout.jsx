@@ -186,9 +186,12 @@ const Checkout = () => {
         <h2>Order Summary</h2>
         {cartItems.map((item) => (
           <div className="item" key={item.id}>
-            <div>
-              <p>{item.name}</p>
-              <p>{item.color} / {item.size}</p>
+            <div className="item-info">
+              <img src={item.imageUrl} alt={item.name} className="item-image" />
+              <div>
+                <p>{item.name}</p>
+                <p>{item.color} / {item.size}</p>
+              </div>
             </div>
             <p>x {item.quantity}</p>
             <p>${(item.price * item.quantity).toFixed(2)}</p>
@@ -196,11 +199,13 @@ const Checkout = () => {
         ))}
         <p>Subtotal: ${calculateSubtotal()}</p>
         <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
-        <h3>Total: $
-          {(
-            parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
-          ).toFixed(2)}
-        </h3>
+        <div className="order-total">
+          <h3>Total: $
+            {(
+              parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
+            ).toFixed(2)}
+          </h3>
+        </div>
         <div className="cancel-order">
           <button onClick={handleCancelOrder}>Cancel Order</button>
         </div>
