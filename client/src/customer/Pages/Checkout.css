@@ -120,7 +120,7 @@ h2 {
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 400;
   color: #222;
 }
@@ -128,9 +128,10 @@ h2 {
 .order-total {
   text-align: right;
   margin-top: 10px;
-  font-size: 10px;
+  font-size: 20px; /* Increased font size for Order Total */
 }
 
+/* Cancel Order Button */
 .cancel-order {
   margin-top: 30px;
   text-align: left;
@@ -155,7 +156,7 @@ h2 {
 /* Action Buttons */
 .button {
   padding: 15px 25px;
-  font-size: 16px;
+  font-size: 18px; /* Increased font size */
   font-weight: bold;
   color: #fff;
   border: none;
@@ -174,6 +175,45 @@ h2 {
 
 .button.place-order:hover {
   background-color: #555;
+}
+
+.add-address-btn {
+  padding: 16px 30px; /* Increased padding */
+  font-size: 18px; /* Increased font size */
+  background-color: #4CAF50; /* Green for Add Address button */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-address-btn:hover {
+  background-color: #388E3C;
+}
+
+/* Order Summary Alignment */
+.order-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.order-summary .subtotal,
+.order-summary .shipping {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.order-summary .subtotal,
+.order-summary .shipping,
+.order-summary .order-total {
+  text-align: right;
+  width: 100%;
+}
+
+.order-summary .shipping {
+  font-size: 14px;
+  color: #555;
 }
 
 /* Responsive Design */
