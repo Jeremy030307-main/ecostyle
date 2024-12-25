@@ -45,7 +45,6 @@ h2 {
 }
 
 .form-group label {
-  font-weight: bold;
   font-size: 14px;
 }
 
@@ -69,13 +68,33 @@ h2 {
   margin-bottom: 10px;
 }
 
+.item-info {
+  display: flex;
+  align-items: center;
+}
+
+.item-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
 .order-summary-total {
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
   font-size: 16px;
-  font-weight: bold;
   color: #444;
+}
+
+.order-total {
+  text-align: right;
+  margin-top: 10px;
+}
+
+.cancel-order {
+  margin-top: 20px;
 }
 
 /* Action Buttons */
