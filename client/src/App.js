@@ -40,8 +40,13 @@ function App() {
             </Route>
             
             <Route path='/admin' element={<AdminRoutes/>}>
-               {/* Your admin routes */}
+              <Route path='' element={<Admin/>}>
+                <Route path='add' element={<Add/>}></Route>
+                <Route path='products' element={<Products/>}></Route>
+                <Route path='orders' element={<Orders/>}></Route>
+              </Route>
             </Route>
+
           </Routes>
       </BrowserRouter>
     </CartProvider>
