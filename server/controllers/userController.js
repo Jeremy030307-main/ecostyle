@@ -1,73 +1,102 @@
 import admin from 'firebase-admin';
 import { db } from "../firebase.js";
+import { COLLECTIONS } from './utility.js';
 
-const userCollection = 'user'
-
-// create new user by its id
-export const newUser = async (req, res, next) => {
-  try{
-    const id = req.params.id;
-    const userData = req.body;
-    await db.collection(userCollection).doc(id).create(userData)
-    res.status(200).send("User Sign Up")
-  } catch (error) {
-    res.status(400).send(error.message)
-  }
-}
-
-// update data of existing user
-export const updateUser = async(req, res) => {
-  try {
-    const {id, ...userData} = req.body;
-    await db.collection(userCollection).doc(id).set(userData)
-    res.status(200).send("User Updated")
-  } catch (error) {
-    res.status(400).send(error.message)
-  }
-}
-
-// delete data of existing user
-export const deleteUser = async(req, res) => {
-  try {
-    const id = req.params.id;
-    await db.collection(userCollection).doc(id).delete()
-    res.status(200).send("User Deleted")
-  } catch (error) {
-    res.status(400).send(error.message)
-  }
-}
-
-// get a user by its id
+// get the display name of a user
 export const getUser = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const data = await db.collection('user').doc(id).get();
+
+    // Fetch the user information from Firebase Authentication
+    const userRecord = await admin.auth().getUser(id); // `id` is the Firebase UID
     
-    if (data.exists) {
-      const userData = data.data(); // Get the document's data
-      userData.id = id; // Add the document ID to the data
-      res.status(200).send(userData); // Send the data with the ID
-    } else {
-      res.status(404).send('product not found');
-    }
+    // If user exists, return the user details
+    const userData = {
+      id: userRecord.uid, // UID (the Firebase Authentication user ID)
+      displayName: userRecord.displayName, // Display Name
+    };
+    
+    res.status(200).send(userData); // Send the user data as the response
   } catch (error) {
+    // If an error occurs (e.g., user not found), handle it
     res.status(400).send(error.message);
+  }
+};
+
+// create new user by its id
+export const newUser = async (req, res, next) => {
+  try {
+    // Get the user id from the authenticated user
+    const id = req.user;
+
+    // Create a new document under the 'users' collection with no fields
+    const userRef = db.collection(COLLECTIONS.USER).doc(id);
+    await userRef.set({}); // Set an empty document
+
+    res.status(200).send("User Sign Up successful, empty document created with subcollections");
+  } catch (error) {
+    console.error(error);
+    res.status(400).send(error.message);
+  }
+}
+
+// ----------------------- Admin Fuction -------------------------------
+// Function to list all users
+export const listAllUsers = async (req, res) => {
+  try {
+    let allUsers = [];
+    let nextPageToken;
+
+    // Fetch users in batches
+    do {
+      const result = await admin.auth().listUsers(1000, nextPageToken); // 1000 is the max number of users per batch
+      allUsers = allUsers.concat(result.users); // Concatenate the users to the array
+      nextPageToken = result.pageToken; // Get the token for the next page of users
+    } while (nextPageToken); // Continue fetching while there's more data (nextPageToken is not null)
+
+    // Send response with all users
+    res.status(200).json({
+      users: allUsers.map(user => ({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        phoneNumber: user.phoneNumber,
+        photoURL: user.photoURL,
+        emailVerified: user.emailVerified,
+      })),
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Failed to retrieve users." });
   }
 };
 
 // create admin level user
 export const setAdmin = async (req, res, next) => {
+  const uid = req.params.id;
+
   try {
-    const uid = req.params.id;
+    // Start a Firestore transaction
+    await admin.firestore().runTransaction(async (transaction) => {
+      const userRef = admin.firestore().collection('users').doc(uid);
 
-    // Set the custom claim 'role' to 'admin' for the user
-    await admin.auth().setCustomUserClaims(uid, { admin: true })
+      // Get the user's Firestore document
+      const userDoc = await transaction.get(userRef);
+      if (!userDoc.exists) {
+        throw new Error(`User document with ID ${uid} does not exist`);
+      }
 
-    console.log(`Custom claim set for user ${uid}`);
-    res.status(200).json({ message: `Custom claim 'admin' set for user ${uid}`});
+      // Update the Firestore document role
+      transaction.update(userRef, { role: 'admin' });
 
+      // Set the custom claim 'role' to 'admin' for the user
+      await admin.auth().setCustomUserClaims(uid, { admin: true });
+    });
+
+    console.log(`Custom claim and Firestore role set for user ${uid}`);
+    res.status(200).json({ message: `Custom claim 'admin' and Firestore role set for user ${uid}` });
   } catch (error) {
-    console.error('Error setting custom claim:', error);
-    res.status(500).json({ error: 'Failed to set custom claim' });
+    console.error('Error setting custom claim or updating Firestore role:', error);
+    res.status(500).json({ error: 'Failed to set custom claim or update Firestore role' });
   }
 };
