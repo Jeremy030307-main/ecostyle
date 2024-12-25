@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Customer from './customer/customer';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -13,41 +13,57 @@ import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
 import LoginSignUp from './customer/Pages/LoginSignUp';
-// import NotFound from './customer/Pages/NotFound';
+import Contact from './customer/Pages/Contact';
+import Footer from './customer/Pages/Footer';
+import NotFound from './customer/Pages/NotFound';
 
 import AdminRoutes from './authentication/protectedRoute';
 import { AuthProvider } from './authentication/authContext';
 
-
 function App() {
-
   return (
     <div>
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-              <Route path='/' element={<Customer/>}>
-                <Route path='' element={<Home/>}></Route>
-                <Route path='shop' element={<Shop/>}></Route>
-                <Route path='eco-point' element={<EcoPoint/>}></Route>
-                <Route path='about' element={<About/>}></Route>
-                <Route path='wishlist' element={<Wishlist/>}></Route>
-                <Route path='cart' element={<Cart/>}></Route>
-                <Route path='account' element={<Account/>}></Route>
-                <Route path='product' element={<Product/>}></Route>
-                <Route path='login' element={<LoginSignUp/>}></Route>
-              </Route>
-
-            
-            <Route element={<AdminRoutes/>}>
-              <Route path='/admin' element={<Admin/>}></Route>
-            </Route>
-            {/* <Route path='*' element={<NotFound/>}></Route> */}
-
-          </Routes>
+          <MainApp />
         </AuthProvider>
       </BrowserRouter>
     </div>
+  );
+}
+
+function MainApp() {
+  const location = useLocation();
+
+  // List of paths where the footer should not appear
+  const noFooterPaths = ['/admin', '/login'];
+
+  return (
+    <>
+      <Routes>
+        <Route path='/' element={<Customer />}>
+          <Route path='' element={<Home />} />
+          <Route path='shop' element={<Shop />} />
+          <Route path='eco-point' element={<EcoPoint />} />
+          <Route path='about' element={<About />} />
+          <Route path='wishlist' element={<Wishlist />} />
+          <Route path='cart' element={<Cart />} />
+          <Route path='account' element={<Account />} />
+          <Route path='product' element={<Product />} />
+          <Route path='login' element={<LoginSignUp />} />
+          <Route path='contact' element={<Contact />} />
+        </Route>
+
+        <Route element={<AdminRoutes />}>
+          <Route path='/admin' element={<Admin />} />
+        </Route>
+
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+
+      {/* Conditional Footer */}
+      {!noFooterPaths.includes(location.pathname) && <Footer />}
+    </>
   );
 }
 

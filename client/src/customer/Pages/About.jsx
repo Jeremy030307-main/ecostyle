@@ -11,6 +11,7 @@ import team6 from "../Components/Assets/ceo3.png";
 import deliveryIcon from "../Components/Assets/cart.svg";
 import serviceIcon from "../Components/Assets/account.svg";
 import guaranteeIcon from "../Components/Assets/wishlist.svg";
+import { FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 
 
@@ -34,30 +35,16 @@ const About = () => {
   ];
 
   const settings = {
-    dots: true, // Show navigation dots
-    infinite: true, // Loop the slides
-    speed: 500, // Transition speed
-    slidesToShow: 3, // Number of slides to show at a time
-    slidesToScroll: 1, // Number of slides to scroll
-    autoplay: true, // Auto-scroll the slider
-    autoplaySpeed: 10000, // Rotate every 10 seconds
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 10000,
     responsive: [
-      {
-        breakpoint: 1024, // Tablet
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600, // Mobile
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+      { breakpoint: 600, settings: { slidesToShow: 1, slidesToScroll: 1 } },
     ],
   };
   
@@ -108,7 +95,9 @@ const About = () => {
               <h4>{member.name}</h4>
               <p>{member.role}</p>
               <div className="team-socials">
-                <span>🐦</span> <span>📷</span> <span>🔗</span>
+                <a href="#!"><FaTwitter /></a>
+                <a href="#!"><FaInstagram /></a>
+                <a href="#!"><FaLinkedin /></a>
               </div>
             </div>
           ))}
@@ -133,30 +122,6 @@ const About = () => {
           <p>We return money within 30 days</p>
         </div>
       </section>
-
-      {/* Footer Section */}
-      <footer className="about-footer">
-        <div className="footer-content">
-          <div>
-            <h3>Exclusive</h3>
-            <p>Get 10% off your first order</p>
-            <input type="email" placeholder="Enter your email" />
-          </div>
-          <div>
-            <h4>Support</h4>
-            <p>111 Bijoy Sarani, Dhaka</p>
-            <p>exclusive@gmail.com</p>
-            <p>+88015-88888-9999</p>
-          </div>
-          <div>
-            <h4>Quick Link</h4>
-            <p>Privacy Policy</p>
-            <p>Terms Of Use</p>
-            <p>FAQ</p>
-            <p>Contact</p>
-          </div>
-        </div>
-      </footer>
     </>
   );
 };
