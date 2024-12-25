@@ -126,10 +126,9 @@ h2 {
 }
 
 .order-total {
-  text-align: center;
-  align-items: right;
+  text-align: right;
   margin-top: 10px;
-  font-size: 20px; /* Increased font size for Order Total */
+  font-size: 20px; 
 }
 
 /* Cancel Order Button */
