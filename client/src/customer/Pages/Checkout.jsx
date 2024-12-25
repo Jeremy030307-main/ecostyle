@@ -182,21 +182,25 @@ const Checkout = () => {
         </div>
       )}
 
-      <div className="cart-order-summary">
+      <div className="order-summary">
         <h2>Order Summary</h2>
-        {cartItems.map((item) => (
-          <div className="item" key={item.id}>
-            <div className="item-info">
-              <img src={item.imageUrl} alt={item.name} className="item-image" />
-              <div>
-                <p>{item.name}</p>
-                <p>{item.color} / {item.size}</p>
+        <div className="cart-items">
+          {cartItems.map((item, index) => (
+            <div key={item.id} className="cart-item">
+              <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
+              <div className="cart-item-details">
+                <h2 className="cart-item-name">{item.name}</h2>
+                <p className="cart-item-id">#{item.id} / {item.color} / {item.size}</p>
+              </div>
+              <div className="cart-item-price-details">
+                <p className="cart-item-price">${(item.price * item.quantity).toFixed(2)}</p>
+                <div className="cart-item-quantity-controls">
+                  <p className="cart-item-quantity">x {item.quantity}</p>
+                </div>
               </div>
             </div>
-            <p>x {item.quantity}</p>
-            <p>${(item.price * item.quantity).toFixed(2)}</p>
-          </div>
-        ))}
+          ))}
+        </div>
         <p>Subtotal: ${calculateSubtotal()}</p>
         <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
         <div className="order-total">
