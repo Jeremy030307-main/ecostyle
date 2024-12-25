@@ -146,18 +146,14 @@ const Checkout = () => {
                   <div key={key} className="form-group">
                     <input
                       type="text"
-                      placeholder={
-                        {
-                          firstName: 'First Name',
-                          lastName: 'Last Name',
-                          address1: 'Address Line 1',
-                          address2: 'Address Line 2 ',
-                          city: 'City',
-                          postalCode: 'Postal Code',
-                          state: 'State',
-                          phone: 'Phone Number',
-                        }[key]
-                      }
+                      placeholder={key === 'firstName' ? 'First Name' :
+                                  key === 'lastName' ? 'Last Name' :
+                                  key === 'address1' ? 'Address Line 1' :
+                                  key === 'address2' ? 'Address Line 2' :
+                                  key === 'city' ? 'City' :
+                                  key === 'postalCode' ? 'Postal Code' :
+                                  key === 'state' ? 'State' :
+                                  key === 'phone' ? 'Phone Number' : ''}
                       value={value}
                       onChange={(e) =>
                         setNewAddress({ ...newAddress, [key]: e.target.value })
@@ -247,7 +243,9 @@ const Checkout = () => {
           />
           {errors.cvv && <span className="error">{errors.cvv}</span>}
         </div>
-        <button onClick={handlePlaceOrder}>Place Order</button>
+        <div className="place-order">
+          <button className="button place-order-btn" onClick={handlePlaceOrder}>Place Order</button>
+        </div>
       </div>
     </div>
   );
