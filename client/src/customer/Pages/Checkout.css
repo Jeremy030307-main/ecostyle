@@ -133,24 +133,22 @@ h2 {
 
 /* Cancel Order Button */
 .cancel-order {
-  margin-top: 30px;
   text-align: left;
 }
 
 .cancel-order button {
-  background-color: #e74c3c; /* Red color for cancel button */
+  background-color: #e74c3c; 
   color: white;
   padding: 15px 25px;
   border: none;
   border-radius: 6px;
   font-size: 18px;
-  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .cancel-order button:hover {
-  background-color: #c0392b; /* Darker red on hover */
+  background-color: #c0392b;
 }
 
 /* Action Buttons */
@@ -175,7 +173,6 @@ h2 {
   color: white;
   padding: 15px 25px;
   font-size: 18px;
-  font-weight: bold;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -191,8 +188,6 @@ h2 {
 .error {
   color: red;
   font-size: 14px;
-  margin-top: 5px; /* Adjust margin for spacing */
-  padding: 0; /* No padding */
 }
 
 .add-address-btn {
@@ -213,21 +208,15 @@ h2 {
 .order-summary {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-}
-
-.order-summary .subtotal,
-.order-summary .shipping {
-  margin-bottom: 10px;
-  font-size: 16px;
-  align-items: end;
+  align-items: flex-end; /* Align all items to the right */
 }
 
 .order-summary .subtotal,
 .order-summary .shipping,
 .order-summary .order-total {
-  text-align: right;
-  align-items: right;
+  margin-bottom: 10px;
+  font-size: 16px;
+  text-align: right; /* Align text to the right */
 }
 
 .order-summary .shipping {
