@@ -143,7 +143,7 @@ const Checkout = () => {
             <div className="form-group">
               {Object.entries(newAddress).map(([key, value]) => (
                 key !== 'tag' && (
-                  <div key={key} className="form-field">
+                  <div key={key} className="form-group">
                     <input
                       type="text"
                       placeholder={
