@@ -180,7 +180,7 @@ h2 {
 .add-address-btn {
   padding: 16px 30px; /* Increased padding */
   font-size: 18px; /* Increased font size */
-  background-color: #4CAF50; /* Green for Add Address button */
+  background-color: #333; 
   color: white;
   border: none;
   border-radius: 6px;
@@ -188,7 +188,7 @@ h2 {
 }
 
 .add-address-btn:hover {
-  background-color: #388E3C;
+  background-color: #555;
 }
 
 /* Order Summary Alignment */
@@ -208,6 +208,7 @@ h2 {
 .order-summary .shipping,
 .order-summary .order-total {
   text-align: right;
+  align-items: right;
   width: 100%;
 }
 
