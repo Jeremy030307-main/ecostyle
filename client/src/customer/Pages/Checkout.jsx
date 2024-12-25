@@ -182,6 +182,7 @@ const Checkout = () => {
         </div>
       )}
 
+      {/* Order Summary Section */}
       <div className="order-summary">
         <h2>Order Summary</h2>
         <div className="cart-items">
@@ -201,14 +202,16 @@ const Checkout = () => {
             </div>
           ))}
         </div>
-        <p>Subtotal: ${calculateSubtotal()}</p>
-        <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
-        <div className="order-total">
-          <h3>Total: $
-            {(
-              parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
-            ).toFixed(2)}
-          </h3>
+        <div className="order-summary-details">
+          <p>Subtotal: ${calculateSubtotal()}</p>
+          <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
+          <div className="order-total">
+            <h3>Total: $
+              {(
+                parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
+              ).toFixed(2)}
+            </h3>
+          </div>
         </div>
         <div className="cancel-order">
           <button onClick={handleCancelOrder}>Cancel Order</button>
