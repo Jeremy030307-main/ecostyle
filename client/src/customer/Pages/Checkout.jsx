@@ -96,254 +96,155 @@ const Checkout = () => {
 
       <div className="tabs">
         <button
-          className={`tab-button ${step === 'shipping' ? 'active' : ''}`}
-          onClick={() => setStep('shipping')}
+          className={`tab-button ${activeTab === 'saved' ? 'active' : ''}`}
+          onClick={() => setActiveTab('saved')}
         >
-          Shipping Address
+          Saved Address
         </button>
         <button
-          className={`tab-button ${step === 'payment' ? 'active' : ''}`}
-          onClick={() => setStep('payment')}
+          className={`tab-button ${activeTab === 'new' ? 'active' : ''}`}
+          onClick={() => setActiveTab('new')}
         >
-          Payment Details
-        </button>
-        <button
-          className={`tab-button ${step === 'summary' ? 'active' : ''}`}
-          onClick={() => setStep('summary')}
-        >
-          Order Summary
+          New Address
         </button>
       </div>
 
       {step === 'shipping' && (
-        <div className="section">
-          <h2>Shipping Address</h2>
-          <div className="tabs">
-            <button
-              className={`tab-button ${activeTab === 'saved' ? 'active' : ''}`}
-              onClick={() => setActiveTab('saved')}
-            >
-              Saved Addresses
-            </button>
-            <button
-              className={`tab-button ${activeTab === 'new' ? 'active' : ''}`}
-              onClick={() => setActiveTab('new')}
-            >
-              Add New Address
-            </button>
-          </div>
+        <div className="shipping-section">
+          <h2>Shipping</h2>
 
           {activeTab === 'saved' && savedAddresses.length > 0 && (
             <div className="saved-addresses">
-              <div className="form-group">
-                <label>Choose a Saved Address:</label>
+              <select
+                value={selectedTag}
+                onChange={handleAddressSelection}
+              >
+                <option value="">Select Address</option>
                 {savedAddresses.map((address, index) => (
-                  <div key={index}>
-                    <input
-                      type="radio"
-                      name="address"
-                      value={address.tag}
-                      checked={selectedTag === address.tag}
-                      onChange={handleAddressSelection}
-                    />
-                    <span>{`${address.firstName} ${address.lastName}, ${address.address1}, ${address.city}, ${address.state}`}</span>
-                  </div>
+                  <option key={index} value={address.tag}>
+                    {address.tag}
+                  </option>
                 ))}
-              </div>
+              </select>
+
+              {filteredAddress && (
+                <div className="saved-address">
+                  <p>{filteredAddress.firstName} {filteredAddress.lastName}</p>
+                  <p>{filteredAddress.address1}, {filteredAddress.address2}</p>
+                  <p>{filteredAddress.city}, {filteredAddress.state} - {filteredAddress.postalCode}</p>
+                  <p>{filteredAddress.phone}</p>
+                  <span className="tag">{filteredAddress.tag}</span>
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === 'new' && (
-            <div className="add-address">
+            <div className="form-group">
+              {Object.entries(newAddress).map(([key, value]) => (
+                key !== 'tag' && (
+                  <div key={key} className="form-group">
+                    <input
+                      type="text"
+                      placeholder={key === 'firstName' ? 'First Name' :
+                                  key === 'lastName' ? 'Last Name' :
+                                  key === 'address1' ? 'Address Line 1' :
+                                  key === 'address2' ? 'Address Line 2' :
+                                  key === 'city' ? 'City' :
+                                  key === 'postalCode' ? 'Postal Code' :
+                                  key === 'state' ? 'State' :
+                                  key === 'phone' ? 'Phone Number' : ''}
+                      value={value}
+                      onChange={(e) =>
+                        setNewAddress({ ...newAddress, [key]: e.target.value })
+                      }
+                    />
+                    {errors[key] && <span className="error">{errors[key]}</span>}
+                  </div>
+                )
+              ))}
+
               <div className="form-group">
-                <label>First Name:</label>
                 <input
                   type="text"
-                  value={newAddress.firstName}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, firstName: e.target.value })
-                  }
-                />
-                {errors.firstName && <div className="error">{errors.firstName}</div>}
-              </div>
-              <div className="form-group">
-                <label>Last Name:</label>
-                <input
-                  type="text"
-                  value={newAddress.lastName}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, lastName: e.target.value })
-                  }
-                />
-                {errors.lastName && <div className="error">{errors.lastName}</div>}
-              </div>
-              <div className="form-group">
-                <label>Address Line 1:</label>
-                <input
-                  type="text"
-                  value={newAddress.address1}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, address1: e.target.value })
-                  }
-                />
-                {errors.address1 && <div className="error">{errors.address1}</div>}
-              </div>
-              <div className="form-group">
-                <label>Address Line 2 (optional):</label>
-                <input
-                  type="text"
-                  value={newAddress.address2}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, address2: e.target.value })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label>City:</label>
-                <input
-                  type="text"
-                  value={newAddress.city}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, city: e.target.value })
-                  }
-                />
-                {errors.city && <div className="error">{errors.city}</div>}
-              </div>
-              <div className="form-group">
-                <label>State:</label>
-                <input
-                  type="text"
-                  value={newAddress.state}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, state: e.target.value })
-                  }
-                />
-                {errors.state && <div className="error">{errors.state}</div>}
-              </div>
-              <div className="form-group">
-                <label>Postal Code:</label>
-                <input
-                  type="text"
-                  value={newAddress.postalCode}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, postalCode: e.target.value })
-                  }
-                />
-                {errors.postalCode && <div className="error">{errors.postalCode}</div>}
-              </div>
-              <div className="form-group">
-                <label>Phone:</label>
-                <input
-                  type="text"
-                  value={newAddress.phone}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, phone: e.target.value })
-                  }
-                />
-                {errors.phone && <div className="error">{errors.phone}</div>}
-              </div>
-              <div className="form-group">
-                <label>Address Tag:</label>
-                <input
-                  type="text"
+                  placeholder="Custom Tag (e.g., Home, Work)"
                   value={newAddress.tag}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, tag: e.target.value })
-                  }
+                  onChange={(e) => setNewAddress({ ...newAddress, tag: e.target.value })}
                 />
-                {errors.tag && <div className="error">{errors.tag}</div>}
               </div>
-              <button className="add-address-btn" onClick={handleAddAddress}>
-                Add Address
-              </button>
+              <button className="add-address-btn" onClick={handleAddAddress}>Add Address</button>
             </div>
           )}
         </div>
       )}
 
-      {step === 'payment' && (
-        <div className="section">
-          <h2>Payment Details</h2>
-          <div className="form-group">
-            <label>Card Number:</label>
-            <input
-              type="text"
-              value={paymentDetails.cardNumber}
-              onChange={(e) =>
-                setPaymentDetails({
-                  ...paymentDetails,
-                  cardNumber: e.target.value,
-                })
-              }
-            />
-            {errors.cardNumber && <div className="error">{errors.cardNumber}</div>}
-          </div>
-          <div className="form-group">
-            <label>Expiry (MM/YY):</label>
-            <input
-              type="text"
-              value={paymentDetails.expiry}
-              onChange={(e) =>
-                setPaymentDetails({ ...paymentDetails, expiry: e.target.value })
-              }
-            />
-            {errors.expiry && <div className="error">{errors.expiry}</div>}
-          </div>
-          <div className="form-group">
-            <label>CVV:</label>
-            <input
-              type="text"
-              value={paymentDetails.cvv}
-              onChange={(e) =>
-                setPaymentDetails({ ...paymentDetails, cvv: e.target.value })
-              }
-            />
-            {errors.cvv && <div className="error">{errors.cvv}</div>}
-          </div>
-        </div>
-      )}
-
-      {step === 'summary' && (
-        <div className="section">
-          <h2>Order Summary</h2>
-          <div className="order-summary">
-            {cartItems.map((item, index) => (
-              <div className="item" key={index}>
-                <div className="item-info">
-                  <img
-                    className="item-image"
-                    src={item.image}
-                    alt={item.name}
-                  />
-                  <span>{item.name}</span>
-                </div>
-                <span>{`$${item.price.toFixed(2)}`}</span>
+      {/* Order Summary Section */}
+      <div className="order-summary">
+        <h2>Order Summary</h2>
+        <div className="cart-items">
+          {cartItems.map((item, index) => (
+            <div key={item.id} className="cart-item">
+              <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
+              <div className="cart-item-details">
+                <h2 className="cart-item-name">{item.name}</h2>
+                <p className="cart-item-id">#{item.id} / {item.color} / {item.size}</p>
               </div>
-            ))}
-            <div className="order-summary-total">
-              <span>Subtotal:</span>
-              <span>{`$${calculateSubtotal().toFixed(2)}`}</span>
+              <div className="cart-item-price-details">
+                <p className="cart-item-price">${(item.price * item.quantity).toFixed(2)}</p>
+                <div className="cart-item-quantity-controls">
+                  <p className="cart-item-quantity">x {item.quantity}</p>
+                </div>
+              </div>
             </div>
-            <div className="order-summary-total">
-              <span>Shipping:</span>
-              <span>$10</span>
-            </div>
-            <div className="order-summary-total order-total">
-              <span>Total:</span>
-              <span>{`$${(calculateSubtotal() + 10).toFixed(2)}`}</span>
-            </div>
+          ))}
+        </div>
+        <div className="order-summary-details">
+          <p>Subtotal: ${calculateSubtotal()}</p>
+          <p>Shipping: {calculateSubtotal() > 140 ? 'Free' : '$10.00'}</p>
+          <div className="order-total">
+            <h3>Total: $
+              {(
+                parseFloat(calculateSubtotal()) + (calculateSubtotal() > 140 ? 0 : 10)
+              ).toFixed(2)}
+            </h3>
           </div>
         </div>
-      )}
-
-      <div className="action-buttons">
         <div className="cancel-order">
           <button onClick={handleCancelOrder}>Cancel Order</button>
         </div>
+      </div>
+
+      <div className="payment-details">
+        <h2>Payment Details</h2>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Card Number"
+            value={paymentDetails.cardNumber}
+            onChange={(e) => setPaymentDetails({ ...paymentDetails, cardNumber: e.target.value })}
+          />
+          {errors.cardNumber && <span className="error">{errors.cardNumber}</span>}
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Expiry Date (MM/YY)"
+            value={paymentDetails.expiry}
+            onChange={(e) => setPaymentDetails({ ...paymentDetails, expiry: e.target.value })}
+          />
+          {errors.expiry && <span className="error">{errors.expiry}</span>}
+        </div>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="CVV"
+            value={paymentDetails.cvv}
+            onChange={(e) => setPaymentDetails({ ...paymentDetails, cvv: e.target.value })}
+          />
+          {errors.cvv && <span className="error">{errors.cvv}</span>}
+        </div>
         <div className="place-order">
-          <button className="button place-order" onClick={handlePlaceOrder}>
-            Place Order
-          </button>
+          <button className="button place-order" onClick={handlePlaceOrder}>Place Order</button>
         </div>
       </div>
     </div>
