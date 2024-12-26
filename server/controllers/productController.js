@@ -3,6 +3,29 @@ import { db } from "../firebase.js";
 import admin from 'firebase-admin'
 import { COLLECTIONS, message } from "./utility.js"; 
 
+export const checkProduct = async (body) => {
+  try {
+      // Check if at least one field is present (in this case, 'collection')
+      if (!body || !body.product) {
+          return { isValid: true, errorMessage: null };
+      }
+      // Reference to the document in the "category" collection
+      const productRef = db.collection(COLLECTIONS.PRODUCT).doc(body.product);
+      const productDoc = await productRef.get();
+
+      // Return true if the document exists, otherwise false
+      if (!productDoc.exists) {
+          return { isValid: false, errorMessage: 'Product does not exist' };
+        }
+      
+        return { isValid: true, errorMessage: null };  // Valid collection
+
+  } catch (error) {
+      console.error('Error checking product:', error);
+      throw new Error(`Unable to check product existence: ${error.message}`);
+  }
+}
+
 const getVariantDetails = async (variantData) => {
   try{
 

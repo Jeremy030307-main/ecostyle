@@ -9,6 +9,7 @@ const getHeaders = async () => {
         if (currentUser) {
             // Await the promise to get the actual token
             authToken = await currentUser.getIdToken() || null;
+            console.log(authToken)
         } else {
             console.log("No authenticated user found.");
         }
@@ -28,6 +29,8 @@ const getHeaders = async () => {
     if (authToken) {
         headers['Authorization'] = `Bearer ${authToken}`;
     }
+
+    console.log(headers)
     return headers;
 };
 

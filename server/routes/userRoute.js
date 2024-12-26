@@ -1,8 +1,7 @@
 import express from 'express';
-import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { authenticate } from './middleware.js';
 
-import { newUser, updateUser, deleteUser, getUser, setAdmin, getAllUser, listAllUsers } from '../controllers/userController.js';
-import { newUserSchema, updateUserSchema } from '../schema/userSchema.js';
+import { newUser, getUser, setAdmin, listAllUsers } from '../controllers/userController.js';
 
 const publicUserRouter = express.Router();
 const adminUserRouter = express.Router();

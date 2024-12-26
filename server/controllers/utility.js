@@ -7,7 +7,8 @@ export const COLLECTIONS = {
     COLLECTION: 'collection',
     COLLECTION_HISTROY: "history",
     USER: "user",
-    REVIEW: "review"
+    REVIEW: "review",
+    CART: "cart"
 };
   
  

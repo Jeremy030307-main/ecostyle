@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { validateRequest } from './middleware.js';
 import { getCategories, addCategory, deleteCategory} from '../controllers/categoryController.js';
 import { categorySchema } from '../schema/categorySchema.js';
 

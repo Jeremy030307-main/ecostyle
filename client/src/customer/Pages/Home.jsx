@@ -18,8 +18,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategory = async () => {
             try {
-              // const data = await deleteReview("Y6ekBM7ZQ93mwG1siw3n")
-              // console.log(data)
+              // await addCartProduct("EL00000", 2)
                 
             } catch (err) {
                 setError(err.message); // Handle error
