@@ -16,25 +16,18 @@ const Add = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  // const [category,setCategory] = useState("Men");
-  // const [subCategory,setSubCategory] = useState("Topwear");
-  const [bestseller, setBestseller] = useState(false);
   const [sizes, setSizes] = useState([]);
 
-  // const [categories, setCategories] = useState([]); // State to store fetched categories
-  // const [error, setError] = useState(null); // State for error handling
-
-  // const [category, setCategory] = useState(""); // Selected category state
-  // const [subCategory, setSubCategory] = useState(""); // Selected subcategory state
-  // const [subCategories, setSubCategories] = useState([]); // Subcategories of the selected category
 
   // COLLECTIONS
   const [collections, setCollections] = useState([{ colorID: "", image: null }]);
+  const [selectedCollection, setSelectedCollection] = useState(""); // Selected collection
+
   const fetchCollections = async () => {
 
     try{
       const collection = await getAllCollection();
-      console.log("All Collections Fetched", collection)
+      console.log("All Collections Fetched")
       setCollections(collection);
     } catch (error){
       console.error("Error fetching collection:", error);
@@ -49,7 +42,7 @@ const Add = () => {
 
     try{
       const colors = await getColors();
-      console.log("All Colors Fetched", colors)
+      console.log("All Colors Fetched")
       setAvailableColors(colors);
     } catch (error){
       console.error("Error fetching colors:", error);
@@ -82,77 +75,91 @@ const Add = () => {
     setVariants(updatedVariants);
   };
 
+
+  const [categories, setCategories] = useState([]); // Full category structure
+  const [selectedCategory, setSelectedCategory] = useState(""); // Top-level category ID
+  const [selectedSubcategory, setSelectedSubcategory] = useState(""); // Subcategory ID
+  const [nestedSubcategory, setNestedSubcategory] = useState(""); // Nested subcategory ID (if applicable)
+
   const fetchCategories = async () => {
-
-    try{
-      const data = await getCategory();
-      console.log("data")
-    } catch (error){
-
+    try {
+      const categoryData = await getCategory();
+      console.log("All Categories Fetched")
+      setCategories(categoryData); // Example: [{id: 'MEN', name: 'Men', subcategories: [...]}, ...]
+    } catch (error) {
+      console.error("Error fetching categories:", error);
     }
   }
 
+  // Handle top-level category selection
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setSelectedSubcategory(""); // Reset subcategory when parent changes
+    setNestedSubcategory(""); // Reset nested subcategory when parent changes
+  };
+
+  // Handle subcategory selection
+  const handleSubcategoryChange = (subcategoryId) => {
+    setSelectedSubcategory(subcategoryId);
+    setNestedSubcategory(""); // Reset nested subcategory when subcategory changes
+  };
+
+  // Handle nested subcategory selection
+  const handleNestedSubcategoryChange = (nestedSubcategoryId) => {
+    setNestedSubcategory(nestedSubcategoryId);
+  };
+
+
   // Fetch categories on component mount
   useEffect(() => {
-    // fetchCategories();
-    // fetchColors();
+    fetchCategories();
+    fetchColors();
     fetchCollections();
   }, []);
 
-  // Update subcategories when a category is selected
-  // const handleCategoryChange = (e) => {
-  //   const selectedCategoryID = e.target.value;
-  //   setCategory(selectedCategoryID);
-
-  //   // Find the selected category in the categories list
-  //   const selectedCategory = categories.find((cat) => cat.id === selectedCategoryID);
-  //   if (selectedCategory && selectedCategory.subcategories) {
-  //     setSubCategories(selectedCategory.subcategories);
-  //   } else {
-  //     setSubCategories([]); // Clear subcategories if none exist
-  //   }
-  // };
+  
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
-    // try {
+    try {
 
-    //   const productData = {
-    //     name: name,
-    //     price: price,
-    //     thumbnail: image1,
-    //     sizes: [JSON.stringify(sizes)],
-    //     details: {
-    //       description: description,
-    //       material: "100% Cotton",
-    //       fit: "Regular"
-    //     },
-    //     category: category,
-    //     collection: "summer2024",
-    //     variant: [
-    //       variants
-    //     ]
-    //   };
+      const productData = {
+        name: name,
+        price: price,
+        thumbnail: image1,
+        sizes: [JSON.stringify(sizes)],
+        details: {
+          description: description,
+          material: "100% Cotton",
+          fit: "Regular"
+        },
+        category: selectedCategory,
+        collection: selectedCollection,
+        variant: [
+          variants
+        ]
+      };
     
-    //   await addProduct(productData)
-    //     .then(response => {
-    //       console.log("Product added successfully:", response);
-    //     })
-    //     .catch(error => {
-    //       console.error("Error adding product:", error);
-    //     });
+      await addProduct(productData)
+        .then(response => {
+          console.log("Product added successfully:", response);
+        })
+        .catch(error => {
+          console.error("Error adding product:", error);
+        });
       
 
 
-    // } catch(error) {
-
-    // }
+    } catch(error) {
+      console.log("Error Dumbbitch")
+    }
 
   }
   
   return (
     <form onSubmit={onSubmitHandler} className="add-form">
+      {/* Images */}
       <div>
         <p className="upload-section">Upload Image</p>
         <div className="upload-images">
@@ -175,51 +182,79 @@ const Add = () => {
         </div>
       </div>
 
+      {/* Name */}
       <div className="w-full">
         <p className="upload-section">Product Name</p>
         <input onChange={(e)=>setName(e.target.value)} value={name} className="input-field" type="text" placeholder="Type Here" required />
       </div>
 
+      {/* Description */}
       <div className="w-full">
         <p className="upload-section">Product Description</p>
         <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className="textarea-field" placeholder="Write Content Here" required></textarea>
       </div>
 
       <div className="category-section sm-row">
-        {/* <div>
-          <p className="upload-section">Product Category</p>
-            <select onChange={handleCategoryChange} className="select-field">
-              <option value="">Select Category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
+        {/* Catategory Dropdown */}
+        <div>
+          <p className="upload-section">Category</p>
+          <select
+            value={selectedCategory}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+          >
+            <option value="">Select Category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {subCategories.length > 0 && (
+        {/* Subcategory Dropdown */}
+        {selectedCategory && (
           <div>
             <p className="upload-section">Subcategory</p>
-            <select onChange={(e) => setSubCategory(e.target.value)} className="select-field">
+            <select
+              value={selectedSubcategory}
+              onChange={(e) => handleSubcategoryChange(e.target.value)}
+            >
               <option value="">Select Subcategory</option>
-              {subCategories.map((subCat) => (
-                <option key={subCat.id} value={subCat.id}>
-                  {subCat.name}
-                </option>
-              ))}
+              {categories
+                .find((category) => category.id === selectedCategory)
+                ?.subcategories.map((subcategory) => (
+                  <option key={subcategory.id} value={subcategory.id}>
+                    {subcategory.name}
+                  </option>
+                ))}
             </select>
           </div>
-        )} */}
+        )}
 
-        {/* <div>
-          <p className="upload-section">Collection</p>
-          <select onChange={(e)=>setSubCategory(e.target.value)} className="select-field">
-            <option value="Summer">Summer</option>
-            <option value="Winter">Winter</option>
-          </select>
-        </div> */}
+        {/* Nested Subcategory Dropdown */}
+        {selectedSubcategory && (
+          <div>
+            <p className="upload-section">Sub subcategory</p>
+            <select
+              value={nestedSubcategory}
+              onChange={(e) => handleNestedSubcategoryChange(e.target.value)}
+            >
+              <option value="">Select Nested Subcategory</option>
+              {categories
+                .find((category) => category.id === selectedCategory)
+                ?.subcategories.find(
+                  (subcategory) => subcategory.id === selectedSubcategory
+                )
+                ?.subcategories.map((nested) => (
+                  <option key={nested.id} value={nested.id}>
+                    {nested.name}
+                  </option>
+                ))}
+            </select>
+          </div>
+        )}
 
+        {/* Price */}
         <div>
           <p className="upload-section">Product Price</p>
           <input onChange={(e)=>setPrice(e.target.value)} value={price} className="input-field category-price-input" type="number" placeholder="25" />
@@ -227,6 +262,23 @@ const Add = () => {
 
       </div>
 
+      {/* Collection*/}
+      <div>
+      <p className="upload-section">Collection</p>
+        <select
+          value={selectedCollection}
+          onChange={(e) => setSelectedCollection(e.target.value)}
+        >
+          <option value="">Select Collection</option>
+          {collections.map((collection) => (
+            <option key={collection.id} value={collection.id}>
+              {collection.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      
+      {/* Sizes */}
       <div>
         <p className="upload-section">Product Sizes</p>
         <div className="size-options">
@@ -247,69 +299,72 @@ const Add = () => {
           </div>
         </div>
       </div>
+      
+      {/* Variances */}
+      <div>
+        <p className="upload-section">Variances</p>
+        {/* Adding Variant (Colors and Images) */}
+        {variants.map((variant, index) => (
+          <div key={index} className="variant-row">
+            {/* Dropdown for selecting color */}
+            <select
+              value={variant.colorID}
+              onChange={(e) => handleColorChange(index, e.target.value)}
+            >
+              <option value="">Select Color</option>
+              {availableColors.map((color) => (
+                <option key={color.id} value={color.id}>
+                  {color.name}
+                </option>
+              ))}
+            </select>
 
+            {/* Display color preview */}
+            {variant.colorID && (
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor:
+                    availableColors.find((color) => color.id === variant.colorID)
+                      ?.colorCode || "#000",
+                  marginLeft: "10px",
+                  borderRadius: "50%",
+                }}
+              ></span>
+            )}
 
-      {/* Adding Variant (Colors and Images) */}
-      {variants.map((variant, index) => (
-        <div key={index} className="variant-row">
-          {/* Dropdown for selecting color */}
-          <select
-            value={variant.colorID}
-            onChange={(e) => handleColorChange(index, e.target.value)}
-          >
-            <option value="">Select Color</option>
-            {availableColors.map((color) => (
-              <option key={color.id} value={color.id}>
-                {color.name}
-              </option>
-            ))}
-          </select>
-
-          {/* Display color preview */}
-          {variant.colorID && (
-            <span
-              style={{
-                display: "inline-block",
-                width: "20px",
-                height: "20px",
-                backgroundColor:
-                  availableColors.find((color) => color.id === variant.colorID)
-                    ?.colorCode || "#000",
-                marginLeft: "10px",
-                borderRadius: "50%",
-              }}
-            ></span>
-          )}
-
-          {/* Image upload */}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(index, e.target.files[0])}
-          />
-
-          {/* Image preview */}
-          {variant.image && (
-            <img
-              src={URL.createObjectURL(variant.image)} // Temporary preview
-              alt="Preview"
-              style={{
-                width: "50px",
-                height: "50px",
-                objectFit: "cover",
-                marginLeft: "10px",
-              }}
+            {/* Image upload */}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(index, e.target.files[0])}
             />
-          )}
 
-          {/* Remove variant button */}
-          <button onClick={() => removeVariant(index)}>Remove</button>
-        </div>
-      ))}
+            {/* Image preview */}
+            {variant.image && (
+              <img
+                src={URL.createObjectURL(variant.image)} // Temporary preview
+                alt="Preview"
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  objectFit: "cover",
+                  marginLeft: "10px",
+                }}
+              />
+            )}
 
-      {/* Add new variant */}
-      <button onClick={addVariant}>Add Variant</button>
+            {/* Remove variant button */}
+            <button onClick={() => removeVariant(index)}>Remove</button>
+          </div>
+        ))}
 
+        {/* Add new variant */}
+        <button onClick={addVariant}>Add Variant</button>
+      </div>
+      
       <button type="submit" className="submit-button">ADD</button>
     </form>
 
