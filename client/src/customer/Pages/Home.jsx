@@ -8,6 +8,7 @@ import flash_sale_icon from '../Components/Assets/flash_sale_rectangle.png'
 import { useState, useEffect } from 'react';
 import { getProduct } from '../../apiManager/methods/productMethods';
 import { getAllCollection } from '../../apiManager/methods/collectionMethods';
+import { getCategory } from '../../apiManager/methods/categoryMethods';
 
 // import add_to_fav_script from '../Components/Scripts/add_to_fav_button.js'
 
@@ -20,7 +21,7 @@ const Home = () => {
     useEffect(() => {
         const fetchCategory = async () => {
             try {
-              const data = await getAllCollection();
+              const data = await getCategory();
               console.log(data)
                 
             } catch (err) {

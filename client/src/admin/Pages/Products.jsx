@@ -3,33 +3,36 @@ import { NavLink } from 'react-router-dom';
 import { assets } from '../Components/Assets/assets';
 import { currency } from '../admin'
 import "./Products.css"
+import { getCategory } from '../../apiManager/methods/categoryMethods';
 
 const Products = () => {
 
   const [list,setList] = useState([])
 
-  // const fetchList = async () => {
-  //   try{
-  //     const response = await axios.get(backendURL + '/api/product/list')
-  //     if (response.data.success) {
-  //       setList(response.data.products);
-  //     } else {
-  //       toast.error(response.data.message)
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //     toast.error(error.message)
-  //   }
-
-  // }
-
-  // useEffect(()=> {
-  //   fetchList()
-  // },[])
+  const [categoryData, setCategoryData] = useState(null);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+    
+        useEffect(() => {
+            const fetchCategory = async () => {
+                try {
+                  const data = await getCategory();
+                  console.log(data)
+                    
+                } catch (err) {
+                    setError(err.message); // Handle error
+                    console.error(err);
+                } finally {
+                    setLoading(false); // Stop loading when request is done
+                }
+            };
+    
+            fetchCategory(); // Fetch data when component mounts or categoryID changes
+        }, []); // Dependency array: only rerun if categoryID changes
 
   return (
     <>
-      <div class="title-container">
+      <div className="title-container">
         <p>Our Products</p>
         <div>
             <NavLink className="add-product-button" to="/admin/add">
@@ -39,24 +42,24 @@ const Products = () => {
         </div>
       </div>
       
-      <div class="product-list-container">
+      <div className="product-list-container">
         {/* List Table Title */}
-        <div class="product-list-header">
+        <div className="product-list-header">
           <b>Image</b>
           <b>Name</b>
           <b>Category</b>
           <b>Price</b>
-          <b class="action-header">Action</b>
+          <b className="action-header">Action</b>
         </div>
 
         {/* Product List */}
         {list.map((item, index) => (
-          <div class="product-item" key={index}>
-            <img class="product-image" src={item.image[0]} alt="" />
+          <div className="product-item" key={index}>
+            <img className="product-image" src={item.image[0]} alt="" />
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>{currency}{item.price}</p>
-            <p class="product-action">X</p>
+            <p className="product-action">X</p>
           </div>
         ))}
       </div>

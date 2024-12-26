@@ -2,11 +2,10 @@ import React, { useState, useEffect } from 'react'
 import {assets} from '../Components/Assets/assets'
 import './Add.css';
 import { addProduct } from '../../apiManager/methods/productMethods';
-import { getCategory } from '../../apiManager/methods/categoryMethods';
+import { getCategory } from '../../apiManager/methods/categoryMethods.js';
 
 
 const Add = () => {
-
   const [image1, setImage1] = useState(false)
   const [image2, setImage2] = useState(false)
   const [image3, setImage3] = useState(false)
@@ -27,20 +26,27 @@ const Add = () => {
   // const [subCategory, setSubCategory] = useState(""); // Selected subcategory state
   // const [subCategories, setSubCategories] = useState([]); // Subcategories of the selected category
 
-  const fetchCategories = async () => {
-
-    try{
-      const data = await getCategory();
-      console.log(data.data)
-    } catch (error){
-
-    }
-  }
-
   // Fetch categories on component mount
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const [categoryData, setCategoryData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchCategory = async () => {
+            try {
+              const data = await getCategory();
+              console.log(data)
+                
+            } catch (err) {
+                setError(err.message); // Handle error
+                console.error(err);
+            } finally {
+                setLoading(false); // Stop loading when request is done
+            }
+        };
+
+        fetchCategory(); // Fetch data when component mounts or categoryID changes
+    }, []); // Dependency array: only rerun if categoryID changes
 
   // Update subcategories when a category is selected
   // const handleCategoryChange = (e) => {
@@ -100,7 +106,7 @@ const Add = () => {
     // }
 
   }
-
+  
   return (
     <form onSubmit={onSubmitHandler} className="add-form">
       <div>

@@ -65,7 +65,7 @@ export const getCategories = async (req, res) => {
     }
 
     try {
-
+        console.log("Masuk")
         const categoryID = req.params.id;
         let categories = null;
 
@@ -73,6 +73,7 @@ export const getCategories = async (req, res) => {
             // Fetch top-level categories
             const categorySnapshot = await db.collection(COLLECTIONS.CATEGORY).get();
 
+            console.log("ffdfdfd")
             if (categorySnapshot.empty) {
                 return res.status(404).send(message('No categories found.'));
             }
