@@ -1,0 +1,180 @@
+/* Main Container */
+.product-page-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; /* Subtle background color for better contrast */
+}
+
+/* Main Content Layout */
+.product-main-content {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap; /* Ensures responsiveness for smaller screens */
+}
+
+/* Left Section: Main Product Image */
+.product-image-section {
+    flex: 1;
+    max-width: 500px; /* Limits the image size for large screens */
+}
+.main-product-image {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+}
+
+/* Right Section: Product Details */
+.product-details-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.product-name {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem; /* Add space between name and price */
+    color: #333; /* Darker color for better readability */
+}
+
+.product-price {
+    font-size: 1.5rem;
+    color: #555;
+    margin-top: 0; /* Remove extra space above price */
+}
+
+.product-sizes,
+.product-colors {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap; /* Allows wrapping for smaller screens */
+}
+
+.size-button {
+    padding: 0.5rem 1rem;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+}
+.size-button:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05); /* Subtle scaling effect */
+}
+
+.color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+.color-swatch:hover {
+    border-color: #000;
+}
+
+/* Variants Section */
+.product-variants {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap; /* Allows wrapping for smaller screens */
+    cursor: pointer;
+}
+.variant-item {
+    text-align: center;
+}
+.variant-image {
+    width: 100px;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    object-fit: cover;
+    transition: transform 0.3s; /* Hover effect */
+}
+.variant-image:hover {
+    transform: scale(1.1);
+}
+
+/* Reviews Section */
+.reviews-section {
+    margin-top: 2rem;
+}
+.review-item {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.review-header {
+    font-weight: bold;
+}
+.review-details {
+    font-size: 0.9rem;
+    color: #555;
+}
+.review-text {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Add to Cart and Favorite Buttons */
+/* Action Buttons: Container for Add to Cart and Favorite buttons */
+.action-buttons {
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center; /* Vertically align items */
+    gap: 1rem; /* Add spacing between buttons */
+    margin-top: 1rem; /* Space above the button container */
+  }
+  
+  /* Add to Cart Button */
+  .add-to-cart-btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Center content inside */
+    justify-content: center;
+  }
+  
+  .add-to-cart-btn:hover {
+    background-color: #45a049;
+  }
+  
+  /* Favorite Button */
+  .fav-btn {
+    background-color: white;
+  color: #ff4081; 
+  padding: 0.8rem; 
+  font-size: 1.5rem; 
+  font-weight: bold;
+  border: none;
+  border-radius: 50%; 
+  border: 2px solid red;
+  cursor: pointer;
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  width: 3rem;
+  height: 3rem; 
+  }
+  
+  .fav-btn:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.05);
+  }
+  
