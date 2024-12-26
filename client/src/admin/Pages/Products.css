@@ -1,3 +1,32 @@
+/* Title container */
+.title-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.add-product-button{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid #D1D5DB;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    color: black;
+    text-decoration: none;
+    background-color: #2fbd8e9d;
+    border-color: black;
+}
+
+.add-product-button img {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.add-product-button p {
+    margin: 0px;
+}
+
 /* Section title */
 .section-title {
     margin-bottom: 0.5rem; /* mb-2 */

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom';
+import { assets } from '../Components/Assets/assets';
 import { currency } from '../admin'
 import "./Products.css"
 
@@ -27,7 +29,16 @@ const Products = () => {
 
   return (
     <>
-      <p class="section-title">Our Products</p>
+      <div class="title-container">
+        <p>Our Products</p>
+        <div>
+            <NavLink className="add-product-button" to="/admin/add">
+                <img src={assets.add_icon} alt="" />
+                <p className='button-word'>Add A Product</p>
+            </NavLink>
+        </div>
+      </div>
+      
       <div class="product-list-container">
         {/* List Table Title */}
         <div class="product-list-header">
