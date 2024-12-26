@@ -1,16 +1,31 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './LoginSignUp.css';
-import { useAuth } from '../../authentication/authContext';
 import formImage from '../Components/Assets/form-bg.png'
 import logo from '../Components/Assets/logo_image.png'
 import { Navigate } from "react-router-dom";
+import AuthenticationManager from '../../authentication/authenticationManager';
 
 const LoginSignUp = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const formRef = useRef(null);
-  const { login, signUp, isAuthenticated } = useAuth();
-  let state = null
+  const [isAuthenticated, setAuthenticated] = useState(false)
+
+  useEffect(() => {
+    const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
+      if (user) {
+        if (!user.isAnonymous){
+          console.log("authentication is true")
+          setAuthenticated(true);
+        }
+      } else {
+        setAuthenticated(false);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
 
   // Toggle between Login and Sign-Up views 
   const toggleForm = () => {
@@ -21,7 +36,7 @@ const LoginSignUp = () => {
     return (p1 === p2);
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
 
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -37,26 +52,16 @@ const LoginSignUp = () => {
     if (isSignUp){
       const fname = formData.get('fname');
       const lname = formData.get('lname');
-      state = signUp(fname, lname, email, password);
-    } else {
-      login(email, password)
-        .then(result => {
-          console.log(result)
-          state = result
-        })
-        .catch(error=> {
-          console.log(error)
-          state = false
-        });
+      await AuthenticationManager.signUp(fname, lname, email, password)
 
-      if (state === false){
-        formRef.current.reset()};
+    } else {
+      await AuthenticationManager.signIn(email, password)
     }
   };
 
-  if (isAuthenticated) {
-    return <Navigate to="/" />; // Redirect to home page
-}
+  if (isAuthenticated === true) {
+    return <Navigate to="/" replace />; // Redirect to home page
+  }
 
   return (
     <div className="form-container">

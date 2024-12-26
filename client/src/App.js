@@ -1,4 +1,7 @@
 import './App.css';
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { CartProvider } from './CartContext.js'; // Import CartProvider
+
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Customer from './customer/customer';
 import "slick-carousel/slick/slick.css";
@@ -11,59 +14,47 @@ import Wishlist from './customer/Pages/Wishlist';
 import Account from './customer/Pages/Account';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
-import Admin from './admin/admin';
 import LoginSignUp from './customer/Pages/LoginSignUp';
+
+import Admin from './admin/admin';
+import Add from './admin/Pages/Add';
+import Products from './admin/Pages/Products';
+import Orders from './admin/Pages/Orders';
 import Contact from './customer/Pages/Contact';
 import Footer from './customer/Pages/Footer';
 import NotFound from './customer/Pages/NotFound';
 
 import AdminRoutes from './authentication/protectedRoute';
+import Checkout from './customer/Pages/Checkout';
 import { AuthProvider } from './authentication/authContext';
 
 function App() {
   return (
-    <div>
+    <CartProvider>  {/* Wrap the entire app in CartProvider */}
       <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Customer/>}>
+              <Route path='' element={<Home/>}></Route>
+              <Route path='shop' element={<Shop/>}></Route>
+              <Route path='eco-point' element={<EcoPoint/>}></Route>
+              <Route path='about' element={<About/>}></Route>
+              <Route path='wishlist' element={<Wishlist/>}></Route>
+              <Route path='cart' element={<Cart />} /> {/* Cart page */}
+              <Route path='account' element={<Accout/>}></Route>
+              <Route path='product' element={<Product/>}></Route>
+              <Route path='login' element={<LoginSignUp/>}></Route>
+              <Route path='checkout' element={<Checkout />} /> {/* Checkout page */}
+            </Route>
+            
+            <Route path='/admin' element={<AdminRoutes/>}>
+               {/* Your admin routes */}
+            </Route>
+          </Routes>
         <AuthProvider>
           <MainApp />
         </AuthProvider>
       </BrowserRouter>
-    </div>
-  );
-}
-
-function MainApp() {
-  const location = useLocation();
-
-  // List of paths where the footer should not appear
-  const noFooterPaths = ['/admin', '/login'];
-
-  return (
-    <>
-      <Routes>
-        <Route path='/' element={<Customer />}>
-          <Route path='' element={<Home />} />
-          <Route path='shop' element={<Shop />} />
-          <Route path='eco-point' element={<EcoPoint />} />
-          <Route path='about' element={<About />} />
-          <Route path='wishlist' element={<Wishlist />} />
-          <Route path='cart' element={<Cart />} />
-          <Route path='account' element={<Account />} />
-          <Route path='product' element={<Product />} />
-          <Route path='login' element={<LoginSignUp />} />
-          <Route path='contact' element={<Contact />} />
-        </Route>
-
-        <Route element={<AdminRoutes />}>
-          <Route path='/admin' element={<Admin />} />
-        </Route>
-
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-
-      {/* Conditional Footer */}
-      {!noFooterPaths.includes(location.pathname) && <Footer />}
-    </>
+    </CartProvider>
   );
 }
 

@@ -7,9 +7,9 @@ import account_icon from '../Assets/account.svg'
 import admin_icon from '../Assets/admin_icon.svg'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAuth } from '../../../authentication/authContext';
 import { useLocation } from 'react-router-dom';
-import { ROLES } from '../../../authentication/authRole';
+import AuthenticationManager from '../../../authentication/authenticationManager';
+import { useCart } from '../../../CartContext';
 
 const NoDecorationLink = styled(Link)`
   text-decoration: none;
@@ -19,19 +19,48 @@ const NoDecorationLink = styled(Link)`
 const Navbar = () => {
 
     const [menu,setMenu] = useState("");
-    const { isAuthenticated,role} = useAuth();
-
+    const [admin, setAdmin] = useState(false);
+    const [isAuthenticated, setAuthenticated] = useState(false)
     const location = useLocation(); // Get the current location
-    useEffect(() => {
-        const pathSegments = location.pathname.split('/'); // Split the pathname by '/'
-        const lastSegment = pathSegments[pathSegments.length - 1]; // Get the last segment
 
-        // Update menu only if it's currently empty
-        if (menu === "") {
-            setMenu(lastSegment || "home");
+  // Get cart items from context
+  const { cartItems } = useCart();
+
+  // Calculate the total number of items in the cart
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+    // Monitor authentication state
+  useEffect(() => {
+    const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
+      if (user) {
+        if (!user.isAnonymous){
+          console.log("authentication is true")
+          setAuthenticated(true);
         }
-    }, [location.pathname]); // Run effect when pathname changes
+        AuthenticationManager.auth.currentUser
+          .getIdTokenResult()
+          .then((idTokenResult) => {
+            setAdmin(Boolean(idTokenResult.claims.admin));
+          })
+          .catch(() => setAdmin(false)); // Handle error gracefully
 
+      } else {
+        setAuthenticated(false);
+        setAdmin(false);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
+    // Update menu based on the current path
+    useEffect(() => {
+        const pathSegments = location.pathname.split("/");
+        const lastSegment = pathSegments[pathSegments.length - 1] || "home";
+        setMenu(lastSegment);
+    }, [location.pathname]); // Run effect only when the path changes
+    
     return (
         <div className="navbar">
             <div className='nav-logo'>
@@ -47,9 +76,10 @@ const Navbar = () => {
             <div className='nav-account-cart-wishlist'>
                 <Link to='/wishlist'><img onClick={() => {setMenu("wishlist")}} src={wishlist_icon} alt="" /></Link>
                 <Link to='/cart'><img onClick={() => {setMenu("cart")}} src={cart_icon} alt="" /></Link>
-                <div className='nav-cart-count'>0</div>
-                <Link to= {isAuthenticated ? '/account':'/login'}><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
-                {(role === ROLES.ADMIN) ? <Link to='/admin'><img onClick={() => {setMenu("admin")}} src={admin_icon} alt="" /></Link> : <></>}
+                {/* Display the total number of items in the cart */}
+                <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
+                <Link to= {(isAuthenticated === true) ? '/account':'/login'}><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
+                {(admin === true) ? <Link to='/admin'><img onClick={() => {setMenu("admin")}} src={admin_icon} alt="" /></Link> : <></>}
                 
             </div>
         </div>
