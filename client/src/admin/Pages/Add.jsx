@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {assets} from '../Components/Assets/assets'
 import './Add.css';
+import { addProduct } from '../../apiManager/methods/productMethods';
+import { getCategory } from '../../apiManager/methods/categoryMethods';
 
 
 const Add = () => {
@@ -13,14 +15,94 @@ const Add = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
-  const [category,setCategory] = useState("Men");
-  const [subCategory,setSubCategory] = useState("Topwear");
+  // const [category,setCategory] = useState("Men");
+  // const [subCategory,setSubCategory] = useState("Topwear");
   const [bestseller, setBestseller] = useState(false);
   const [sizes, setSizes] = useState([]);
 
+  // const [categories, setCategories] = useState([]); // State to store fetched categories
+  // const [error, setError] = useState(null); // State for error handling
+
+  // const [category, setCategory] = useState(""); // Selected category state
+  // const [subCategory, setSubCategory] = useState(""); // Selected subcategory state
+  // const [subCategories, setSubCategories] = useState([]); // Subcategories of the selected category
+
+  const fetchCategories = async () => {
+
+    try{
+      const data = await getCategory();
+      console.log(data.data)
+    } catch (error){
+
+    }
+  }
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  // Update subcategories when a category is selected
+  // const handleCategoryChange = (e) => {
+  //   const selectedCategoryID = e.target.value;
+  //   setCategory(selectedCategoryID);
+
+  //   // Find the selected category in the categories list
+  //   const selectedCategory = categories.find((cat) => cat.id === selectedCategoryID);
+  //   if (selectedCategory && selectedCategory.subcategories) {
+  //     setSubCategories(selectedCategory.subcategories);
+  //   } else {
+  //     setSubCategories([]); // Clear subcategories if none exist
+  //   }
+  // };
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    // try {
+
+    //   const productData = {
+    //     name: name,
+    //     price: price,
+    //     thumbnail: image1,
+    //     sizes: [JSON.stringify(sizes)],
+    //     details: {
+    //       description: description,
+    //       material: "100% Cotton",
+    //       fit: "Regular"
+    //     },
+    //     category: category,
+    //     collection: "summer2024",
+    //     variants: [
+    //       {
+    //         color: "Red",
+    //         image: "https://example.com/images/t-shirt-red.jpg"
+    //       },
+    //       {
+    //         color: "Blue",
+    //         image: "https://example.com/images/t-shirt-blue.jpg"
+    //       }
+    //     ]
+    //   };
+    
+    //   await addProduct(productData)
+    //     .then(response => {
+    //       console.log("Product added successfully:", response);
+    //     })
+    //     .catch(error => {
+    //       console.error("Error adding product:", error);
+    //     });
+      
+
+
+    // } catch(error) {
+
+    // }
+
+  }
 
   return (
-    <form className="add-form">
+    <form onSubmit={onSubmitHandler} className="add-form">
       <div>
         <p className="upload-section">Upload Image</p>
         <div className="upload-images">
@@ -54,23 +136,39 @@ const Add = () => {
       </div>
 
       <div className="category-section sm-row">
-        <div>
+        {/* <div>
           <p className="upload-section">Product Category</p>
-          <select onChange={(e)=>setCategory(e.target.value)} className="select-field">
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Kids">Kids</option>
-          </select>
+            <select onChange={handleCategoryChange} className="select-field">
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
         </div>
 
-        <div>
-          <p className="upload-section">Sub Category</p>
+        {subCategories.length > 0 && (
+          <div>
+            <p className="upload-section">Subcategory</p>
+            <select onChange={(e) => setSubCategory(e.target.value)} className="select-field">
+              <option value="">Select Subcategory</option>
+              {subCategories.map((subCat) => (
+                <option key={subCat.id} value={subCat.id}>
+                  {subCat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )} */}
+
+        {/* <div>
+          <p className="upload-section">Collection</p>
           <select onChange={(e)=>setSubCategory(e.target.value)} className="select-field">
-            <option value="Topwear">Topwear</option>
-            <option value="Bottomwear">Bottomwear</option>
-            <option value="Winterwear">Winterwear</option>
+            <option value="Summer">Summer</option>
+            <option value="Winter">Winter</option>
           </select>
-        </div>
+        </div> */}
 
         <div>
           <p className="upload-section">Product Price</p>
