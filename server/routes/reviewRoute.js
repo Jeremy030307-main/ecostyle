@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { validateRequest } from './middleware.js';
 import { addReview, deleteReview, getProductReview, getUserReview, updateReview } from '../controllers/reviewController.js';
 import { newReviewSchema, updateReviewSchema } from '../schema/reviewSchema.js';
 

@@ -6,6 +6,7 @@ import { publicUserRouter } from './userRoute.js';
 import { publicProductRouter } from './productRoute.js';
 import { publicReviewRouter } from './reviewRoute.js';
 import { authenticate } from './middleware.js';
+import cartRouter from './cartRoute.js';
 
 const publicRouter = express.Router()
 
@@ -15,5 +16,6 @@ publicRouter.use("/color", publicColorRouter);
 publicRouter.use("/category", publicCategoryRouter);
 publicRouter.use("/product", publicProductRouter);
 publicRouter.use("/review", authenticate, publicReviewRouter);
+publicRouter.use("/cart", authenticate, cartRouter)
 
 export default publicRouter;

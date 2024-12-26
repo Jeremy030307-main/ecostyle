@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { validateRequest } from './middleware.js';
 import { addcolor, deleteColor, getColors } from '../controllers/colorController.js';
 import { newColorSchema } from '../schema/colorSchema.js';
 
