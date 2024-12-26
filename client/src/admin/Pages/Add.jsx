@@ -3,6 +3,8 @@ import {assets} from '../Components/Assets/assets'
 import './Add.css';
 import { addProduct } from '../../apiManager/methods/productMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
+import { getColors } from '../../apiManager/methods/colorMethods';
+import { getAllCollection } from '../../apiManager/methods/collectionMethods';
 
 
 const Add = () => {
@@ -27,11 +29,65 @@ const Add = () => {
   // const [subCategory, setSubCategory] = useState(""); // Selected subcategory state
   // const [subCategories, setSubCategories] = useState([]); // Subcategories of the selected category
 
+  // COLLECTIONS
+  const [collections, setCollections] = useState([{ colorID: "", image: null }]);
+  const fetchCollections = async () => {
+
+    try{
+      const collection = await getAllCollection();
+      console.log("All Collections Fetched", collection)
+      setCollections(collection);
+    } catch (error){
+      console.error("Error fetching collection:", error);
+    }
+
+  }
+
+  // VARIANTS
+  const [variants, setVariants] = useState([{ colorID: "", image: null }]);
+  const [availableColors, setAvailableColors] = useState([]);
+  const fetchColors = async () => {
+
+    try{
+      const colors = await getColors();
+      console.log("All Colors Fetched", colors)
+      setAvailableColors(colors);
+    } catch (error){
+      console.error("Error fetching colors:", error);
+    }
+
+  };
+
+  // Handle color selection
+  const handleColorChange = (index, colorID) => {
+    const updatedVariants = [...variants];
+    updatedVariants[index].colorID = colorID;
+    setVariants(updatedVariants);
+  };
+
+  // Handle image upload
+  const handleImageUpload = (index, file) => {
+    const updatedVariants = [...variants];
+    updatedVariants[index].image = file; // Store the file object
+    setVariants(updatedVariants);
+  };
+
+  // Add a new variant
+  const addVariant = () => {
+    setVariants([...variants, { colorID: "", image: null }]);
+  };
+
+  // Remove a variant
+  const removeVariant = (index) => {
+    const updatedVariants = variants.filter((_, i) => i !== index);
+    setVariants(updatedVariants);
+  };
+
   const fetchCategories = async () => {
 
     try{
       const data = await getCategory();
-      console.log(data.data)
+      console.log("data")
     } catch (error){
 
     }
@@ -39,7 +95,9 @@ const Add = () => {
 
   // Fetch categories on component mount
   useEffect(() => {
-    fetchCategories();
+    // fetchCategories();
+    // fetchColors();
+    fetchCollections();
   }, []);
 
   // Update subcategories when a category is selected
@@ -73,15 +131,8 @@ const Add = () => {
     //     },
     //     category: category,
     //     collection: "summer2024",
-    //     variants: [
-    //       {
-    //         color: "Red",
-    //         image: "https://example.com/images/t-shirt-red.jpg"
-    //       },
-    //       {
-    //         color: "Blue",
-    //         image: "https://example.com/images/t-shirt-blue.jpg"
-    //       }
+    //     variant: [
+    //       variants
     //     ]
     //   };
     
@@ -198,10 +249,67 @@ const Add = () => {
         </div>
       </div>
 
-      <div className="bestseller-section">
-        <input onChange={() => setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id="bestseller" />
-        <label htmlFor="bestseller">Add to bestseller</label>
-      </div>
+
+      {/* Adding Variant (Colors and Images) */}
+      {variants.map((variant, index) => (
+        <div key={index} className="variant-row">
+          {/* Dropdown for selecting color */}
+          <select
+            value={variant.colorID}
+            onChange={(e) => handleColorChange(index, e.target.value)}
+          >
+            <option value="">Select Color</option>
+            {availableColors.map((color) => (
+              <option key={color.id} value={color.id}>
+                {color.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Display color preview */}
+          {variant.colorID && (
+            <span
+              style={{
+                display: "inline-block",
+                width: "20px",
+                height: "20px",
+                backgroundColor:
+                  availableColors.find((color) => color.id === variant.colorID)
+                    ?.colorCode || "#000",
+                marginLeft: "10px",
+                borderRadius: "50%",
+              }}
+            ></span>
+          )}
+
+          {/* Image upload */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageUpload(index, e.target.files[0])}
+          />
+
+          {/* Image preview */}
+          {variant.image && (
+            <img
+              src={URL.createObjectURL(variant.image)} // Temporary preview
+              alt="Preview"
+              style={{
+                width: "50px",
+                height: "50px",
+                objectFit: "cover",
+                marginLeft: "10px",
+              }}
+            />
+          )}
+
+          {/* Remove variant button */}
+          <button onClick={() => removeVariant(index)}>Remove</button>
+        </div>
+      ))}
+
+      {/* Add new variant */}
+      <button onClick={addVariant}>Add Variant</button>
 
       <button type="submit" className="submit-button">ADD</button>
     </form>
