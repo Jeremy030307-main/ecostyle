@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import AuthenticationManager from '../../../authentication/authenticationManager';
-
+import { useCart } from '../../../CartContext';
 
 const NoDecorationLink = styled(Link)`
   text-decoration: none;
@@ -24,17 +24,27 @@ const Navbar = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false); // State to track dropdown visibility
     const location = useLocation(); // Get the current location
 
+  // Get cart items from context
+  const { cartItems } = useCart();
+
+  // Calculate the total number of items in the cart
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
     // Monitor authentication state
   useEffect(() => {
     const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
       if (user) {
-        setAuthenticated(true);
+        if (!user.isAnonymous){
+          console.log("authentication is true")
+          setAuthenticated(true);
+        }
         AuthenticationManager.auth.currentUser
           .getIdTokenResult()
           .then((idTokenResult) => {
             setAdmin(Boolean(idTokenResult.claims.admin));
           })
           .catch(() => setAdmin(false)); // Handle error gracefully
+
       } else {
         setAuthenticated(false);
         setAdmin(false);

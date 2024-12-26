@@ -11,6 +11,6 @@ publicRouter.use("/user", publicUserRouter);
 publicRouter.use("/collection", publicCollectionRouter);
 publicRouter.use("/color", publicColorRouter);
 publicRouter.use("/category", publicCategoryRouter);
-publicRouter.use("/product", publicProductRouter)
+publicRouter.use("/product", publicProductRouter);
 
 export default publicRouter;

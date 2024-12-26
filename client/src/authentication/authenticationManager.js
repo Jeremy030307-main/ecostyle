@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInAnonymously } from "firebase/auth";
 
 // Firebase project configuration
 const firebaseConfig = {
@@ -19,15 +19,16 @@ class AuthenticationManager {
     static auth = getAuth(app);
 
     static getCurrentUser = () => {
-        const currentUser = this.auth.currentUser;
-
-        if (!currentUser) {
-            console.warn("No authenticated user found");
-            throw new Error("No authenticated user found");
-        }
-
-        return currentUser
-    }
+        return new Promise((resolve, reject) => {
+            this.auth.onAuthStateChanged((user) => {
+                if (user) {
+                    resolve(user);
+                } else {
+                    reject(new Error("No authenticated user found"));
+                }
+            });
+        });
+    };
 
     static signUp = async(fname, lname, email, password) => {
 
@@ -66,5 +67,20 @@ class AuthenticationManager {
         }
     }
 }
+
+AuthenticationManager.auth.onAuthStateChanged((user) => {
+
+    if (user){
+        console.log("hahahaha", user)
+    } else {
+        signInAnonymously(AuthenticationManager.auth)
+            .then(() => {
+                console.log("Anomynously")
+            })
+            .catch((error) => {
+                console.log("Sign In Anomynously Fail")
+            });
+    }
+});
 
 export default AuthenticationManager;
