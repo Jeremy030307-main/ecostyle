@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react'
 import {assets} from '../Components/Assets/assets'
 import './Add.css';
 import { addProduct } from '../../apiManager/methods/productMethods';
-import { getCategory } from '../../apiManager/methods/categoryMethods';
+import { getCategory } from '../../apiManager/methods/categoryMethods.js';
 import { getColors } from '../../apiManager/methods/colorMethods';
 import { getAllCollection } from '../../apiManager/methods/collectionMethods';
 
 
 const Add = () => {
-
   const [image1, setImage1] = useState(false)
   const [image2, setImage2] = useState(false)
   const [image3, setImage3] = useState(false)
@@ -151,7 +150,7 @@ const Add = () => {
     // }
 
   }
-
+  
   return (
     <form onSubmit={onSubmitHandler} className="add-form">
       <div>

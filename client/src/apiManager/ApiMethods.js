@@ -46,7 +46,7 @@ class ApiMethods {
             if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
                 options.body = JSON.stringify(body);
             }
-    
+            
             fetch(url, options)
                 .then(res => {
                     // Check if the response is ok (status in the range 200-299)
