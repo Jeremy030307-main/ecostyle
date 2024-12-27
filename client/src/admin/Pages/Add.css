@@ -1,3 +1,49 @@
+/* Title container */
+.title-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title{
+    font-size: 28px;
+    margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.button-link{
+    text-decoration: none;
+}
+
+/* From Uiverse.io by Jedi-hongbin */ 
+button {
+    display: flex;
+    height: 3em;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    transition: all 0.2s linear;
+    cursor: pointer;
+    border: 1px solid black;
+}
+   
+button > svg {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 20px;
+    transition: all 0.4s ease-in;
+}
+
+button:hover > svg {
+    font-size: 1.2em;
+    transform: translateX(-5px);
+}
+
+button:hover {
+    box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+    transform: translateY(-2px);
+}
 /* General form styling */
 .add-form {
     display: flex;
