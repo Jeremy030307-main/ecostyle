@@ -3,6 +3,10 @@
     width: max(10%, 80px);
 }
 
+.button-link{
+    text-decoration: none;
+}
+
 /* Style for the button with class 'logout-btn' */
 .logout-btn {
     background-color: #4B5563;
