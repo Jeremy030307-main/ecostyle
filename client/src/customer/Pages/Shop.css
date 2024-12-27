@@ -73,6 +73,118 @@ body, html {
     pointer-events: none; /* Allows clicking inside the input without being blocked by the icon */
 }
 
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+  
+  .dropdown-toggle {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    width: 100%; /* Ensure it spans the full width */
+    text-align: left;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .dropdown-toggle:hover {
+    background-color: #ddd;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%; /* Match the toggle width */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .dropdown-menu li {
+    padding: 8px 12px;
+  }
+  
+  .dropdown-menu li button {
+    all: unset;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 5px 10px;
+  }
+  
+  .dropdown-menu li button:hover {
+    background-color: #f5f5f5;
+    border-radius: 5px;
+  }
+  
+  .filters {
+    margin: 1rem 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .filter-section {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-toggle {
+    width: 100%;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .filter-toggle:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .filter-options {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filter-options li {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .filter-options li:last-child {
+    border-bottom: none;
+  }
+  
+  .filter-options button {
+    all: unset;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .filter-options button:hover {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  .filter-options button span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  
+
 /* Shop Page Content */
 /* Update main content max-width to accommodate the new sidebar width */
 .main-content {

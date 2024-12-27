@@ -9,19 +9,37 @@ const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const initialCategory = location.state?.category || "MEN"; // Default to Men's category ID
+  const initialCategory = location.state?.category || "MEN"; // Default to Men's category
   const [categories, setCategories] = useState([]); // State for categories
   const [products, setProducts] = useState([]); // State for products
-  const [category, setCategory] = useState(initialCategory); // Selected category ID
+  const [category, setCategory] = useState(initialCategory); // Selected category
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(''); // Error state
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown menu
+
+  const colors = ["#000000", "#FFFFFF", "#D9D9D9", "#c3af91", "#F5F5DC", "#283950", "#84b067", "#545125", "#EAD7DB"];
+  const sizes = ["S", "M", "L", "XL"];
+  const colorMap = {
+    "#000000": "Black", // Black
+    "#FFFFFF": "White", // White
+    "#F5F5DC": "Beige", // Beige
+    "#EAD7DB": "Pink", // Pink
+    "#283950": "Navy Blue", // Navy Blue
+    "#84b067": "Pistachio Green", // Pistachio Green
+    "#545125": "Dark Khaki Green", // Dark Khaki Green
+    "#D9D9D9": "Gray", // Gray
+    "#c3af91": "Khaki", // Khaki
+  };
+  
+  
 
   // Fetch categories from the API
   const fetchCategories = async () => {
     try {
-      const data = await getCategory(); // Fetch categories from API
-      console.log("Fetched categories:", data);
-      setCategories(data || []); // Ensure categories array is set
+      const data = await getCategory();
+      setCategories(data || []);
     } catch (err) {
       console.error("Error fetching categories:", err);
     }
@@ -32,11 +50,8 @@ const Shop = () => {
     try {
       setLoading(true);
       setError('');
-      console.log(`Fetching products for category ID: ${categoryId}`);
-
-      const data = await getProduct("", { category: categoryId }); // Pass category ID
-      console.log("Fetched products:", data);
-      setProducts(data || []); // Update products state with fetched data
+      const data = await getProduct("", { category: categoryId });
+      setProducts(data || []);
     } catch (err) {
       setError(err.message);
       console.error("Error fetching products:", err);
@@ -47,18 +62,22 @@ const Shop = () => {
 
   // Handle navigation to shop with a selected category
   const handleNavigation = (categoryId) => {
-    setCategory(categoryId); // Update selected category ID
-    navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
-    fetchCategory(categoryId); // Fetch products for the selected category
+    setCategory(categoryId);
+    setSelectedSize(null); // Reset size filter
+    setSelectedColor(null); // Reset color filter
+    navigate('/shop', { state: { category: categoryId } });
+    fetchCategory(categoryId);
   };
 
   // Fetch categories and initial products on component mount
   useEffect(() => {
-    fetchCategories(); // Fetch all categories
+    fetchCategories();
     if (category) {
-      fetchCategory(category); // Fetch products for the initial category
+      fetchCategory(category);
     }
   }, [category]);
+
+  
 
   const handleProductClick = (product) => {
     navigate('/product', { state: { product } });
@@ -68,6 +87,15 @@ const Shop = () => {
     const selectedCategory = categories.find((cat) => cat.id === category);
     return selectedCategory ? selectedCategory.name : "Fashion"; // Default to "Fashion" if category not found
   };
+
+  // Filter products based on selected size and color
+  const filteredProducts = products.filter((product) => {
+    const matchesSize = selectedSize ? product.size.includes(selectedSize) : true;
+    const matchesColor = selectedColor
+      ? product.variant.some((variant) => variant.colorCode === selectedColor)
+      : true;
+    return matchesSize && matchesColor;
+  });
 
   return (
     <div className="container">
@@ -91,6 +119,60 @@ const Shop = () => {
             </li>
           </ul>
         </nav>
+        <div className="filters">
+          <h4>Filters</h4>
+
+          {/* Size Filter */}
+          <div className="filter-section">
+            <button
+              className="filter-toggle"
+              onClick={() => setDropdownOpen((prev) => ({ ...prev, size: !prev.size }))}
+            >
+              Size
+            </button>
+            {dropdownOpen.size && (
+              <ul className="filter-options">
+                {sizes.map((size) => (
+                  <li key={size}>
+                    <button onClick={() => setSelectedSize(size)}>{size}</button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* Color Filter */}
+          <div className="filter-section">
+            <button
+              className="filter-toggle"
+              onClick={() => setDropdownOpen((prev) => ({ ...prev, color: !prev.color }))}
+            >
+              Color
+            </button>
+            {dropdownOpen.color && (
+              <ul className="filter-options">
+                {Object.entries(colorMap).map(([colorHex, colorName]) => (
+                  <li key={colorHex}>
+                    <button onClick={() => setSelectedColor(colorHex)}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: colorHex,
+                          borderRadius: "50%",
+                          marginRight: "10px",
+                          border: "1px solid #ccc",
+                        }}
+                      ></span>
+                      {colorName}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </aside>
 
       <main className="main-content">
@@ -98,10 +180,10 @@ const Shop = () => {
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
-        {!loading && products.length === 0 && <p>No products found for this category.</p>}
+        {!loading && filteredProducts.length === 0 && <p>No products found for this category.</p>}
 
         <div className="product-grid">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <button
               key={product.id}
               className="product-card"
