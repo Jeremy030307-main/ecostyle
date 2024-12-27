@@ -8,7 +8,8 @@ export const COLLECTIONS = {
     COLLECTION_HISTROY: "history",
     USER: "user",
     REVIEW: "review",
-    CART: "cart"
+    CART: "cart",
+    ADDRESS: "address"
 };
   
  
