@@ -20,7 +20,7 @@ const Add = () => {
 
 
   // COLLECTIONS
-  const [collections, setCollections] = useState([{ colorID: "", image: null }]);
+  const [collections, setCollections] = useState([{ color: "", image: null }]);
   const [selectedCollection, setSelectedCollection] = useState(""); // Selected collection
 
   const fetchCollections = async () => {
@@ -36,7 +36,7 @@ const Add = () => {
   }
 
   // VARIANTS
-  const [variants, setVariants] = useState([{ colorID: "", image: null }]);
+  const [variants, setVariants] = useState([{ color: "", image: null }]);
   const [availableColors, setAvailableColors] = useState([]);
   const fetchColors = async () => {
 
@@ -51,9 +51,9 @@ const Add = () => {
   };
 
   // Handle color selection
-  const handleColorChange = (index, colorID) => {
+  const handleColorChange = (index, color) => {
     const updatedVariants = [...variants];
-    updatedVariants[index].colorID = colorID;
+    updatedVariants[index].color = color;
     setVariants(updatedVariants);
   };
 
@@ -66,7 +66,7 @@ const Add = () => {
 
   // Add a new variant
   const addVariant = () => {
-    setVariants([...variants, { colorID: "", image: null }]);
+    setVariants([...variants, { color: "", image: null }]);
   };
 
   // Remove a variant
@@ -75,7 +75,7 @@ const Add = () => {
     setVariants(updatedVariants);
   };
 
-
+  // CATEGORIES
   const [categories, setCategories] = useState([]); // Full category structure
   const [selectedCategory, setSelectedCategory] = useState(""); // Top-level category ID
   const [selectedSubcategory, setSelectedSubcategory] = useState(""); // Subcategory ID
@@ -118,7 +118,8 @@ const Add = () => {
   }, []);
 
   
-
+  // 1. Material and fit (Nid implement or can dont need)
+  // 2. Change thumbnail and variant images to URL
   const onSubmitHandler = async (e) => {
     e.preventDefault();
 
@@ -127,8 +128,8 @@ const Add = () => {
       const productData = {
         name: name,
         price: price,
-        thumbnail: image1,
-        sizes: [JSON.stringify(sizes)],
+        thumbnail: "image1",
+        size: sizes,
         details: {
           description: description,
           material: "100% Cotton",
@@ -136,25 +137,20 @@ const Add = () => {
         },
         category: selectedCategory,
         collection: selectedCollection,
-        variant: [
-          variants
-        ]
+        variant: variants
       };
     
       await addProduct(productData)
         .then(response => {
-          console.log("Product added successfully:", response);
+          console.log("Product added successfully:", productData);
         })
         .catch(error => {
           console.error("Error adding product:", error);
         });
-      
-
 
     } catch(error) {
       console.log("Error Dumbbitch")
     }
-
   }
   
   return (
@@ -308,7 +304,7 @@ const Add = () => {
           <div key={index} className="variant-row">
             {/* Dropdown for selecting color */}
             <select
-              value={variant.colorID}
+              value={variant.color}
               onChange={(e) => handleColorChange(index, e.target.value)}
             >
               <option value="">Select Color</option>
@@ -320,14 +316,14 @@ const Add = () => {
             </select>
 
             {/* Display color preview */}
-            {variant.colorID && (
+            {variant.color && (
               <span
                 style={{
                   display: "inline-block",
                   width: "20px",
                   height: "20px",
                   backgroundColor:
-                    availableColors.find((color) => color.id === variant.colorID)
+                    availableColors.find((color) => color.id === variant.color)
                       ?.colorCode || "#000",
                   marginLeft: "10px",
                   borderRadius: "50%",
