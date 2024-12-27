@@ -41,9 +41,6 @@ function App() {
             
             <Route path='/admin' element={<AdminRoutes/>}>
               <Route path='' element={<Admin/>}>
-                <Route path='add' element={<Add/>}></Route>
-                <Route path='products' element={<Products/>}></Route>
-                <Route path='orders' element={<Orders/>}></Route>
               </Route>
             </Route>
 
