@@ -6,7 +6,6 @@ import Customer from './customer/customer';
 import Shop from './customer/Pages/Shop';
 import EcoPoint from './customer/Pages/EcoPoint';
 import About from './customer/Pages/About';
-import Cart from './customer/Pages/Cart';
 import Wishlist from './customer/Pages/Wishlist'; 
 import Accout from './customer/Pages/Accout';
 import Product from './customer/Pages/Product';
