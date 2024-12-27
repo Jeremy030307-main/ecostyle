@@ -3,37 +3,44 @@ import { NavLink } from 'react-router-dom';
 import { assets } from '../Components/Assets/assets';
 import { currency } from '../admin'
 import "./Products.css"
-import { getCategory } from '../../apiManager/methods/categoryMethods';
+import { getProduct, deleteProduct } from '../../apiManager/methods/productMethods';
 
 const Products = () => {
 
   const [list,setList] = useState([])
 
-  const [categoryData, setCategoryData] = useState(null);
-        const [loading, setLoading] = useState(true);
-        const [error, setError] = useState(null);
-    
-        useEffect(() => {
-            const fetchCategory = async () => {
-                try {
-                  const data = await getCategory();
-                  console.log(data)
-                    
-                } catch (err) {
-                    setError(err.message); // Handle error
-                    console.error(err);
-                } finally {
-                    setLoading(false); // Stop loading when request is done
-                }
-            };
-    
-            fetchCategory(); // Fetch data when component mounts or categoryID changes
-        }, []); // Dependency array: only rerun if categoryID changes
+  const fetchList = async () => {
+    try {
+      const response = await getProduct(); // Call your existing getProduct API
+      console.log("API response:", response); // Debugging to check the response structure
+      setList(response)
+    } catch (error) {
+      console.error("Error fetching product list:", error.message || error);
+    }
+  };
+
+  // Handle product deletion
+  const handleDelete = async (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")){
+      try {
+        await deleteProduct(productId); // Call deleteProduct API
+        setList((prevList) => prevList.filter((item) => item.id !== productId));
+        console.log("Product deleted successfully");
+      } catch (error) {
+        console.error("Error deleting product:", error.message || error);
+      }
+    }
+  };
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    fetchList();
+  }, []);
 
   return (
     <>
       <div className="title-container">
-        <p>Our Products</p>
+        <p className='our-products'>Our Products</p>
         <div>
             <NavLink className="add-product-button" to="/admin/add">
                 <img src={assets.add_icon} alt="" />
@@ -53,13 +60,15 @@ const Products = () => {
         </div>
 
         {/* Product List */}
+        {/* fix image to url link, and add category into getProduct() */}
         {list.map((item, index) => (
           <div className="product-item" key={index}>
-            <img className="product-image" src={item.image[0]} alt="" />
+            {/* <img className="product-image" src={item.image[8]} alt="" /> */}
+            <p>{item.thumbnail}</p>
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>{currency}{item.price}</p>
-            <p className="product-action">X</p>
+            <p onClick={() => handleDelete(item.id)} className="product-action">X</p>
           </div>
         ))}
       </div>
