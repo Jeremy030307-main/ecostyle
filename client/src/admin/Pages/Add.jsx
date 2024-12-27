@@ -6,6 +6,8 @@ import { getCategory } from '../../apiManager/methods/categoryMethods.js';
 import { getColors } from '../../apiManager/methods/colorMethods';
 import { getAllCollection } from '../../apiManager/methods/collectionMethods';
 import { Link } from 'react-router-dom';
+import CategorySelectionSection from '../Components/Dropdown/Dropdown.jsx';
+import CustomSelect from '../Components/Dropdown/CustomSelect.jsx';
 
 
 const Add = () => {
@@ -200,89 +202,35 @@ const Add = () => {
         <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className="textarea-field" placeholder="Write Content Here" required></textarea>
       </div>
 
+      {/* Price */}
+      <div>
+        <p className="upload-section">Product Price</p>
+        <input onChange={(e)=>setPrice(e.target.value)} value={price} className="input-field category-price-input" type="number" placeholder="25" />
+      </div>
+
+      {/* Category */}
       <div className="category-section sm-row">
         {/* Catategory Dropdown */}
-        <div>
-          <p className="upload-section">Category</p>
-          <select
-            value={selectedCategory}
-            onChange={(e) => handleCategoryChange(e.target.value)}
-          >
-            <option value="">Select Category</option>
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Subcategory Dropdown */}
-        {selectedCategory && (
-          <div>
-            <p className="upload-section">Subcategory</p>
-            <select
-              value={selectedSubcategory}
-              onChange={(e) => handleSubcategoryChange(e.target.value)}
-            >
-              <option value="">Select Subcategory</option>
-              {categories
-                .find((category) => category.id === selectedCategory)
-                ?.subcategories.map((subcategory) => (
-                  <option key={subcategory.id} value={subcategory.id}>
-                    {subcategory.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-        )}
-
-        {/* Nested Subcategory Dropdown */}
-        {selectedSubcategory && (
-          <div>
-            <p className="upload-section">Sub subcategory</p>
-            <select
-              value={nestedSubcategory}
-              onChange={(e) => handleNestedSubcategoryChange(e.target.value)}
-            >
-              <option value="">Select Nested Subcategory</option>
-              {categories
-                .find((category) => category.id === selectedCategory)
-                ?.subcategories.find(
-                  (subcategory) => subcategory.id === selectedSubcategory
-                )
-                ?.subcategories.map((nested) => (
-                  <option key={nested.id} value={nested.id}>
-                    {nested.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-        )}
-
-        {/* Price */}
-        <div>
-          <p className="upload-section">Product Price</p>
-          <input onChange={(e)=>setPrice(e.target.value)} value={price} className="input-field category-price-input" type="number" placeholder="25" />
-        </div>
+        <CategorySelectionSection
+          categories={categories}
+          selectedCategory={selectedCategory}
+          selectedSubcategory={selectedSubcategory}
+          nestedSubcategory={nestedSubcategory}
+          handleCategoryChange={handleCategoryChange}
+          handleSubcategoryChange={handleSubcategoryChange}
+          handleNestedSubcategoryChange={handleNestedSubcategoryChange}
+        />
 
       </div>
 
-      {/* Collection*/}
-      <div>
-      <p className="upload-section">Collection</p>
-        <select
-          value={selectedCollection}
-          onChange={(e) => setSelectedCollection(e.target.value)}
-        >
-          <option value="">Select Collection</option>
-          {collections.map((collection) => (
-            <option key={collection.id} value={collection.id}>
-              {collection.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {/* Collection */}
+      <CustomSelect
+        label="Collection"
+        value={selectedCollection}
+        options={collections}
+        onChange={setSelectedCollection}
+        placeholder="Select Collection"
+      />
       
       {/* Sizes */}
       <div>
