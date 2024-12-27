@@ -13,11 +13,6 @@ import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
-import Admin from './admin/admin';
-import Add from './admin/Pages/Add';
-import Products from './admin/Pages/Products';
-import Orders from './admin/Pages/Orders';
-
 import AdminRoutes from './authentication/protectedRoute';
 import Checkout from './customer/Pages/Checkout';
 
