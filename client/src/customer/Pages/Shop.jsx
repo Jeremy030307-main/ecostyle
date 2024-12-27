@@ -10,27 +10,26 @@ const Shop = () => {
   const navigate = useNavigate();
 
   const initialCategory = location.state?.category || "MEN"; // Default to Men's category
-  const [categories, setCategories] = useState([]); // State for categories
-  const [products, setProducts] = useState([]); // State for products
-  const [category, setCategory] = useState(initialCategory); // Selected category
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(''); // Error state
+  const [categories, setCategories] = useState([]); 
+  const [products, setProducts] = useState([]); 
+  const [category, setCategory] = useState(initialCategory); 
+  const [loading, setLoading] = useState(false); 
+  const [error, setError] = useState(''); 
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown menu
-
+  const [dropdownOpen, setDropdownOpen] = useState(false); 
   const colors = ["#000000", "#FFFFFF", "#D9D9D9", "#c3af91", "#F5F5DC", "#283950", "#84b067", "#545125", "#EAD7DB"];
   const sizes = ["S", "M", "L", "XL"];
   const colorMap = {
-    "#000000": "Black", // Black
-    "#FFFFFF": "White", // White
-    "#F5F5DC": "Beige", // Beige
-    "#EAD7DB": "Pink", // Pink
-    "#283950": "Navy Blue", // Navy Blue
-    "#84b067": "Pistachio Green", // Pistachio Green
-    "#545125": "Dark Khaki Green", // Dark Khaki Green
-    "#D9D9D9": "Gray", // Gray
-    "#c3af91": "Khaki", // Khaki
+    "#000000": "Black", 
+    "#FFFFFF": "White", 
+    "#F5F5DC": "Beige", 
+    "#EAD7DB": "Pink", 
+    "#283950": "Navy Blue", 
+    "#84b067": "Pistachio Green", 
+    "#545125": "Dark Khaki Green", 
+    "#D9D9D9": "Gray", 
+    "#c3af91": "Khaki", 
   };
   
   
@@ -85,8 +84,8 @@ const Shop = () => {
 
   const getCategoryHeading = () => {
     const selectedCategory = categories.find((cat) => cat.id === category);
-    return selectedCategory ? selectedCategory.name : "Fashion"; // Default to "Fashion" if category not found
-  };
+    return selectedCategory ? selectedCategory.name : " "; 
+    };
 
   // Filter products based on selected size and color
   const filteredProducts = products.filter((product) => {
