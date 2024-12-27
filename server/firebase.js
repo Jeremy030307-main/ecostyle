@@ -8,7 +8,6 @@ const serviceAccount = JSON.parse(
   fs.readFileSync('./ecostyle-f6ae5-firebase-adminsdk-usabu-0b1c2c17bb.json', 'utf8')
 );
 
-
 // Initialize Firebase Admin app if it's not already initialized
 if (!admin.apps.length) {
   admin.initializeApp({
