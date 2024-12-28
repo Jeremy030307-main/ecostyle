@@ -20,6 +20,7 @@ const authenticate = async (req, res, next) => {
   }
 
   try {
+    console.log("authenticatr")
       // Verify the ID token using Firebase Admin SDK
       const decodedToken = await admin.auth().verifyIdToken(token);
 
@@ -27,7 +28,7 @@ const authenticate = async (req, res, next) => {
       if (decodedToken.firebase.sign_in_provider === 'anonymous') {
           return res.status(401).send(message("User must be authenticated for this action."));
       }
-
+      
       // Attach the decoded token (user information) to the request object
       req.user = decodedToken.uid;
       

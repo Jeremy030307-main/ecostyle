@@ -7,7 +7,7 @@ export const getColors = (colorID = "") => {
 
 export const addColor = (colorID = "",name = "", colorCode = "", ) => {
     const body = {
-        code: colorID,
+        id: colorID,
         name, 
         colorCode
     };

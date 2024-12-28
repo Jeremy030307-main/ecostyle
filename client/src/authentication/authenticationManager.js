@@ -68,10 +68,10 @@ class AuthenticationManager {
     }
 }
 
-AuthenticationManager.auth.onAuthStateChanged((user) => {
+AuthenticationManager.auth.onAuthStateChanged(async (user) => {
 
     if (user){
-        console.log("hahahaha", user)
+        console.log("hahahaha",  await user.getIdToken())
     } else {
         signInAnonymously(AuthenticationManager.auth)
             .then(() => {

@@ -16,6 +16,10 @@ import MyAccount from './customer/Pages/MyAccount';
 import Cancellation from './customer/Pages/Cancellation';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
+import Add from './admin/Pages/Add';
+import Products from './admin/Pages/Products';
+import Orders from './admin/Pages/Orders';
+
 import AdminRoutes from './authentication/protectedRoute';
 import Checkout from './customer/Pages/Checkout';
 
