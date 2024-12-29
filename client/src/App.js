@@ -11,9 +11,11 @@ import Wishlist from './customer/Pages/Wishlist';
 import Accout from './customer/Pages/Accout';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
+import Admin from './admin/admin';
+import MyAccount from './customer/Pages/MyAccount';
+import Cancellation from './customer/Pages/Cancellation';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
-import Admin from './admin/admin';
 import Add from './admin/Pages/Add';
 import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
@@ -36,7 +38,9 @@ function App() {
               <Route path='account' element={<Accout/>}></Route>
               <Route path='product' element={<Product/>}></Route>
               <Route path='login' element={<LoginSignUp/>}></Route>
-              <Route path='checkout' element={<Checkout />} /> {/* Checkout page */}
+              <Route path='myaccount' element={<MyAccount/>}></Route>
+              <Route path='cancellation' element={<Cancellation/>}></Route>
+
             </Route>
             
             <Route path='/admin' element={<AdminRoutes/>}>

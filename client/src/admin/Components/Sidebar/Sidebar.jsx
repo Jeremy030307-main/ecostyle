@@ -6,12 +6,6 @@ import "./Sidebar.css"
 const Sidebar = () => {
     return (
         <div className="sidebar-container">
-            <div className="sidebar-section">
-                <NavLink className="sidebar-link" to="./add">
-                    <img src={assets.add_icon} alt="" />
-                    <p>Add Items</p>
-                </NavLink>
-            </div>
 
             <div className="sidebar-section">
                 <NavLink className="sidebar-link" to="./products">
@@ -26,6 +20,21 @@ const Sidebar = () => {
                     <p>Orders</p>
                 </NavLink>
             </div>
+
+            <div className="sidebar-section">
+                <NavLink className="sidebar-link" to="./category">
+                    <img src={assets.order_icon} alt="" />
+                    <p>Category</p>
+                </NavLink>
+            </div>
+
+            <div className="sidebar-section">
+                <NavLink className="sidebar-link" to="./subcategory">
+                    <img src={assets.order_icon} alt="" />
+                    <p>Subcategory</p>
+                </NavLink>
+            </div>
+
         </div>
     );
 };
