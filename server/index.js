@@ -1,13 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import cookieParser from 'cookie-parser';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import cookieParser from 'cookie-parser';
 
 import config from './config.js';
 import publicRouter from './routes/publicRoute.js';
 import adminRouter from './routes/adminRoute.js';
-import { isAdmin } from './routes/middleware.js';
 
 const app = express();
 

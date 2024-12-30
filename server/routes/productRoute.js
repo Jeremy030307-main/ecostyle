@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { validateRequest } from './middleware.js';
 import {
   createProduct,
   getProduct,
@@ -15,7 +15,7 @@ import {
 import { variantSchema, productSchema, updateProductSchema } from '../schema/productSchema.js';
 import { checkCategory } from '../controllers/categoryController.js';
 import { checkCollection } from '../controllers/collectionController.js';
-import { checkColor } from '../controllers/colorController.js';
+import { checkColor, checkColors } from '../controllers/colorController.js';
 
 const publicProductRouter = express.Router();
 const adminProductRouter = express.Router();
@@ -26,13 +26,13 @@ publicProductRouter.get('/:id', getProduct);
 // -------- Admin Route --------------
 
 // product
-adminProductRouter.post('/', validateRequest(productSchema, checkCategory, checkCollection), createProduct);
+adminProductRouter.post('/', validateRequest(productSchema, checkCategory, checkCollection, checkColors), createProduct);
 adminProductRouter.put('/:id',validateRequest(updateProductSchema, checkCategory, checkCollection), updateProduct);
 adminProductRouter.delete('/:id', deleteProduct);
 
 // variant
 adminProductRouter.post('/:id/variant', validateRequest(variantSchema, checkColor), addVariant);
-adminProductRouter.put('/:id/variant', validateRequest(variantSchema), updateVariant);
+adminProductRouter.put('/:id/variant', validateRequest(variantSchema, checkColor), updateVariant);
 adminProductRouter.delete('/:productID/variant/:variantID', deleteVariant);
 
 // size
