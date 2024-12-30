@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import search_icon from '../Components/Assets/search_icon.png';
 import { getProduct, useProduct } from '../../apiManager/methods/productMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
+import { getProductReview } from '../../apiManager/methods/reviewMethods';
+
 
 const Shop = () => {
   const location = useLocation();
@@ -13,6 +15,7 @@ const Shop = () => {
   const [categories, setCategories] = useState([]); 
   const [products, setProducts] = useState([]); 
   const [category, setCategory] = useState(initialCategory); 
+  const [ratings, setRatings] = useState({});
   const [loading, setLoading] = useState(false); 
   const [error, setError] = useState(''); 
   const [selectedSize, setSelectedSize] = useState(null);
@@ -35,7 +38,7 @@ const Shop = () => {
   };
   const productData = useProduct("", { category });
 
-  
+
   useEffect(() => {
     // Fetch categories from the API
     const fetchCategories = async () => {
@@ -59,6 +62,37 @@ const Shop = () => {
     }
   }, [category, productData]);
 
+
+  useEffect(() => {
+    const fetchRatings = async () => {
+      const ratingsMap = {};
+      if (productData) {
+        await Promise.all(
+          productData.map(async (product) => {
+            try {
+              const reviews = await getProductReview(product.id);
+              console.log(`Reviews for product ${product.id}:`, reviews); // Log reviews and ratings here
+  
+              const averageRating =
+                reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
+              ratingsMap[product.id] = {
+                averageRating: averageRating.toFixed(1),
+                reviewCount: reviews.length,
+              };
+            } catch (err) {
+              console.error(`Error fetching reviews for product ${product.id}:`, err);
+              ratingsMap[product.id] = { averageRating: "No rating", reviewCount: 0 };
+            }
+          })
+        );
+      }
+      setRatings(ratingsMap);
+    };
+  
+    fetchRatings();
+  }, [productData]);
+  
+  
   // Handle navigation to shop with a selected category
   const handleNavigation = (categoryId) => {
     setCategory(categoryId); // Update selected category ID
@@ -190,8 +224,8 @@ const Shop = () => {
                 ))}
               </div>
               <div className="rating">
-                <span className="stars">⭐ {product.rating || 'No rating'}</span>
-                <span className="review-count">({product.reviewCount || 0})</span>
+                <span className="stars">⭐ {ratings[product.id]?.averageRating || 'No rating'}</span>
+                <span className="review-count">({ratings[product.id]?.reviewCount || 0} reviews)</span>
               </div>
             </button>
           ))}
