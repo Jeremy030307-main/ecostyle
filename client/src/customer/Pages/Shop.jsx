@@ -2,7 +2,7 @@ import './Shop.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import search_icon from '../Components/Assets/search_icon.png';
-import { getProduct } from '../../apiManager/methods/productMethods';
+import { getProduct, useProduct } from '../../apiManager/methods/productMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
 
 const Shop = () => {
@@ -16,49 +16,35 @@ const Shop = () => {
   const [loading, setLoading] = useState(false); // Loading state
   const [error, setError] = useState(''); // Error state
 
-  // Fetch categories from the API
-  const fetchCategories = async () => {
-    try {
-      const data = await getCategory(); // Fetch categories from API
-      console.log("Fetched categories:", data);
-      setCategories(data || []); // Ensure categories array is set
-    } catch (err) {
-      console.error("Error fetching categories:", err);
-    }
-  };
+  const productData = useProduct("", { category });
+  useEffect(() => {
+    // Fetch categories from the API
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategory();
+        console.log("Fetched categories:", data);
+        setCategories(data || []); // Ensure categories array is set
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
 
-  // Fetch products for a selected category
-  const fetchCategory = async (categoryId) => {
-    try {
-      setLoading(true);
-      setError('');
-      console.log(`Fetching products for category ID: ${categoryId}`);
+    fetchCategories();
+  }, []); // Only run on component mount
 
-      const data = await getProduct("", { category: categoryId }); // Pass category ID
-      console.log("Fetched products:", data);
-      setProducts(data || []); // Update products state with fetched data
-    } catch (err) {
-      setError(err.message);
-      console.error("Error fetching products:", err);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (category) {
+      // When the category changes, update products
+      setProducts(productData || []);
     }
-  };
+  }, [category, productData]);
 
   // Handle navigation to shop with a selected category
   const handleNavigation = (categoryId) => {
     setCategory(categoryId); // Update selected category ID
     navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
-    fetchCategory(categoryId); // Fetch products for the selected category
+    // fetchCategory(categoryId); // Fetch products for the selected category
   };
-
-  // Fetch categories and initial products on component mount
-  useEffect(() => {
-    fetchCategories(); // Fetch all categories
-    if (category) {
-      fetchCategory(category); // Fetch products for the initial category
-    }
-  }, [category]);
 
   const handleProductClick = (product) => {
     navigate('/product', { state: { product } });

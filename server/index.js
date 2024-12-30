@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import Stripe from 'stripe';
+import cookieParser from 'cookie-parser';
 
 import config from './config.js';
 import publicRouter from './routes/publicRoute.js';
@@ -11,6 +11,7 @@ import adminRouter from './routes/adminRoute.js';
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser())
 
 const corsOptions = {
   origin: "http://localhost:3000", // Your React app's URL

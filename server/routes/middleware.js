@@ -4,52 +4,41 @@ import { message } from '../controllers/utility.js';
 
 // authenticate that the user has an account and currently log in
 const authenticate = async (req, res, next) => {
-  const authHeader = req.headers['authorization'];
+  // Extract the token from cookies
+  const token = req.cookies.authToken;  // Assuming the token is stored in the 'authToken' cookie
 
-  // Check if authorization header is present
-  if (!authHeader) {
-      return res.status(401).send(message('Authorization header missing'));
-  }
-
-  // Extract the token from the Authorization header
-  const token = authHeader.split(' ')[1]; // Split "Bearer <token>"
-  
   // If token is missing, return an error
   if (!token) {
-      return res.status(401).send(message('Token missing in Authorization header'));
+      return res.status(401).send(message('Token missing in cookies'));
   }
 
   try {
-    console.log("authenticatr")
-      // Verify the ID token using Firebase Admin SDK
-      const decodedToken = await admin.auth().verifyIdToken(token);
+    console.log("Authenticating with token from cookies");
 
-      // Check if the user is anonymous
-      if (decodedToken.firebase.sign_in_provider === 'anonymous') {
-          return res.status(401).send(message("User must be authenticated for this action."));
-      }
-      
-      // Attach the decoded token (user information) to the request object
-      req.user = decodedToken.uid;
-      
-      // Proceed to the next middleware or route handler
-      next();
+    // Verify the ID token using Firebase Admin SDK
+    const decodedToken = await admin.auth().verifyIdToken(token);
+
+    // Check if the user is anonymous (optional)
+    if (decodedToken.firebase.sign_in_provider === 'anonymous') {
+        return res.status(401).send(message("User must be authenticated for this action."));
+    }
+    
+    // Attach the decoded token (user information) to the request object
+    req.user = decodedToken.uid;
+    
+    // Proceed to the next middleware or route handler
+    next();
   } catch (err) {
-      // If token verification fails, respond with an error
-      res.status(401).json(message("Permission Denied"));
+    // If token verification fails, respond with an error
+    res.status(401).json(message("Permission Denied"));
   }
 };
 
 const isAdmin = async (req, res, next) => {
-    const authHeader = req.headers['authorization'];
 
-    if (!authHeader) {
-        return res.status(401).send(message('Authorization header missing'));
-      }
-
-    const token = authHeader.split(' ')[1]; // Split "Bearer <token>"
+    const token = req.cookies.authToken;
     if (!token) {
-        return res.status(401).send(message('Token missing in Authorization header'));
+        return res.status(401).send(message('Token missing in cookies'));
       }
 
     try {

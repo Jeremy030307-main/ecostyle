@@ -1,24 +1,47 @@
 import { db } from "../firebase.js";
 import { COLLECTIONS, message } from "./utility.js";
 
-// Retrieve the user's cart
-export const getUserCart = async (req, res) => {
-    const userId = req.user;
-  
-    try {
-      const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
-      const cartSnapshot = await userCartRef.get();
-  
-      const cart = cartSnapshot.docs.map(doc => ({
-        ...doc.data()
-      }));
-  
-      res.status(200).json(cart);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Failed to retrieve cart' });
-    }
-  };
+export const getUserCart = (req, res) => {
+  const userId = req.user;
+
+  // Set up SSE headers
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', "*");
+  res.setHeader('Content-Encoding', "none");
+  res.flushHeaders(); // Flush headers to establish SSE connection
+
+  try {
+    const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
+
+    // Set up a Firestore snapshot listener for real-time updates
+    const unsubscribe = userCartRef.onSnapshot(
+      (snapshot) => {
+        const cart = snapshot.docs.map((doc) => ({
+          id: doc.id, // Include document ID for reference
+          ...doc.data(),
+        }));
+
+        // Send the updated cart data to the client
+        res.write(`data: ${JSON.stringify(cart)}\n\n`);
+      },
+      (error) => {
+        console.error("Error listening to user cart changes:", error);
+        res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
+      }
+    );
+
+    // Handle connection close and clean up the listener
+    req.on('close', () => {
+      unsubscribe(); // Stop listening for changes
+      res.end();
+    });
+  } catch (error) {
+    console.error("Error setting up cart listener:", error);
+    res.status(500).json({ error: 'Failed to retrieve cart' });
+  }
+};
 
 // Add a product to the user's cart
 export const addProductToCart = async (req, res) => {

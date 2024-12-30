@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInAnonymously } from "firebase/auth";
+import { ApiMethods } from "../apiManager/ApiMethods";
 
 // Firebase project configuration
 const firebaseConfig = {
@@ -17,18 +18,6 @@ const app = initializeApp(firebaseConfig);
 class AuthenticationManager {
 
     static auth = getAuth(app);
-
-    static getCurrentUser = () => {
-        return new Promise((resolve, reject) => {
-            this.auth.onAuthStateChanged((user) => {
-                if (user) {
-                    resolve(user);
-                } else {
-                    reject(new Error("No authenticated user found"));
-                }
-            });
-        });
-    };
 
     static signUp = async(fname, lname, email, password) => {
 
@@ -66,12 +55,14 @@ class AuthenticationManager {
             return false
         }
     }
+    
 }
 
 AuthenticationManager.auth.onAuthStateChanged(async (user) => {
 
     if (user){
-        console.log("hahahaha",  await user.getIdToken())
+        const token = await user.getIdToken();
+        await ApiMethods.post("/user/set-cookie", {token : token})
     } else {
         signInAnonymously(AuthenticationManager.auth)
             .then(() => {
@@ -81,6 +72,8 @@ AuthenticationManager.auth.onAuthStateChanged(async (user) => {
                 console.log("Sign In Anomynously Fail")
             });
     }
+    
+
 });
 
 export default AuthenticationManager;

@@ -2,6 +2,28 @@ import admin from 'firebase-admin';
 import { db } from "../firebase.js";
 import { COLLECTIONS } from './utility.js';
 
+// set user cookie
+export const setCookie = async (req, res) => {
+  const { token } = req.body;  // Get token sent from frontend
+
+  try {
+    // Verify the Firebase ID token
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    
+    // Set the token as a cookie (HTTP-Only, Secure, SameSite)
+    res.cookie('authToken', token, {
+      httpOnly: true,  // Prevents access from JavaScript
+      secure: process.env.NODE_ENV === 'production',  // Use cookies only over HTTPS in production
+      sameSite: 'Strict',  // Protects against CSRF
+      maxAge: 24 * 60 * 60 * 1000,  // 1 day expiration
+    });
+
+    res.status(200).json({ message: 'Authenticated', user: decodedToken });
+  } catch (error) {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
 // get the display name of a user
 export const getUser = async (req, res, next) => {
   try {

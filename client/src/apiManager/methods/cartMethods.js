@@ -1,17 +1,23 @@
 import { ApiMethods } from "../ApiMethods";
 import CART_ENDPOINTS from "../endpoints/cartEndpoint";
+import useSEE from "../useSEE";
 
 /**
- * Fetches the user's cart information.
- * @returns {Promise<Object>} A promise that resolves to the user's cart data.
+ * Custom hook that retrieves the cart data using Server-Sent Events (SSE).
+ *
+ * This hook internally calls the `useSEE` hook with the endpoint for the cart route.
+ * The data fetched through SSE will be updated and returned by the `useSEE` hook.
+ *
+ * @returns {Object|null} The cart data received from the SSE endpoint or `null` if no data is available.
+ *
  * @example
- * // Fetch the user's cart and log it to the console
- * getUserCart()
- *   .then(cart => console.log(cart))
- *   .catch(err => console.error(err));
+ * const cartData = useCart();
+ * if (cartData) {
+ *   // handle cart data
+ * }
  */
-export const getUserCart = () => {
-    return ApiMethods.get(CART_ENDPOINTS.CART_ROUTE());
+export const useCart = () => {
+    return useSEE(CART_ENDPOINTS.CART_ROUTE());
 };
 
 /**
