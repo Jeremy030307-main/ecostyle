@@ -1,5 +1,6 @@
 import { ApiMethods } from "../ApiMethods";
 import REVIEW_ENDPOINTS from "../endpoints/reviewEndpoint";
+import useSEE from "../useSEE";
 
 /**
  * Fetches reviews for a specific product.
@@ -52,7 +53,7 @@ import REVIEW_ENDPOINTS from "../endpoints/reviewEndpoint";
  *       console.error("Error fetching reviews:", error);
  *   });
  */
-export const getProductReview = (productID, query) => {
+export const useProductReview = (productID, query) => {
     // Construct base URL for the reviews endpoint
     let url = REVIEW_ENDPOINTS.REVIEW_ROUTE(productID);
 
@@ -62,7 +63,7 @@ export const getProductReview = (productID, query) => {
         url += `?${queryString}`;
     }
 
-    return ApiMethods.get(url);
+    return useSEE(url);
 };
 
 /**
