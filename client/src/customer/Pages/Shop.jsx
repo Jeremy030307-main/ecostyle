@@ -33,10 +33,9 @@ const Shop = () => {
     "#7285A5": "Pigeon Blue",
     "#964B00": "Brown"
   };
-  
-  
-
   const productData = useProduct("", { category });
+
+  
   useEffect(() => {
     // Fetch categories from the API
     const fetchCategories = async () => {
@@ -96,15 +95,11 @@ const Shop = () => {
         </div>
         <nav>
           <ul>
-            <li>
-              <button onClick={() => handleNavigation('WMN')}>Women's Fashion</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('MEN')}>Men's Fashion</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('KID')}>Kids</button>
-            </li>
+            {categories.map((cat) => (
+              <li key={cat.id}>
+                <button onClick={() => handleNavigation(cat.id)}>{cat.name}</button>
+              </li>
+            ))}
           </ul>
         </nav>
         <div className="filters">
