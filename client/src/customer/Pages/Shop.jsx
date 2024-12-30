@@ -18,7 +18,7 @@ const Shop = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false); 
-  const colors = ["#000000", "#FFFFFF", "#D9D9D9", "#c3af91", "#F5F5DC", "#283950", "#84b067", "#545125", "#EAD7DB"];
+  const colors = ["#000000", "#FFFFFF", "#D9D9D9", "#c3af91", "#F5F5DC", "#283950", "#84b067", "#545125", "#EAD7DB","#7285A5","#964B00"];
   const sizes = ["S", "M", "L", "XL"];
   const colorMap = {
     "#000000": "Black", 
@@ -30,39 +30,18 @@ const Shop = () => {
     "#545125": "Dark Khaki Green", 
     "#D9D9D9": "Gray", 
     "#c3af91": "Khaki", 
+    "#7285A5": "Pigeon Blue",
+    "#964B00": "Brown"
   };
   
   
 
-<<<<<<< HEAD
-  // Fetch categories from the API
-  const fetchCategories = async () => {
-    try {
-      const data = await getCategory();
-      setCategories(data || []);
-    } catch (err) {
-      console.error("Error fetching categories:", err);
-    }
-  };
-
-  // Fetch products for a selected category
-  const fetchCategory = async (categoryId) => {
-    try {
-      setLoading(true);
-      setError('');
-      const data = await getProduct("", { category: categoryId });
-      setProducts(data || []);
-    } catch (err) {
-      setError(err.message);
-      console.error("Error fetching products:", err);
-    } finally {
-      setLoading(false);
-=======
   const productData = useProduct("", { category });
   useEffect(() => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
+        console.log("Fetching products with options:",productData); 
         const data = await getCategory();
         console.log("Fetched categories:", data);
         setCategories(data || []); // Ensure categories array is set
@@ -78,37 +57,16 @@ const Shop = () => {
     if (category) {
       // When the category changes, update products
       setProducts(productData || []);
->>>>>>> fba0a1779c38d2617dc7dfc64f90e802874c707e
     }
   }, [category, productData]);
 
   // Handle navigation to shop with a selected category
   const handleNavigation = (categoryId) => {
-<<<<<<< HEAD
-    setCategory(categoryId);
-    setSelectedSize(null); // Reset size filter
-    setSelectedColor(null); // Reset color filter
-    navigate('/shop', { state: { category: categoryId } });
-    fetchCategory(categoryId);
-  };
-
-  // Fetch categories and initial products on component mount
-  useEffect(() => {
-    fetchCategories();
-    if (category) {
-      fetchCategory(category);
-    }
-  }, [category]);
-
-  
-
-=======
     setCategory(categoryId); // Update selected category ID
     navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
     // fetchCategory(categoryId); // Fetch products for the selected category
   };
 
->>>>>>> fba0a1779c38d2617dc7dfc64f90e802874c707e
   const handleProductClick = (product) => {
     navigate('/product', { state: { product } });
   };
@@ -145,7 +103,7 @@ const Shop = () => {
               <button onClick={() => handleNavigation('MEN')}>Men's Fashion</button>
             </li>
             <li>
-              <button onClick={() => handleNavigation('KIDS')}>Kids</button>
+              <button onClick={() => handleNavigation('KID')}>Kids</button>
             </li>
           </ul>
         </nav>

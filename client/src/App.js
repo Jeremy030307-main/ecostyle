@@ -16,10 +16,7 @@ import MyAccount from './customer/Pages/MyAccount';
 import Cancellation from './customer/Pages/Cancellation';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
-<<<<<<< HEAD
 //import Admin from './admin/admin';
-=======
->>>>>>> fba0a1779c38d2617dc7dfc64f90e802874c707e
 import Add from './admin/Pages/Add';
 import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
