@@ -218,6 +218,8 @@ h1 {
 .product-card img {
     width: 100%;
     display: block;
+    height: auto;
+    background-color: #161515;
 }
 .discount {
     position: absolute;
