@@ -125,8 +125,9 @@ h1 {
     width: 100%;
     background-color: #000;
     border-radius: 10px;
-    overflow: hidden;
     height: 300px;
+    display: flex;
+    flex-wrap: nowrap; 
 }
 
 .indicators_separators{
