@@ -1,8 +1,4 @@
 import './Home.css';
-import Product_1 from '../Components/Assets/Product_1.png';
-import Product_2 from '../Components/Assets/Product_2.png';
-import Product_3 from '../Components/Assets/Product_3.png';
-import Product_4 from '../Components/Assets/Product_4.png';
 import search_icon from '../Components/Assets/search_icon.png';
 import mega_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
@@ -10,8 +6,6 @@ import { useState, useEffect } from 'react';
 
 const Home = () => {
   const navigate = useNavigate();
-
-  // Target date for Mega Sale: February 12, 2025
   const targetDate = new Date('February 12, 2025 00:00:00').getTime();
 
   const [timeRemaining, setTimeRemaining] = useState({
@@ -21,28 +15,25 @@ const Home = () => {
     seconds: 0,
   });
 
-  const slides = [
-    {
-      title: 'Eco*Raincoat',
-      description: 'Up to 10% off Voucher',
-      img: Product_4,
-    },
-    {
-      title: 'Eco*Hoodie',
-      description: 'Up to 15% off Voucher',
-      img: Product_1,
-    },
-    {
-      title: 'Eco*T-Shirt',
-      description: 'Up to 20% off Voucher',
-      img: Product_2,
-    },
-  ];
-
+  const [products, setProducts] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
 
+  // Fetch product data
   useEffect(() => {
-    // Function to update the countdown timer
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/product');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // Countdown Timer
+  useEffect(() => {
     const updateTimer = () => {
       const now = new Date().getTime();
       const distance = targetDate - now;
@@ -54,9 +45,7 @@ const Home = () => {
 
       setTimeRemaining({ days, hours, minutes, seconds });
 
-      if (distance < 0) {
-        clearInterval(timer);
-      }
+      if (distance < 0) clearInterval(timer);
     };
 
     const timer = setInterval(updateTimer, 1000);
@@ -65,14 +54,14 @@ const Home = () => {
     return () => clearInterval(timer);
   }, [targetDate]);
 
+  // Auto-Switch Slides
   useEffect(() => {
-    // Automatically switch slides every 5 seconds
     const slideInterval = setInterval(() => {
-      setActiveSlide((prevSlide) => (prevSlide + 1) % slides.length);
+      setActiveSlide((prevSlide) => (prevSlide + 1) % products.length);
     }, 5000);
 
     return () => clearInterval(slideInterval);
-  }, [slides.length]);
+  }, [products.length]);
 
   const handleNavigation = (category) => {
     navigate('/shop', { state: { category } });
@@ -90,15 +79,9 @@ const Home = () => {
         </div>
         <nav>
           <ul>
-            <li>
-              <button onClick={() => handleNavigation('WMN')}>Women's Fashion</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('MEN')}>Men's Fashion</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('KIDS')}>Kids</button>
-            </li>
+            <li><button onClick={() => handleNavigation('WMN')}>Women's Fashion</button></li>
+            <li><button onClick={() => handleNavigation('MEN')}>Men's Fashion</button></li>
+            <li><button onClick={() => handleNavigation('KIDS')}>Kids</button></li>
           </ul>
         </nav>
       </aside>
@@ -107,83 +90,37 @@ const Home = () => {
       <main className="main-content">
         {/* Mega Sale Section */}
         <section className="flash-sale">
-          <div className="showcase">
-            <div className="content">
-              <h1>{slides[activeSlide].title}</h1>
-              <p className="banner-description">{slides[activeSlide].description}</p>
-              <button className="shop-now">Shop Now →</button>
+          {products.length > 0 && (
+            <div className="showcase">
+              <div className="content">
+                <h1>{products[activeSlide].name}</h1>
+                <p className="banner-description">Price: ${products[activeSlide].price}</p>
+                <button className="shop-now">Shop Now →</button>
+              </div>
+              <img
+                src={products[activeSlide].thumbnail}
+                className="product-image"
+                alt={products[activeSlide].name}
+              />
+              <div className="indicators">
+                {products.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`indicator ${index === activeSlide ? 'active' : ''}`}
+                    onClick={() => setActiveSlide(index)}
+                  ></div>
+                ))}
+              </div>
             </div>
-            <img src={slides[activeSlide].img} className="product-image" alt={slides[activeSlide].title} />
-            <div className="indicators_separators"></div>
-            <div className="indicators">
-              {slides.map((_, index) => (
-                <div
-                  key={index}
-                  className={`indicator ${index === activeSlide ? 'active' : ''}`}
-                  onClick={() => setActiveSlide(index)}
-                ></div>
-              ))}
-            </div>
-          </div>
+          )}
 
           <div className="flash-sale-timer">
             <div className="flash-title">
               <img src={mega_sale_icon} alt="Mega Sale Icon" />
               <span className="flash-label">Mega Sale</span>
             </div>
-
-            <div className="flash-timer">
-              <h1>Mega Sale Countdown</h1>
-              <div className="time-box">
-                <span className="time-value">{timeRemaining.days}</span>
-                <span className="time-label">Days</span>
-              </div>
-              <span className="dot">:</span>
-              <div className="time-box">
-                <span className="time-value">{timeRemaining.hours}</span>
-                <span className="time-label">Hours</span>
-              </div>
-              <span className="dot">:</span>
-              <div className="time-box">
-                <span className="time-value">{timeRemaining.minutes}</span>
-                <span className="time-label">Minutes</span>
-              </div>
-              <span className="dot">:</span>
-              <div className="time-box">
-                <span className="time-value">{timeRemaining.seconds}</span>
-                <span className="time-label">Seconds</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Sale Products */}
-          <div className="product-grid">
-            <div className="product-card">
-              <img src={Product_1} alt="Green Jacket" />
-              <span className="discount">-40%</span>
-              <button className="favorite-btn" aria-label="Add to favorites">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </button>
-            </div>
-            <div className="product-card">
-              <img src={Product_2} alt="Gray Hoodie" />
-              <span className="discount">-35%</span>
-              <button className="favorite-btn" aria-label="Add to favorites">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </button>
-            </div>
-            <div className="product-card">
-              <img src={Product_3} alt="Gray T-Shirt" />
-              <span className="discount">-30%</span>
-              <button className="favorite-btn" aria-label="Add to favorites">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </button>
+            <div className="timer">
+              {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m {timeRemaining.seconds}s
             </div>
           </div>
         </section>
