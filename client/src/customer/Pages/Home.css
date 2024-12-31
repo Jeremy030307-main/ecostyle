@@ -19,17 +19,21 @@ body, html {
     border-right: 1px solid #ddd;
 }
 
+/* Remove point form */
 .sidebar nav ul {
     list-style: none;
     padding: 0;
 }
 
+/* Margin between each category */
 .sidebar nav ul li {
     margin: 20px 0;
 }
 
+/* Button styles to mimic <a> */
 .sidebar nav ul li button {
-    all: unset;
+    all: unset; /* Reset button styles */
+    text-decoration: none;
     font-size: 18px;
     color: #333;
     cursor: pointer;
@@ -38,17 +42,20 @@ body, html {
     transition: background-color 0.3s, color 0.3s;
 }
 
+/* Hover effect */
 .sidebar nav ul li button:hover {
-    color: #ff0000;
+    color: #ff0000; /* Change text color on hover */
     font-size: 28px;
     transition: 0.3s, font-size 0.3s;
 }
 
+/* Search bar with icon */
 .sidebar .search input {
     width: 100%;
-    padding: 10px 40px;
+    padding: 10px 40px; /* Adds padding to make room for the icon */
     border: 1px solid #ddd;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
 .search-wrapper {
@@ -63,7 +70,7 @@ body, html {
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    pointer-events: none;
+    pointer-events: none; /* Allows clicking inside the input without being blocked by the icon */
 }
 
 /* Flash Sale Section */
@@ -101,55 +108,50 @@ h1 {
     background-color: transparent;
     border: 1px solid #fff;
     color: #fff;
-    padding: 12px 30px;
-    font-size: 18px;
+    padding: 10px 20px;
+    font-size: 1em;
     cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 7px;
 }
 
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.product-card {
-    position: relative;
+.shop-now:hover {
     background-color: #fff;
-    padding: 15px;
-    border-radius: 8px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #000;
 }
 
-.product-card img {
-    width: 100%;
+.product-image {
+    max-width: 40%;
     height: auto;
-    max-height: 300px;
 }
 
-.favorite-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #ff0000;
-    cursor: pointer;
-    font-size: 24px;
-    transition: color 0.3s;
+.indicators_separators{
+    width: 100%;
+    margin-bottom: 0px;
+    margin-top: 0px;
 }
 
-.favorite-btn:hover {
-    color: #ff00ff;
-}
-
-/* Flash Sale Timer */
-.flash-sale-timer {
+.indicators {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 20px;
-    font-size: 18px;
+    margin-bottom: 20px;
+    margin-left: 45%;
+    gap: 10px;
+}
+.indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #555;
+}
+.indicator.active {
+    background-color: #DB4444;
+}
+
+/* Flash Sale section */
+.flash-sale-timer {
+    text-align: left;
+    /* margin: 20px 0; */
+    font-family: Arial, sans-serif;
 }
 
 .flash-title {
@@ -158,25 +160,100 @@ h1 {
 }
 
 .flash-label {
-    margin-left: 10px;
+    color: #DB4444;
+    font-weight: bold;
+    padding: 5px 16px;
+    font-size: 18px;
 }
 
-.time-box {
+.flash-timer h1 {
+    font-size: 36px;
+    padding-right: 100px;
+}
+
+.flash-timer {
     display: flex;
     align-items: center;
 }
 
+.time-box {
+    text-align: center;
+    padding: 0 10px;
+}
+
 .time-value {
-    font-size: 2.5em;
+    font-size: 32px;
     font-weight: bold;
-    margin-right: 5px;
+    color: black;
 }
 
 .time-label {
-    font-size: 1.2em;
+    font-size: 18px;
+    color: #666;
 }
 
 .dot {
-    font-size: 2.5em;
-    margin: 0 10px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #F44E47; /* Color of the dot between the time units */
+    padding: 0 5px;
+}
+
+/* Product Section */
+.product-grid {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.product-card {
+    position: relative;
+    width: 30%;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.product-card img {
+    width: 100%;
+    display: block;
+}
+.discount {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.favorite-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.favorite-btn:hover {
+    background-color: #f0f0f0;
+}
+.favorite-btn svg {
+    width: 25px;
+    height: 25px;
+    fill: #333;
+    transition: fill 0.3s;
+}
+.favorite-btn.active svg {
+    fill: #e74c3c;
 }
