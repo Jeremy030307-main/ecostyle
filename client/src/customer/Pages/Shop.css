@@ -133,35 +133,37 @@ body, html {
   }
   
   .filter-toggle {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
     width: 100%;
     text-align: left;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+  
+.filter-toggle:hover {
+    background-color: #ddd;
+}
+  
+.filter-options {
+    margin-top: 10px;
+    list-style: none;
+    padding: 0;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
-    padding: 10px 15px;
-    font-size: 16px;
+}
+
+.filter-options li {
+    padding: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
-  }
-  
-  .filter-toggle:hover {
-    background-color: #f9f9f9;
-  }
-  
-  .filter-options {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .filter-options li {
-    padding: 10px 15px;
-    border-bottom: 1px solid #eee;
-  }
+}
+.filter-options li:hover {
+    background-color: #f1f1f1;
+}
   
   .filter-options li:last-child {
     border-bottom: none;
@@ -184,6 +186,14 @@ body, html {
     margin-right: 10px;
   }
   
+  .color-circle {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+  }
 
 /* Shop Page Content */
 /* Update main content max-width to accommodate the new sidebar width */

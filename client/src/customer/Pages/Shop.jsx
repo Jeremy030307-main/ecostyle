@@ -175,17 +175,7 @@ const Shop = () => {
                 {availableColors.map((colorHex) => (
                   <li key={colorHex}>
                     <button onClick={() => setSelectedColor(colorHex)}>
-                      <span
-                        style={{
-                          display: "inline-block",
-                          width: "20px",
-                          height: "20px",
-                          backgroundColor: colorHex,
-                          borderRadius: "50%",
-                          marginRight: "10px",
-                          border: "1px solid #ccc",
-                        }}
-                      ></span>
+                      <span className="color-circle" style={{ backgroundColor: colorHex }}></span>
                       {colorNameMap[colorHex] || "Unknown Color"}
                     </button>
                   </li>
@@ -202,7 +192,7 @@ const Shop = () => {
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
-        {!loading && filteredProducts.length === 0 && <p>No products found for this category.</p>}
+        {!loading && filteredProducts.length === 0 && <p>Loading Products.</p>}
 
         <div className="product-grid">
           {filteredProducts.map((product) => (
