@@ -1,6 +1,5 @@
 import './App.css';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import { CartProvider } from './CartContext.js'; // Import CartProvider
 
 import Customer from './customer/customer';
@@ -31,9 +30,7 @@ function App() {
   return (
     <CartProvider>  {/* Wrap the entire app in CartProvider */}
       <BrowserRouter>
-        <AuthProvider>
           <MainApp />
-        </AuthProvider>
           <Routes>
             <Route path='/' element={<Customer/>}>
               <Route path='' element={<Home/>}></Route>
@@ -42,7 +39,7 @@ function App() {
               <Route path='about' element={<About/>}></Route>
               <Route path='wishlist' element={<Wishlist/>}></Route>
               <Route path='cart' element={<Cart />} /> {/* Cart page */}
-              <Route path='account' element={<Accout/>}></Route>
+              <Route path='account' element={<Account/>}></Route>
               <Route path='product' element={<Product/>}></Route>
               <Route path='login' element={<LoginSignUp/>}></Route>
               <Route path='checkout' element={<Checkout />} /> {/* Checkout page */}
