@@ -1,15 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Product.css'; // CSS file for styling
+import { getProductReview } from '../../apiManager/methods/reviewMethods';
+
 
 const Product = () => {
   const location = useLocation();
   const product = location.state?.product;
+  const [reviews, setReviews] = useState([]); // State to store reviews
+  const [loadingReviews, setLoadingReviews] = useState(true); // State to track loading
 
   // State to track the selected variant's image
   const [selectedImage, setSelectedImage] = useState(
     product?.variant[0]?.image || '/placeholder.png'
   );
+
+  useEffect(() => {
+    if (product?.id) {
+      const fetchReviews = async () => {
+        try {
+          const fetchedReviews = await getProductReview(product.id);
+          setReviews(fetchedReviews);
+        } catch (error) {
+          console.error('Error fetching product reviews:', error);
+        } finally {
+          setLoadingReviews(false);
+        }
+      };
+
+      fetchReviews();
+    }
+  }, [product?.id]);
 
   if (!product) {
     return <p>Product not found!</p>;
@@ -97,14 +118,16 @@ const Product = () => {
       {/* Reviews Section */}
       <div className="reviews-section">
         <h2>Customer Reviews</h2>
-        {product.reviews && product.reviews.length > 0 ? (
-          product.reviews.map((review, index) => (
+        {loadingReviews ? (
+          <p>Loading reviews...</p>
+        ) : reviews.length > 0 ? (
+          reviews.map((review, index) => (
             <div key={index} className="review-item">
-              <p className="review-header">{review.user}</p>
+              <p className="review-header">{review.user || 'Anonymous'}</p>
               <p className="review-details">
-                Height: {review.height} | Weight: {review.weight}
+                Height: {review.height || 'N/A'} | Weight: {review.weight || 'N/A'}
               </p>
-              <p className="review-text">{review.text}</p>
+              <p className="review-text">{review.text || 'No review text'}</p>
             </div>
           ))
         ) : (
