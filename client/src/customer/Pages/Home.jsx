@@ -125,7 +125,7 @@ const Home = () => {
               <p className="banner-description">{slides[activeSlide].description}</p>
               <button className="shop-now">Shop Now →</button>
             </div>
-            <img src={slides[activeSlide].img} className="product-card img" alt={slides[activeSlide].title} />
+            <img src={slides[activeSlide].img} className="product img" alt={slides[activeSlide].title} />
             <div className="indicators_separators"></div>
             <div className="indicators">
               {slides.map((_, index) => (
