@@ -90,6 +90,10 @@ const Home = () => {
     navigate('/shop', { state: { category } });
   };
 
+  const handleProductNavigation = (productId) => {
+    navigate('/shop', { state: { productId } });
+  };
+  
   return (
     <div className="container">
       {/* Sidebar */}
@@ -123,7 +127,7 @@ const Home = () => {
             <div className="content">
               <h1>{slides[activeSlide].title}</h1>
               <p className="banner-description">{slides[activeSlide].description}</p>
-              <button className="shop-now">Shop Now →</button>
+              <button className="shop-now" onClick={() => handleProductNavigation(slides[activeSlide].title)}>Shop Now →</button>
             </div>
             <img src={slides[activeSlide].img} className="banner-image" alt={slides[activeSlide].title} />
             <div className="indicators_separators"></div>
