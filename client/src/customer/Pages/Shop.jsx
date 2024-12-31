@@ -6,7 +6,6 @@ import { getProduct, useProduct } from '../../apiManager/methods/productMethods'
 import { getCategory } from '../../apiManager/methods/categoryMethods';
 import { getProductReview } from '../../apiManager/methods/reviewMethods';
 
-
 const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,30 +19,30 @@ const Shop = () => {
   const [error, setError] = useState(''); 
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false); 
-  const colors = ["#000000", "#FFFFFF", "#D9D9D9", "#c3af91", "#F5F5DC", "#283950", "#84b067", "#545125", "#EAD7DB","#7285A5","#964B00"];
+  const [dropdownOpen, setDropdownOpen] = useState({ size: false, color: false }); 
+  const [availableColors, setAvailableColors] = useState([]); // To store colors dynamically
   const sizes = ["S", "M", "L", "XL"];
-  const colorMap = {
-    "#000000": "Black", 
-    "#FFFFFF": "White", 
-    "#F5F5DC": "Beige", 
-    "#EAD7DB": "Pink", 
-    "#283950": "Navy Blue", 
-    "#84b067": "Pistachio Green", 
-    "#545125": "Dark Khaki Green", 
-    "#D9D9D9": "Gray", 
-    "#c3af91": "Khaki", 
+  const colorNameMap = {
+    "#000000": "Black",
+    "#FFFFFF": "White",
+    "#D9D9D9": "Gray",
+    "#c3af91": "Khaki",
+    "#F5F5DC": "Beige",
+    "#283950": "Navy Blue",
+    "#84b067": "Pistachio Green",
+    "#545125": "Dark Khaki Green",
+    "#EAD7DB": "Pink",
     "#7285A5": "Pigeon Blue",
-    "#964B00": "Brown"
-  };
-  const productData = useProduct("", { category });
+    "#964B00": "Brown",
+  }; // Map hex codes to color names
 
+  const productData = useProduct("", { category });
 
   useEffect(() => {
     // Fetch categories from the API
     const fetchCategories = async () => {
       try {
-        console.log("Fetching products with options:",productData); 
+        console.log("Fetching products with options:", productData); 
         const data = await getCategory();
         console.log("Fetched categories:", data);
         setCategories(data || []); // Ensure categories array is set
@@ -59,9 +58,17 @@ const Shop = () => {
     if (category) {
       // When the category changes, update products
       setProducts(productData || []);
+
+      // Extract available colors from product variants
+      const uniqueColors = new Set();
+      productData?.forEach((product) => {
+        product.variant.forEach((variant) => {
+          uniqueColors.add(variant.colorCode);
+        });
+      });
+      setAvailableColors(Array.from(uniqueColors));
     }
   }, [category, productData]);
-
 
   useEffect(() => {
     const fetchRatings = async () => {
@@ -72,7 +79,7 @@ const Shop = () => {
             try {
               const reviews = await getProductReview(product.id);
               console.log(`Reviews for product ${product.id}:`, reviews); // Log reviews and ratings here
-  
+
               const averageRating =
                 reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
               ratingsMap[product.id] = {
@@ -88,16 +95,13 @@ const Shop = () => {
       }
       setRatings(ratingsMap);
     };
-  
+
     fetchRatings();
   }, [productData]);
-  
-  
-  // Handle navigation to shop with a selected category
+
   const handleNavigation = (categoryId) => {
     setCategory(categoryId); // Update selected category ID
     navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
-    // fetchCategory(categoryId); // Fetch products for the selected category
   };
 
   const handleProductClick = (product) => {
@@ -107,7 +111,7 @@ const Shop = () => {
   const getCategoryHeading = () => {
     const selectedCategory = categories.find((cat) => cat.id === category);
     return selectedCategory ? selectedCategory.name : " "; 
-    };
+  };
 
   // Filter products based on selected size and color
   const filteredProducts = products.filter((product) => {
@@ -168,7 +172,7 @@ const Shop = () => {
             </button>
             {dropdownOpen.color && (
               <ul className="filter-options">
-                {Object.entries(colorMap).map(([colorHex, colorName]) => (
+                {availableColors.map((colorHex) => (
                   <li key={colorHex}>
                     <button onClick={() => setSelectedColor(colorHex)}>
                       <span
@@ -182,7 +186,7 @@ const Shop = () => {
                           border: "1px solid #ccc",
                         }}
                       ></span>
-                      {colorName}
+                      {colorNameMap[colorHex] || "Unknown Color"}
                     </button>
                   </li>
                 ))}
@@ -191,6 +195,7 @@ const Shop = () => {
           </div>
         </div>
       </aside>
+
 
       <main className="main-content">
         <h1>{getCategoryHeading()} Fashion</h1>
