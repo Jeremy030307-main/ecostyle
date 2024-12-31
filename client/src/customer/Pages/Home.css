@@ -120,8 +120,12 @@ h1 {
     color: #000;
 }
 
-.product-image {
+.banner-image{
+    position: relative;
     width: 100%;
+    background-color: #000;
+    border-radius: 10px;
+    overflow: hidden;
     height: auto;
 }
 
@@ -220,11 +224,6 @@ h1 {
     display: block;
 }
 
-.product img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
 
 .discount {
     position: absolute;
