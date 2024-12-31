@@ -100,7 +100,7 @@ h1 {
 }
 
 .banner-description {
-    font-size: 1.8em;
+    font-size: 1.4em;
     margin-bottom: 1.5em;
 }
 
@@ -121,7 +121,7 @@ h1 {
 }
 
 .product-image {
-    max-width: 40%;
+    max-width: 70%;
     height: auto;
 }
 
