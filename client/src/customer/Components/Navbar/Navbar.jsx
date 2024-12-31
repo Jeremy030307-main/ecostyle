@@ -102,7 +102,7 @@ const Navbar = () => {
             <img onClick={() => { setMenu('cart'); }} src={cart_icon} alt="" />
           </Link>
           {totalItems > 0 && (
-            <div className="nav-cart-count">{totalItems}</div> /* Display badge only if totalItems > 0 */
+            <div className="nav-cart-count">{totalItems}</div> {/* Display badge only if totalItems > 0 */}
           )}
         </div>
 
