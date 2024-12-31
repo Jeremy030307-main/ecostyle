@@ -4,11 +4,51 @@ import Product_2 from '../Components/Assets/Product_2.png';
 import Product_3 from '../Components/Assets/Product_3.png';
 import Product_4 from '../Components/Assets/Product_4.png';
 import search_icon from '../Components/Assets/search_icon.png';
-import flash_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
+import mega_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const Home = () => {
   const navigate = useNavigate();
+
+  // Target date for Mega Sale: February 12, 2025
+  const targetDate = new Date('February 12, 2025 00:00:00').getTime();
+
+  const [timeRemaining, setTimeRemaining] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    // Function to update the countdown timer
+    const updateTimer = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      // Time calculations for days, hours, minutes, and seconds
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      setTimeRemaining({ days, hours, minutes, seconds });
+
+      // If the countdown ends, stop the timer
+      if (distance < 0) {
+        clearInterval(timer);
+      }
+    };
+
+    // Update timer every second
+    const timer = setInterval(updateTimer, 1000);
+
+    // Initialize the timer
+    updateTimer();
+
+    return () => clearInterval(timer); // Cleanup the interval on component unmount
+  }, [targetDate]);
 
   const handleNavigation = (category) => {
     navigate('/shop', { state: { category } }); // Pass category data to Shop page
@@ -41,7 +81,7 @@ const Home = () => {
 
       {/* Main Content */}
       <main className="main-content">
-        {/* Flash Sale Section */}
+        {/* Mega Sale Section */}
         <section className="flash-sale">
           <div className="showcase">
             <div className="content">
@@ -62,29 +102,29 @@ const Home = () => {
 
           <div className="flash-sale-timer">
             <div className="flash-title">
-              <img src={flash_sale_icon} alt="Flash Sale Icon" />
-              <span className="flash-label">Today's</span>
+              <img src={mega_sale_icon} alt="Mega Sale Icon" />
+              <span className="flash-label">Mega Sale</span>
             </div>
 
             <div className="flash-timer">
-              <h1>Flash Sales</h1>
+              <h1>Mega Sale Countdown</h1>
               <div className="time-box">
-                <span className="time-value">03</span>
+                <span className="time-value">{timeRemaining.days}</span>
                 <span className="time-label">Days</span>
               </div>
               <span className="dot">:</span>
               <div className="time-box">
-                <span className="time-value">23</span>
+                <span className="time-value">{timeRemaining.hours}</span>
                 <span className="time-label">Hours</span>
               </div>
               <span className="dot">:</span>
               <div className="time-box">
-                <span className="time-value">19</span>
+                <span className="time-value">{timeRemaining.minutes}</span>
                 <span className="time-label">Minutes</span>
               </div>
               <span className="dot">:</span>
               <div className="time-box">
-                <span className="time-value">56</span>
+                <span className="time-value">{timeRemaining.seconds}</span>
                 <span className="time-label">Seconds</span>
               </div>
             </div>
