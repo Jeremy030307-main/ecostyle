@@ -21,13 +21,32 @@ const Home = () => {
     seconds: 0,
   });
 
+  const slides = [
+    {
+      title: 'Eco*Raincoat',
+      description: 'Up to 10% off Voucher',
+      img: Product_4,
+    },
+    {
+      title: 'Eco*Hoodie',
+      description: 'Up to 15% off Voucher',
+      img: Product_1,
+    },
+    {
+      title: 'Eco*T-Shirt',
+      description: 'Up to 20% off Voucher',
+      img: Product_2,
+    },
+  ];
+
+  const [activeSlide, setActiveSlide] = useState(0);
+
   useEffect(() => {
     // Function to update the countdown timer
     const updateTimer = () => {
       const now = new Date().getTime();
       const distance = targetDate - now;
 
-      // Time calculations for days, hours, minutes, and seconds
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
@@ -35,23 +54,28 @@ const Home = () => {
 
       setTimeRemaining({ days, hours, minutes, seconds });
 
-      // If the countdown ends, stop the timer
       if (distance < 0) {
         clearInterval(timer);
       }
     };
 
-    // Update timer every second
     const timer = setInterval(updateTimer, 1000);
-
-    // Initialize the timer
     updateTimer();
 
-    return () => clearInterval(timer); // Cleanup the interval on component unmount
+    return () => clearInterval(timer);
   }, [targetDate]);
 
+  useEffect(() => {
+    // Automatically switch slides every 5 seconds
+    const slideInterval = setInterval(() => {
+      setActiveSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(slideInterval);
+  }, [slides.length]);
+
   const handleNavigation = (category) => {
-    navigate('/shop', { state: { category } }); // Pass category data to Shop page
+    navigate('/shop', { state: { category } });
   };
 
   return (
@@ -85,18 +109,20 @@ const Home = () => {
         <section className="flash-sale">
           <div className="showcase">
             <div className="content">
-              <h1>Eco*Raincoat</h1>
-              <p className="banner-description">Up to 10% off Voucher</p>
+              <h1>{slides[activeSlide].title}</h1>
+              <p className="banner-description">{slides[activeSlide].description}</p>
               <button className="shop-now">Shop Now →</button>
             </div>
-            <img src={Product_4} className="product-image" alt="Eco Raincoat" />
+            <img src={slides[activeSlide].img} className="product-image" alt={slides[activeSlide].title} />
             <div className="indicators_separators"></div>
             <div className="indicators">
-              <div className="indicator"></div>
-              <div className="indicator"></div>
-              <div className="indicator active"></div>
-              <div className="indicator"></div>
-              <div className="indicator"></div>
+              {slides.map((_, index) => (
+                <div
+                  key={index}
+                  className={`indicator ${index === activeSlide ? 'active' : ''}`}
+                  onClick={() => setActiveSlide(index)}
+                ></div>
+              ))}
             </div>
           </div>
 
