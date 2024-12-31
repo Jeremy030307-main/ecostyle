@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useCart } from '../../CartContext'; // Import the Cart Context
 import './Product.css'; // CSS file for styling
 
 const Product = () => {
   const location = useLocation();
+  const { addItemToCart } = useCart(); // Import the addItemToCart function from CartContext
   const product = location.state?.product;
 
   // State to track the selected variant's image
@@ -14,6 +16,11 @@ const Product = () => {
   if (!product) {
     return <p>Product not found!</p>;
   }
+
+  const handleAddToCart = () => {
+    // Add the product to the cart with a default quantity of 1
+    addItemToCart({ ...product, quantity: 1 });
+  };
 
   return (
     <div className="product-page-container">
@@ -88,7 +95,9 @@ const Product = () => {
 
           {/* Add to Cart and Favorite Buttons */}
           <div className="action-buttons">
-            <button className="add-to-cart-btn">Add to Cart</button>
+            <button className="add-to-cart-btn" onClick={handleAddToCart}>
+              Add to Cart
+            </button>
             <button className="fav-btn">❤️</button>
           </div>
         </div>
