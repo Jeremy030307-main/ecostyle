@@ -21,6 +21,13 @@ const Sidebar = () => {
                 </NavLink>
             </div>
 
+            <div className="sidebar-section">
+                <NavLink className="sidebar-link" to="categories">
+                    <img src={assets.order_icon} alt="" />
+                    <p>Categories</p>
+                </NavLink>
+            </div>
+
         </div>
     );
 };

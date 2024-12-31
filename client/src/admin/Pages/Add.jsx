@@ -273,22 +273,6 @@ const Add = () => {
               ))}
             </select>
 
-            {/* Display color preview */}
-            {variant.color && (
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "20px",
-                  height: "20px",
-                  backgroundColor:
-                    availableColors.find((color) => color.id === variant.color)
-                      ?.colorCode || "#000",
-                  marginLeft: "10px",
-                  borderRadius: "50%",
-                }}
-              ></span>
-            )}
-
             {/* Image upload */}
             <input
               type="file"

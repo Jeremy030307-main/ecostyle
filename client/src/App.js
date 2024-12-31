@@ -17,6 +17,7 @@ import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
+import Categories from './admin/Pages/Categories';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
                 <Route path='add' element={<Add/>}></Route>
                 <Route path='products' element={<Products/>}></Route>
                 <Route path='orders' element={<Orders/>}></Route>
+                <Route path='categories' element={<Categories/>}></Route>
               </Route>
             </Route>
 
