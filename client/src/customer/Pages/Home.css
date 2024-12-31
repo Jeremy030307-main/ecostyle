@@ -126,7 +126,7 @@ h1 {
     background-color: #000;
     border-radius: 10px;
     overflow: hidden;
-    height: auto;
+    height: 300px;
 }
 
 .indicators_separators{
