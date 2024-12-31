@@ -11,6 +11,7 @@ const useSEE = (url) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
+    console.log("Running ")
     if (!url) return; // If no URL is provided, skip connection
 
     let eventSource;

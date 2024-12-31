@@ -6,6 +6,9 @@ import Product_4 from '../Components/Assets/Product_4.png';
 import search_icon from '../Components/Assets/search_icon.png';
 import flash_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useColors } from '../../apiManager/methods/colorMethods';
+import { addNewAddress, deleteAddress, useUserAddress } from '../../apiManager/methods/addressMethods';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,6 +16,21 @@ const Home = () => {
   const handleNavigation = (category) => {
     navigate('/shop', { state: { category } }); // Pass category data to Shop page
   };
+
+  const data = useUserAddress();
+  console.log(data);
+
+  // useEffect(() => {
+  //   const testing = async () => {
+  //     try{
+  //     await deleteAddress("Test");
+  //   } catch (error) {
+  //     console.log("error")
+  //   }
+  // }
+
+  // testing();
+  // });
 
   return (
     <div className="container">

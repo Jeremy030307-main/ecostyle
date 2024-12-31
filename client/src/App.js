@@ -21,7 +21,7 @@ import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
-import Checkout from './customer/Pages/Checkout';
+import Checkout from './customer/Checkout/Checkout.jsx';
 
 function App() {
   return (
@@ -40,6 +40,10 @@ function App() {
               <Route path='login' element={<LoginSignUp/>}></Route>
               <Route path='myaccount' element={<MyAccount/>}></Route>
               <Route path='cancellation' element={<Cancellation/>}></Route>
+
+            </Route>
+
+            <Route path='/checkout' element={<Checkout/>}>
 
             </Route>
             

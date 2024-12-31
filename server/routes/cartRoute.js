@@ -15,7 +15,7 @@ cartRouter.post('/', validateRequest(cartItemSchema, checkProduct), addProductTo
 cartRouter.put('/', validateRequest(cartItemSchema), updateCartProductQuantity);
 
 // Remove a product from the cart
-cartRouter.delete('/:productId', removeCartProduct);
+cartRouter.delete('/:cartProductID', removeCartProduct);
 
 // Clear the cart
 cartRouter.delete('/', clearCart);

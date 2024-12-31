@@ -16,21 +16,46 @@ export const getUserCart = (req, res) => {
     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
 
     // Set up a Firestore snapshot listener for real-time updates
-    const unsubscribe = userCartRef.onSnapshot(
-      (snapshot) => {
-        const cart = snapshot.docs.map((doc) => ({
-          id: doc.id, // Include document ID for reference
-          ...doc.data(),
-        }));
+  const unsubscribe = userCartRef.onSnapshot(
+    async (snapshot) => {
+      const cart = await Promise.all(
+        snapshot.docs.map(async (doc) => {
+          const cartData = {
+            id: doc.id, // Include document ID for reference
+            ...doc.data(),
+          };
 
-        // Send the updated cart data to the client
-        res.write(`data: ${JSON.stringify(cart)}\n\n`);
-      },
-      (error) => {
-        console.error("Error listening to user cart changes:", error);
-        res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
-      }
-    );
+          // Retrieve the product ID from the cart data and fetch the product details
+          const productId = cartData.product; // Assuming 'product' field contains the product ID
+          const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productId);
+          
+          try {
+            const productDoc = await productRef.get();
+            if (productDoc.exists) {
+              const productData = productDoc.data();
+              // Include the product information in the cart
+              cartData.productDetails = productData;
+            } else {
+              console.warn(`Product with ID ${productId} not found`);
+              cartData.productDetails = null;
+            }
+          } catch (productError) {
+            console.error(`Error fetching product data for productId ${productId}:`, productError);
+            cartData.productDetails = null;
+          }
+
+          return cartData;
+        })
+      );
+
+      // Send the updated cart data to the client
+      res.write(`data: ${JSON.stringify(cart)}\n\n`);
+    },
+    (error) => {
+      console.error("Error listening to user cart changes:", error);
+      res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
+    }
+  );
 
     // Handle connection close and clean up the listener
     req.on('close', () => {
@@ -46,12 +71,12 @@ export const getUserCart = (req, res) => {
 // Add a product to the user's cart
 export const addProductToCart = async (req, res) => {
   const userId = req.user;
-  const { product, quantity } = req.body;
+  const { product, variant, size, quantity } = req.body;
 
   try {
-    console.log(req.user, userId)
+    const cartProductID = `${product}_${variant}_${size}`
     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
-    const productRef = userCartRef.doc(product);
+    const productRef = userCartRef.doc(cartProductID);
 
     const productDoc = await productRef.get();
 
@@ -61,6 +86,8 @@ export const addProductToCart = async (req, res) => {
     // Add a new product to the cart
     await productRef.set({
     product,
+    variant, 
+    size,
     quantity,
     }); 
 
@@ -74,10 +101,10 @@ export const addProductToCart = async (req, res) => {
 // Update the quantity of a product in the user's cart
 export const updateCartProductQuantity = async (req, res) => {
   const userId = req.user;
-  const { product, quantity } = req.body;
+  const { cartProductID, quantity} = req.body;
 
   try {
-    const productRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART).doc(product);
+    const productRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART).doc(cartProductID);
 
     const productDoc = await productRef.get();
 
@@ -96,7 +123,7 @@ export const updateCartProductQuantity = async (req, res) => {
 // Remove a product from the user's cart
 export const removeCartProduct = async (req, res) => {
   const userId = req.user;
-  const product = req.params.productId;
+  const product = req.params.cartProductID;
 
   try {
     const productRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART).doc(product);
@@ -133,4 +160,36 @@ export const clearCart = async (req, res) => {
     res.status(500).json({ error: 'Failed to clear cart' });
   }
 };
+
+// export const checkout = async (req, res) => {
+//   const userId = req.user;
+
+//   try {
+//     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
+
+//     await db.runTransaction( async (transaction) => {
+//       const cartDoc = await transaction.get(userCartRef);
+
+//       if (!cartDoc.exists()) {
+//           throw new Error("Cart does not exist!");
+//       }
+
+//       const cartData = cartDoc.data();
+
+//       if (cartData.isLocked) {
+//           throw new Error("Cart is already locked. Another checkout might be in progress.");
+//       }
+
+//       // Lock the cart
+//       transaction.update(cartRef, {
+//           isLocked: true,
+//       });
+//   });
+
+//   console.log("Checkout started: Cart locked successfully.");
+
+//   } catch (error) {
+//     res.status(400).send(message(error.message))
+//   }
+// }
 
