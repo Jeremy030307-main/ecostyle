@@ -34,7 +34,7 @@ const Cancellation = () => {
                         <li className="main-option">My Orders
                             <ul className="sub-options">
                                 <li>
-                                    <button onClick={() => handleNavigation('/orders')}>Order</button>
+                                    <button onClick={() => handleNavigation('/AccountOrder')}>Order</button>
                                 </li>
                                 <li>
                                     <button onClick={() => handleNavigation('/cancellation')}>Cancellations</button>

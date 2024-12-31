@@ -14,6 +14,7 @@ import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
 import MyAccount from './customer/Pages/MyAccount';
 import Cancellation from './customer/Pages/Cancellation';
+import AccountOrder from './customer/Pages/AccountOrder';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
 //import Admin from './admin/admin';
@@ -41,6 +42,8 @@ function App() {
               <Route path='login' element={<LoginSignUp/>}></Route>
               <Route path='myaccount' element={<MyAccount/>}></Route>
               <Route path='cancellation' element={<Cancellation/>}></Route>
+              <Route path='AccountOrder' element={<AccountOrder/>}></Route>
+
 
             </Route>
             
