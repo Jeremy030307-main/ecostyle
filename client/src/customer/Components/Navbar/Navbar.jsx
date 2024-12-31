@@ -82,7 +82,8 @@ const Navbar = () => {
             <div className='nav-account-cart-wishlist'>
                 <Link to='/wishlist'><img onClick={() => {setMenu("wishlist")}} src={wishlist_icon} alt="" /></Link>
                 <Link to='/cart'><img onClick={() => {setMenu("cart")}} src={cart_icon} alt="" /></Link>
-                <div className='nav-cart-count'>0</div>
+                {/* Display the total number of items in the cart */}
+                <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
                 <div className="profile-menu">
                     <img onClick={toggleDropdown} src={account_icon} alt="" />
                     {isDropdownOpen && (
