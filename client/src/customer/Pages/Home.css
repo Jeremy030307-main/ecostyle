@@ -204,12 +204,12 @@ h1 {
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    max-width: 1500px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 .product-card {
     position: relative;
-    width: 80%;
+    width: 30%;
     background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
