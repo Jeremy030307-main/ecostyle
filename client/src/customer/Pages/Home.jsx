@@ -18,15 +18,15 @@ const Home = () => {
   const [products, setProducts] = useState([]);
   const [activeSlide, setActiveSlide] = useState(0);
 
-  // Fetch product data
+  // Fetch Product Data
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('http://localhost:5001/product');
+        const response = await fetch('http://localhost:5001/products'); // Replace with actual API endpoint
         const data = await response.json();
         setProducts(data);
       } catch (error) {
-        console.error('Error fetching product data:', error);
+        console.error('Error fetching products:', error);
       }
     };
     fetchProducts();
@@ -54,17 +54,17 @@ const Home = () => {
     return () => clearInterval(timer);
   }, [targetDate]);
 
-  // Auto-Switch Slides
+  // Auto-switch slides
   useEffect(() => {
     const slideInterval = setInterval(() => {
-      setActiveSlide((prevSlide) => (prevSlide + 1) % products.length);
+      setActiveSlide((prev) => (prev + 1) % products.length);
     }, 5000);
 
     return () => clearInterval(slideInterval);
   }, [products.length]);
 
-  const handleNavigation = (category) => {
-    navigate('/shop', { state: { category } });
+  const handleNavigateToProduct = (product) => {
+    navigate('/product', { state: { product } });
   };
 
   return (
@@ -79,23 +79,28 @@ const Home = () => {
         </div>
         <nav>
           <ul>
-            <li><button onClick={() => handleNavigation('WMN')}>Women's Fashion</button></li>
-            <li><button onClick={() => handleNavigation('MEN')}>Men's Fashion</button></li>
-            <li><button onClick={() => handleNavigation('KIDS')}>Kids</button></li>
+            <li><button onClick={() => navigate('/shop', { state: { category: 'WMN' } })}>Women's Fashion</button></li>
+            <li><button onClick={() => navigate('/shop', { state: { category: 'MEN' } })}>Men's Fashion</button></li>
+            <li><button onClick={() => navigate('/shop', { state: { category: 'KIDS' } })}>Kids</button></li>
           </ul>
         </nav>
       </aside>
 
       {/* Main Content */}
       <main className="main-content">
-        {/* Mega Sale Section */}
+        {/* Flash Sale Section */}
         <section className="flash-sale">
           {products.length > 0 && (
             <div className="showcase">
               <div className="content">
                 <h1>{products[activeSlide].name}</h1>
-                <p className="banner-description">Price: ${products[activeSlide].price}</p>
-                <button className="shop-now">Shop Now →</button>
+                <p className="banner-description">{products[activeSlide].description}</p>
+                <button
+                  className="shop-now"
+                  onClick={() => handleNavigateToProduct(products[activeSlide])}
+                >
+                  Shop Now →
+                </button>
               </div>
               <img
                 src={products[activeSlide].thumbnail}
@@ -119,7 +124,7 @@ const Home = () => {
               <img src={mega_sale_icon} alt="Mega Sale Icon" />
               <span className="flash-label">Mega Sale</span>
             </div>
-            <div className="timer">
+            <div className="flash-timer">
               {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m {timeRemaining.seconds}s
             </div>
           </div>
