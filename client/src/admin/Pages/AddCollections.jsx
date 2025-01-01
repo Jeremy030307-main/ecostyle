@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { assets } from "../Components/Assets/assets";
 import { Link } from "react-router-dom";
 import { addCollection } from "../../apiManager/methods/collectionMethods";
+import { useNavigate } from "react-router-dom";
 
 const AddCollections = () => {
   const [image1, setImage1] = useState(false);
@@ -22,6 +23,7 @@ const AddCollections = () => {
       await addCollection(id, name, description)
         .then(response => {
           console.log("Collection added successfully:");
+          window.location.reload();
         })
         .catch(error => {
           console.error("Error adding collection:", error);

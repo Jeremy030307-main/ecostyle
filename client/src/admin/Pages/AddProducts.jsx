@@ -147,6 +147,7 @@ const AddProducts = () => {
       await addProduct(productData)
         .then(response => {
           console.log("Product added successfully:", productData);
+          window.location.reload();
         })
         .catch(error => {
           console.error("Error adding product:", error);
