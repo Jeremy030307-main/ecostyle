@@ -20,6 +20,7 @@ const Shop = () => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState({ size: false, color: false }); 
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [availableColors, setAvailableColors] = useState([]); // To store colors dynamically
   const sizes = ["S", "M", "L", "XL"];
   const colorNameMap = {
@@ -99,6 +100,16 @@ const Shop = () => {
     fetchRatings();
   }, [productData]);
 
+  const handleCategorySelection = (subCategoryId) => {
+    setSelectedSubCategory(subCategoryId);
+    setCategory(subCategoryId); // Update category to subcategory
+  };
+
+  const getSubcategories = () => {
+    const selectedCategory = categories.find((cat) => cat.id === category);
+    return selectedCategory?.subcategories || [];
+  };
+
   const handleNavigation = (categoryId) => {
     setCategory(categoryId); // Update selected category ID
     navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
@@ -156,6 +167,28 @@ const Shop = () => {
                 {sizes.map((size) => (
                   <li key={size}>
                     <button onClick={() => setSelectedSize(size)}>{size}</button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+
+          {/* Category Filter */}
+          <div className="filter-section">
+            <button
+              className="filter-toggle"
+              onClick={() => setDropdownOpen((prev) => ({ ...prev, category: !prev.category }))}
+            >
+              Category
+            </button>
+            {dropdownOpen.category && (
+              <ul className="filter-options">
+                {getSubcategories().map((subCat) => (
+                  <li key={subCat.id}>
+                    <button onClick={() => handleCategorySelection(subCat.id)}>
+                      {subCat.name}
+                    </button>
                   </li>
                 ))}
               </ul>
