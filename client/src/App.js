@@ -12,13 +12,13 @@ import Home from './customer/Pages/Home';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
 import Admin from './admin/admin';
-import AddProducts from './admin/Pages/AddProducts';
-import Products from './admin/Pages/Products';
+import AddProducts from './admin/Pages/products/AddProducts';
+import Products from './admin/Pages/products/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
-import Collections from './admin/Pages/Collections';
-import AddCollections from './admin/Pages/AddCollections';
+import Collections from './admin/Pages/collections/Collections';
+import AddCollections from './admin/Pages/collections/AddCollections';
 
 
 

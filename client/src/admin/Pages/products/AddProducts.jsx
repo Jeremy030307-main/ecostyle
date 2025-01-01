@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import {assets} from '../Components/Assets/assets.js'
+import {assets} from '../../Components/Assets/assets.js'
 import './AddProducts.css';
-import { addProduct } from '../../apiManager/methods/productMethods.js';
-import { getCategory } from '../../apiManager/methods/categoryMethods.js';
-import { getColors } from '../../apiManager/methods/colorMethods.js';
-import { getAllCollection } from '../../apiManager/methods/collectionMethods.js';
+import { addProduct } from '../../../apiManager/methods/productMethods.js';
+import { getCategory } from '../../../apiManager/methods/categoryMethods.js';
+import { getColors } from '../../../apiManager/methods/colorMethods.js';
+import { getAllCollection } from '../../../apiManager/methods/collectionMethods.js';
 import { Link } from 'react-router-dom';
-import CategorySelectionSection from '../Components/Dropdown/Dropdown.jsx';
-import CustomSelect from '../Components/Dropdown/CustomSelect.jsx';
-import VariantSelector from '../Components/Dropdown/VariantSelector.jsx';
+import CategorySelectionSection from '../../Components/Dropdown/Dropdown.jsx';
+import CustomSelect from '../../Components/Dropdown/CustomSelect.jsx';
+import VariantSelector from '../../Components/Dropdown/VariantSelector.jsx';
 
 
 const AddProducts = () => {

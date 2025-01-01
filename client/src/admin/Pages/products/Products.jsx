@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom';
-import { assets } from '../Components/Assets/assets';
-import { currency } from '../admin'
-import "./Products.css"
-import { getProduct, deleteProduct } from '../../apiManager/methods/productMethods';
+import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { assets } from "../../Components/Assets/assets";
+import { currency } from "../../admin";
+import "./Products.css";
+import {
+  getProduct,
+  deleteProduct,
+} from "../../../apiManager/methods/productMethods";
 
 const Products = () => {
-
-  const [list,setList] = useState([])
+  const [list, setList] = useState([]);
 
   const fetchList = async () => {
     try {
       const response = await getProduct(); // Call your existing getProduct API
       console.log("API response:", response); // Debugging to check the response structure
-      setList(response)
+      setList(response);
     } catch (error) {
       console.error("Error fetching product list:", error.message || error);
     }
@@ -21,7 +23,7 @@ const Products = () => {
 
   // Handle product deletion
   const handleDelete = async (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")){
+    if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await deleteProduct(productId); // Call deleteProduct API
         setList((prevList) => prevList.filter((item) => item.id !== productId));
@@ -40,15 +42,15 @@ const Products = () => {
   return (
     <>
       <div className="title-container">
-        <p className='our-products'>Our Products</p>
+        <p className="our-products">Our Products</p>
         <div>
-            <NavLink className="add-product-button" to="/admin/add">
-                <img src={assets.add_icon} alt="" />
-                <p className='button-word'>Add A Product</p>
-            </NavLink>
+          <NavLink className="add-product-button" to="/admin/add">
+            <img src={assets.add_icon} alt="" />
+            <p className="button-word">Add A Product</p>
+          </NavLink>
         </div>
       </div>
-      
+
       <div className="product-list-container">
         {/* List Table Title */}
         <div className="product-list-header">
@@ -67,14 +69,19 @@ const Products = () => {
             <p>{item.thumbnail}</p>
             <p>{item.name}</p>
             <p>{item.category}</p>
-            <p>{currency}{item.price}</p>
-            <p onClick={() => handleDelete(item.id)} className="product-action">X</p>
+            <p>
+              {currency}
+              {item.price}
+            </p>
+            <p className="product-action">
+              <img onClick={() => handleDelete(item.id)} className="product-action-button" src={assets.delete_icon} alt="" />
+            </p>
+            
           </div>
         ))}
       </div>
     </>
+  );
+};
 
-  )
-}
-
-export default Products
+export default Products;

@@ -1,9 +1,9 @@
 import "./AddCollections.css";
 
 import React, { useState, useEffect } from "react";
-import { assets } from "../Components/Assets/assets";
+import { assets } from "../../Components/Assets/assets";
 import { Link } from "react-router-dom";
-import { addCollection } from "../../apiManager/methods/collectionMethods";
+import { addCollection } from "../../../apiManager/methods/collectionMethods";
 import { useNavigate } from "react-router-dom";
 
 const AddCollections = () => {

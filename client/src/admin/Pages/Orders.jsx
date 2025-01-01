@@ -7,35 +7,27 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
 
   // Fetch categories on component mount
-    const [categoryData, setCategoryData] = useState(null);
-      const [loading, setLoading] = useState(true);
-      const [error, setError] = useState(null);
+  const [categoryData, setCategoryData] = useState(null);
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const data = await getCategory();
+        console.log(data);
+      } catch (err) {
+        console.log("Error");
+      }
+    };
+
+    fetchCategory(); // Fetch data when component mounts or categoryID changes
+  }, []); // Dependency array: only rerun if categoryID changes
   
-      useEffect(() => {
-          const fetchCategory = async () => {
-              try {
-                const data = await getCategory();
-                console.log(data)
-                  
-              } catch (err) {
-                  setError(err.message); // Handle error
-                  console.error(err);
-              } finally {
-                  setLoading(false); // Stop loading when request is done
-              }
-          };
-  
-          fetchCategory(); // Fetch data when component mounts or categoryID changes
-      }, []); // Dependency array: only rerun if categoryID changes
   return (
     <div>
       <h3>Order Page</h3>
       <div>
         {orders.map((order, index) => (
-          <div
-            className="orders-container"
-            key={index}
-          >
+          <div className="orders-container" key={index}>
             <img className="order-image" src={assets.parcel_icon} alt="" />
             <div>
               <div className="order-items">
@@ -49,7 +41,8 @@ const Orders = () => {
                   } else {
                     return (
                       <p key={index}>
-                        {item.name} x {item.quantity} <span> {item.size} </span>,{" "}
+                        {item.name} x {item.quantity} <span> {item.size} </span>
+                        ,{" "}
                       </p>
                     );
                   }

@@ -86,15 +86,16 @@
 
 /* Action column styling */
 .product-action {
-    text-align: right; /* text-right */
-    font-size: 1.125rem; /* text-lg */
     cursor: pointer;
     color: red;
 }
 
 @media (min-width: 768px) { /* md breakpoint */
     .product-action {
-        text-align: center; /* md:text-center */
+        text-align-last: right;
+        height: 25px;
+        width: 25px;
+        margin-left: 4px;
     }
 }
 
