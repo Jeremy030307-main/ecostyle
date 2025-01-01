@@ -12,9 +12,14 @@ export const WishlistProvider = ({ children }) => {
 
   // Function to add an item to the wishlist
   const addItemToWishlist = (product) => {
-    if (!wishlistItems.find((item) => item.id === product.id)) {
-      setWishlistItems((prevItems) => [...prevItems, product]);
-    }
+    setWishlistItems((prevItems) => {
+      const existingItem = prevItems.find(item => item.id === product.id);
+      if (existingItem) {
+        return prevItems.map(item => item.id === product.id ? 
+          { ...item, quantity: item.quantity + 1 } : item);
+      }
+      return [...prevItems, { ...product, quantity: 1 }];
+    });
   };
 
   // Function to remove an item from the wishlist
@@ -22,18 +27,37 @@ export const WishlistProvider = ({ children }) => {
     setWishlistItems((prevItems) => prevItems.filter((item) => item.id !== productId));
   };
 
-  // Function to check if an item is in the wishlist
-  const isInWishlist = (productId) => {
-    return wishlistItems.some((item) => item.id === productId);
+  // Function to update the quantity of an item in the cart
+  const updateWishlistItemQuantity = (productId, newQuantity) => {
+    setWishlistItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === productId
+          ? { ...item, quantity: Math.max(1, newQuantity) } // Prevent quantity from being less than 1
+          : item
+      )
+    );
+  };
+
+  // Function to calculate subtotal
+  const calculateWishlistSubtotal = () => {
+    return wishlistItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
+  };
+
+  // Function to calculate total number of items in the cart
+  const calculateWishlistTotalItems = () => {
+    return wishlistItems.reduce((acc, item) => acc + item.quantity, 0);
   };
 
   return (
     <WishlistContext.Provider
       value={{
         wishlistItems,
+        setWishlistItems,
         addItemToWishlist,
         removeItemFromWishlist,
-        isInWishlist,
+        updateWishlistItemQuantity,
+        calculateWishlistSubtotal,
+        calculateWishlistTotalItems
       }}
     >
       {children}

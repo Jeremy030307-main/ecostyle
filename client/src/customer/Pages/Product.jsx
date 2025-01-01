@@ -11,7 +11,7 @@ const Product = () => {
   const product = location.state?.product;
 
   const handleAddToWishlist = () => {
-    addItemToWishlist(product);
+    addItemToWishlist({ ...product, quantity: 1 });
   };
 
   // State to track the selected variant's image
@@ -104,7 +104,8 @@ const Product = () => {
             <button className="add-to-cart-btn" onClick={handleAddToCart}>
               Add to Cart
             </button>
-            <button className="fav-btn">❤️  onClick={handleAddToWishlist}
+            <button className="fav-btn" onClick={handleAddToWishlist}>
+            ❤️
             </button>
           </div>
         </div>
