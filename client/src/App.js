@@ -12,12 +12,14 @@ import Home from './customer/Pages/Home';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
 import Admin from './admin/admin';
-import Add from './admin/Pages/Add';
+import AddProducts from './admin/Pages/AddProducts';
 import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
-import Categories from './admin/Pages/Categories';
+import Collections from './admin/Pages/Collections';
+import AddCollections from './admin/Pages/AddCollections';
+
 
 
 function App() {
@@ -40,10 +42,11 @@ function App() {
               
             <Route path='/admin' element={<AdminRoutes/>}>
               <Route path='' element={<Admin/>}>
-                <Route path='add' element={<Add/>}></Route>
+                <Route path='add' element={<AddProducts/>}></Route>
                 <Route path='products' element={<Products/>}></Route>
                 <Route path='orders' element={<Orders/>}></Route>
-                <Route path='categories' element={<Categories/>}></Route>
+                <Route path='collections' element={<Collections/>}></Route>
+                <Route path='addCollections' element={<AddCollections/>}></Route>
               </Route>
             </Route>
 

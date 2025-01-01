@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import {assets} from '../Components/Assets/assets'
-import './Add.css';
-import { addProduct } from '../../apiManager/methods/productMethods';
+import {assets} from '../Components/Assets/assets.js'
+import './AddProducts.css';
+import { addProduct } from '../../apiManager/methods/productMethods.js';
 import { getCategory } from '../../apiManager/methods/categoryMethods.js';
-import { getColors } from '../../apiManager/methods/colorMethods';
-import { getAllCollection } from '../../apiManager/methods/collectionMethods';
+import { getColors } from '../../apiManager/methods/colorMethods.js';
+import { getAllCollection } from '../../apiManager/methods/collectionMethods.js';
 import { Link } from 'react-router-dom';
 import CategorySelectionSection from '../Components/Dropdown/Dropdown.jsx';
 import CustomSelect from '../Components/Dropdown/CustomSelect.jsx';
 import VariantSelector from '../Components/Dropdown/VariantSelector.jsx';
 
 
-const Add = () => {
+const AddProducts = () => {
   const [image1, setImage1] = useState(false)
   const [image2, setImage2] = useState(false)
   const [image3, setImage3] = useState(false)
@@ -24,7 +24,7 @@ const Add = () => {
 
 
   // COLLECTIONS
-  const [collections, setCollections] = useState([{ color: "", image: null }]);
+  const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState(""); // Selected collection
 
   const fetchCollections = async () => {
@@ -272,4 +272,4 @@ const Add = () => {
   );
 }
 
-export default Add
+export default AddProducts

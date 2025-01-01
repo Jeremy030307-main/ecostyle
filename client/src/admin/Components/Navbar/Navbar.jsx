@@ -7,7 +7,7 @@ const Navbar = () => {
     return (
         <div className='navbar-container'>
             <img src={assets.logo_text} alt ="" />
-            <Link className='button-link' to='../Login'>
+            <Link to='../Login'>
                 <button className='logout-btn'>Logout</button>
             </Link>
         </div>
