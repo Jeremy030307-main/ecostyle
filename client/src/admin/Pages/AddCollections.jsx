@@ -19,14 +19,9 @@ const AddCollections = () => {
     e.preventDefault();
 
     try {
-      const collection = {
-        id: id,
-        name: name,
-        description: description
-      };
-      await addCollection(collection)
+      await addCollection(id, name, description)
         .then(response => {
-          console.log("Collection added successfully:", collection);
+          console.log("Collection added successfully:");
         })
         .catch(error => {
           console.error("Error adding collection:", error);
@@ -106,7 +101,7 @@ const AddCollections = () => {
         </div>
       </div>
 
-      {/* Title */}
+      {/* ID */}
       <div className="w-full">
         <p className="upload-section">ID</p>
         <input
