@@ -1,0 +1,87 @@
+.variant-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.file-upload-container {
+  position: relative;
+}
+
+.file-upload-button {
+  background: white;
+  color: black;
+  padding: 6px 10px;
+  border: solid 1px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-block;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.file-upload-button:hover {
+  background-color: lightgrey;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.image-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Made circular to match your design */
+  overflow: hidden;
+  border: 2px solid #2d3643;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+.image-preview img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+}
+
+.remove-button {
+  background: transparent;
+  color: #666;
+  border: none;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.remove-button:hover {
+  color: #ff4444;
+}
+
+.variant-row .select-wrapper {
+  width: 140px;
+}
+
+.variant-row .custom-select {
+  font-size: 14px;
+}
+
+/* Hide the default file input text */
+.file-input-wrapper {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+}
+
+.file-input-wrapper input[type="file"] {
+  position: absolute;
+  left: -9999px;
+}

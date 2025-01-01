@@ -8,6 +8,7 @@ import { getAllCollection } from '../../apiManager/methods/collectionMethods';
 import { Link } from 'react-router-dom';
 import CategorySelectionSection from '../Components/Dropdown/Dropdown.jsx';
 import CustomSelect from '../Components/Dropdown/CustomSelect.jsx';
+import VariantSelector from '../Components/Dropdown/VariantSelector.jsx';
 
 
 const Add = () => {
@@ -254,55 +255,17 @@ const Add = () => {
         </div>
       </div>
       
-      {/* Variances */}
-      <div>
-        <p className="upload-section">Variances</p>
-        {/* Adding Variant (Colors and Images) */}
-        {variants.map((variant, index) => (
-          <div key={index} className="variant-row">
-            {/* Dropdown for selecting color */}
-            <select
-              value={variant.color}
-              onChange={(e) => handleColorChange(index, e.target.value)}
-            >
-              <option value="">Select Color</option>
-              {availableColors.map((color) => (
-                <option key={color.id} value={color.id}>
-                  {color.name}
-                </option>
-              ))}
-            </select>
+      <VariantSelector
+        variants={variants}
+        availableColors={availableColors}
+        handleColorChange={handleColorChange}
+        handleImageUpload={handleImageUpload}
+        removeVariant={removeVariant}
+      />
 
-            {/* Image upload */}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageUpload(index, e.target.files[0])}
-            />
-
-            {/* Image preview */}
-            {variant.image && (
-              <img
-                src={URL.createObjectURL(variant.image)} // Temporary preview
-                alt="Preview"
-                style={{
-                  width: "50px",
-                  height: "50px",
-                  objectFit: "cover",
-                  marginLeft: "10px",
-                }}
-              />
-            )}
-
-            {/* Remove variant button */}
-            <button onClick={() => removeVariant(index)}>Remove</button>
-          </div>
-        ))}
-
-        {/* Add new variant */}
-        <button onClick={addVariant}>Add Variant</button>
-      </div>
-      
+      {/* Add new variant */}
+      <button onClick={addVariant}>Add Variant</button>
+  
       <button type="submit" className="submit-button">ADD</button>
     </form>
 

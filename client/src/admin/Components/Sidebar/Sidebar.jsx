@@ -22,9 +22,9 @@ const Sidebar = () => {
             </div>
 
             <div className="sidebar-section">
-                <NavLink className="sidebar-link" to="categories">
+                <NavLink className="sidebar-link" to="collections">
                     <img src={assets.order_icon} alt="" />
-                    <p>Categories</p>
+                    <p>Collections</p>
                 </NavLink>
             </div>
 
