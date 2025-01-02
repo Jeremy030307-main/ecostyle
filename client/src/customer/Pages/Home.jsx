@@ -7,10 +7,29 @@ import Product_5 from '../Components/Assets/Eo Root Long Sleeve Polo.png';
 import search_icon from '../Components/Assets/search_icon.png';
 import mega_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { getCategory } from '../../apiManager/methods/categoryMethods';
+import { useEffect, useState } from 'react';
+
+
 
 const Home = () => {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]); 
+
+  useEffect(() => {
+    // Fetch categories from the API
+    const fetchCategories = async () => {
+      try {
+        const data = await getCategory();
+        console.log("Fetched categories:", data);
+        setCategories(data || []); // Ensure categories array is set
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Target date for Mega Sale: February 12, 2025
   const targetDate = new Date('February 12, 2025 00:00:00').getTime();
@@ -106,15 +125,11 @@ const Home = () => {
         </div>
         <nav>
           <ul>
-            <li>
-              <button onClick={() => handleNavigation('WMN')}>Women's Fashion</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('MEN')}>Men's Fashion</button>
-            </li>
-            <li>
-              <button onClick={() => handleNavigation('KIDS')}>Kids</button>
-            </li>
+          {categories.map((cat) => (
+              <li key={cat.id}>
+                <button onClick={() => handleNavigation(cat.id)}>{cat.name}</button>
+              </li>
+            ))}
           </ul>
         </nav>
       </aside>

@@ -15,8 +15,10 @@ import Home from './customer/Pages/Home';
 import Admin from './admin/admin';
 import MyAccount from './customer/Pages/MyAccount';
 import Cancellation from './customer/Pages/Cancellation';
+import AccountOrder from './customer/Pages/AccountOrder';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
+//import Admin from './admin/admin';
 import Add from './admin/Pages/Add';
 import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
@@ -30,18 +32,21 @@ function App() {
       <WishlistProvider> {/* Wrap the entire app in WishlistProvider */}
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Customer />}>
-              <Route path="" element={<Home />} />
-              <Route path="shop" element={<Shop />} />
-              <Route path="eco-point" element={<EcoPoint />} />
-              <Route path="about" element={<About />} />
-              <Route path="wishlist" element={<Wishlist />} />
-              <Route path="cart" element={<Cart />} /> {/* Cart page */}
-              <Route path="account" element={<Accout />} />
-              <Route path="product" element={<Product />} />
-              <Route path="login" element={<LoginSignUp />} />
-              <Route path="myaccount" element={<MyAccount />} />
-              <Route path="cancellation" element={<Cancellation />} />
+            <Route path='/' element={<Customer/>}>
+              <Route path='' element={<Home/>}></Route>
+              <Route path='shop' element={<Shop/>}></Route>
+              <Route path='eco-point' element={<EcoPoint/>}></Route>
+              <Route path='about' element={<About/>}></Route>
+              <Route path='wishlist' element={<Wishlist/>}></Route>
+              <Route path='cart' element={<Cart />} /> {/* Cart page */}
+              <Route path='account' element={<Accout/>}></Route>
+              <Route path='product' element={<Product/>}></Route>
+              <Route path='login' element={<LoginSignUp/>}></Route>
+              <Route path='myaccount' element={<MyAccount/>}></Route>
+              <Route path='cancellation' element={<Cancellation/>}></Route>
+              <Route path='AccountOrder' element={<AccountOrder/>}></Route>
+
+
             </Route>
 
             <Route path="/admin" element={<AdminRoutes />}>
