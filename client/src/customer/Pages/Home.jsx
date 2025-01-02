@@ -7,10 +7,9 @@ import Product_5 from '../Components/Assets/Eo Root Long Sleeve Polo.png';
 import search_icon from '../Components/Assets/search_icon.png';
 import mega_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
-import { getCategory } from '../../apiManager/methods/categoryMethods';
-import { useEffect, useState } from 'react';
-
-
+import { useEffect } from 'react';
+import { useColors } from '../../apiManager/methods/colorMethods';
+import { addNewAddress, deleteAddress, useUserAddress } from '../../apiManager/methods/addressMethods';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -109,10 +108,21 @@ const Home = () => {
     navigate('/shop', { state: { category } });
   };
 
-  const handleProductNavigation = (productId) => {
-    navigate('/shop', { state: { productId } });
-  };
-  
+  const data = useUserAddress();
+  console.log(data);
+
+  // useEffect(() => {
+  //   const testing = async () => {
+  //     try{
+  //     await deleteAddress("Test");
+  //   } catch (error) {
+  //     console.log("error")
+  //   }
+  // }
+
+  // testing();
+  // });
+
   return (
     <div className="container">
       {/* Sidebar */}

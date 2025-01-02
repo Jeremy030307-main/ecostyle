@@ -1,8 +1,9 @@
 import { ApiMethods } from "../ApiMethods";
 import COLOR_ENDPOINTS from "../endpoints/colorEndpoint";
+import useSEE from "../useSEE";
 
-export const getColors = (colorID = "") => {
-    return ApiMethods.get(COLOR_ENDPOINTS.COLOR(colorID))
+export const useColors = (colorID = "") => {
+    return useSEE(COLOR_ENDPOINTS.COLOR(colorID))
 }
 
 export const addColor = (colorID = "",name = "", colorCode = "", ) => {

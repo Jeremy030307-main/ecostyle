@@ -54,49 +54,76 @@ export const checkColors = async (body) => {
     }
 }
 
-export const getColors = async (req, res) => {
+export const getColors = (req, res) => {
+    const colorID = req.params.id;
+
+    // Set up SSE headers
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', "*");
+    res.setHeader('Content-Encoding', "none");
+    res.flushHeaders(); // Flush headers to establish SSE connection
+
     try {
+        if (!colorID) {
+            // Listen for real-time changes to the entire collection
+            const colorSnapshot = db.collection(COLLECTIONS.COLOR);
 
-        const colorID = req.params.id;
-        let result = null;
+            const unsubscribe = colorSnapshot.onSnapshot(snapshot => {
+                if (snapshot.empty) {
+                    console.log("No Color found");
+                    return res.status(404).send(message('No Color found'));
+                }
 
-        if (!colorID){
-            const colorSnapshot = await db.collection(COLLECTIONS.COLOR).get();
-    
-            if (colorSnapshot.empty) {
-                console.log("No Color")
-                return res.status(404).send(message('No Color found'));
-            }
-            result = colorSnapshot.docs.map((doc) => {
-                const colorData = doc.data();
-                return {
-                    id: doc.id,
-                    ...colorData
-                };
+                const colors = snapshot.docs.map(doc => {
+                    const colorData = doc.data();
+                    return {
+                        id: doc.id,
+                        ...colorData
+                    };
+                });
+
+                // Send the updated data to the client
+                res.write(`data: ${JSON.stringify(colors)}\n\n`);
+            });
+
+            // Close the listener when the connection is closed
+            req.on('close', () => {
+                console.log("Connection closed, unsubscribing...");
+                unsubscribe();
             });
 
         } else {
+            // Listen for real-time updates for a specific color
+            const colorSnapshot = db.collection(COLLECTIONS.COLOR).doc(colorID);
 
-            const colorSnapshot = await db.collection(COLLECTIONS.COLOR).doc(colorID).get();
-    
-            if (colorSnapshot.empty) {
-                return res.status(404).send(message('No Color found'));
-            } 
-            
-            const colorData = colorSnapshot.data();
+            const unsubscribe = colorSnapshot.onSnapshot(docSnapshot => {
+                if (!docSnapshot.exists) {
+                    return res.status(404).send(message('No Color found'));
+                }
 
-            result = {
-                id: colorSnapshot.id,
-                ...colorData
-            };
+                const colorData = docSnapshot.data();
+                const result = {
+                    id: docSnapshot.id,
+                    ...colorData
+                };
+
+                // Send the updated data to the client
+                res.write(`data: ${JSON.stringify(result)}\n\n`);
+            });
+
+            // Close the listener when the connection is closed
+            req.on('close', () => {
+                console.log("Connection closed, unsubscribing...");
+                unsubscribe();
+            });
         }
 
-        res.status(200).send(result);
-
-      } catch (error) {
+    } catch (error) {
         res.status(500).send(message(error.message));
-      }
-}
+    }
+};
 
 export const addcolor = async (req, res) => {
 

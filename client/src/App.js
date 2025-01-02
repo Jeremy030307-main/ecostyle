@@ -51,6 +51,10 @@ function App() {
 
 
             </Route>
+
+            <Route path='/checkout' element={<Checkout/>}>
+
+            </Route>
             
             <Route path='/admin' element={<AdminRoutes/>}>
               <Route path='' element={<Admin/>}>

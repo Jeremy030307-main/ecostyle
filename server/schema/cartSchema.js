@@ -10,7 +10,13 @@ const cartItemSchema = Joi.object({
     'number.integer': 'Quantity must be an integer.',
     'number.min': 'Quantity must be at least 1.',
     'any.required': 'Quantity is required.'
-  })
+  }),
+  variant: Joi.string().optional().messages({
+    'string.base': 'Variant must be a string.'
+  }),
+  size: Joi.string().optional().messages({
+    'string.base': 'Size must be a string.'
+  }),
 });
 
 export {cartItemSchema}
