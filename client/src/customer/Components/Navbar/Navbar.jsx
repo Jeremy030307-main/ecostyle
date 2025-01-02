@@ -101,9 +101,10 @@ const Navbar = () => {
       <div className="nav-account-cart-wishlist">
         <Link to="/wishlist">
           <img onClick={() => { setMenu('wishlist'); }} src={wishlist_icon} alt="" />
-          {/* Display total items in the wishlist as a badge */}
-          {totalWishlistItems > 0 && <div className="nav-wishlist-count">{totalWishlistItems}</div>}
         </Link>
+          {/* Display total items in the wishlist as a badge */}
+          <div className="nav-wishlist-count">{totalItems > 0 ? totalItems : 0}</div>
+
         <Link to="/cart">
           <img onClick={() => { setMenu('cart'); }} src={cart_icon} alt="" />
         </Link>
