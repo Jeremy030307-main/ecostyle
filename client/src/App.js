@@ -13,12 +13,14 @@ import Wishlist from './customer/Pages/Wishlist';
 import Account from './customer/Pages/Account';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
+import Admin from './admin/admin';
+import MyAccount from './customer/Pages/MyAccount';
+import Cancellation from './customer/Pages/Cancellation';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 import Contact from './customer/Pages/Contact';
 import Footer from './customer/Pages/Footer';
 import NotFound from './customer/Pages/NotFound';
 
-import Admin from './admin/admin';
 import Add from './admin/Pages/Add';
 import Products from './admin/Pages/Products';
 import Orders from './admin/Pages/Orders';
@@ -42,12 +44,19 @@ function App() {
               <Route path='account' element={<Account/>}></Route>
               <Route path='product' element={<Product/>}></Route>
               <Route path='login' element={<LoginSignUp/>}></Route>
-              <Route path='checkout' element={<Checkout />} /> {/* Checkout page */}
+              <Route path='myaccount' element={<MyAccount/>}></Route>
+              <Route path='cancellation' element={<Cancellation/>}></Route>
+
             </Route>
             
             <Route path='/admin' element={<AdminRoutes/>}>
-               {/* Your admin routes */}
+              <Route path='' element={<Admin/>}>
+                <Route path='add' element={<Add/>}></Route>
+                <Route path='products' element={<Products/>}></Route>
+                <Route path='orders' element={<Orders/>}></Route>
+              </Route>
             </Route>
+
           </Routes>
       </BrowserRouter>
     </CartProvider>
