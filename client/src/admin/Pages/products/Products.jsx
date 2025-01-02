@@ -4,41 +4,32 @@ import { assets } from "../../Components/Assets/assets";
 import { currency } from "../../admin";
 import "./Products.css";
 import {
-  getProduct,
+  useProduct,
   deleteProduct,
 } from "../../../apiManager/methods/productMethods";
 
 const Products = () => {
-  const [list, setList] = useState([]);
-
-  const fetchList = async () => {
-    try {
-      const response = await getProduct(); // Call your existing getProduct API
-      console.log("API response:", response); // Debugging to check the response structure
-      setList(response);
-    } catch (error) {
-      console.error("Error fetching product list:", error.message || error);
-    }
-  };
 
   // Handle product deletion
   const handleDelete = async (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await deleteProduct(productId); // Call deleteProduct API
-        setList((prevList) => prevList.filter((item) => item.id !== productId));
+        // setList((prevList) => prevList.filter((item) => item.id !== productId));
         console.log("Product deleted successfully");
       } catch (error) {
         console.error("Error deleting product:", error.message || error);
       }
     }
   };
+  
+  const list = useProduct();
+  console.log(list)
 
-  // Fetch categories on component mount
-  useEffect(() => {
-    fetchList();
-  }, []);
-
+  if (!list) {
+    return <p>Loading...</p>;
+  }
+  
   return (
     <>
       <div className="title-container">

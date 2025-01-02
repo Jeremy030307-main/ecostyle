@@ -3,7 +3,7 @@ import {assets} from '../../Components/Assets/assets.js'
 import './AddProducts.css';
 import { addProduct } from '../../../apiManager/methods/productMethods.js';
 import { getCategory } from '../../../apiManager/methods/categoryMethods.js';
-import { getColors } from '../../../apiManager/methods/colorMethods.js';
+import { useColors } from '../../../apiManager/methods/colorMethods.js';
 import { getAllCollection } from '../../../apiManager/methods/collectionMethods.js';
 import { Link } from 'react-router-dom';
 import CategorySelectionSection from '../../Components/Dropdown/Dropdown.jsx';
@@ -27,32 +27,46 @@ const AddProducts = () => {
   const [collections, setCollections] = useState([]);
   const [selectedCollection, setSelectedCollection] = useState(""); // Selected collection
 
-  const fetchCollections = async () => {
-
-    try{
-      const collection = await getAllCollection();
-      console.log("All Collections Fetched")
-      setCollections(collection);
-    } catch (error){
-      console.error("Error fetching collection:", error);
-    }
-
-  }
+  // CATEGORIES
+  const [categories, setCategories] = useState([]); // Full category structure
+  const [selectedCategory, setSelectedCategory] = useState(""); // Top-level category ID
+  const [selectedSubcategory, setSelectedSubcategory] = useState(""); // Subcategory ID
+  const [nestedSubcategory, setNestedSubcategory] = useState(""); // Nested subcategory ID (if applicable)
 
   // VARIANTS
   const [variants, setVariants] = useState([{ color: "", image: null }]);
-  const [availableColors, setAvailableColors] = useState([]);
-  const fetchColors = async () => {
 
-    try{
-      const colors = await getColors();
-      console.log("All Colors Fetched")
-      setAvailableColors(colors);
-    } catch (error){
-      console.error("Error fetching colors:", error);
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getCategory();
+        console.log("All Categories Fetched")
+        setCategories(categoryData); // Example: [{id: 'MEN', name: 'Men', subcategories: [...]}, ...]
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     }
 
-  };
+    const fetchCollections = async () => {
+
+      try{
+        const collection = await getAllCollection();
+        console.log("All Collections Fetched")
+        setCollections(collection);
+      } catch (error){
+        console.error("Error fetching collection:", error);
+      }
+  
+    }
+
+    fetchCategories();
+    fetchCollections();
+  }, []);
+  const availableColors = useColors();
+  if (!availableColors) {
+    return <p>Loading...</p>;
+  }
 
   // Handle color selection
   const handleColorChange = (index, color) => {
@@ -79,22 +93,6 @@ const AddProducts = () => {
     setVariants(updatedVariants);
   };
 
-  // CATEGORIES
-  const [categories, setCategories] = useState([]); // Full category structure
-  const [selectedCategory, setSelectedCategory] = useState(""); // Top-level category ID
-  const [selectedSubcategory, setSelectedSubcategory] = useState(""); // Subcategory ID
-  const [nestedSubcategory, setNestedSubcategory] = useState(""); // Nested subcategory ID (if applicable)
-
-  const fetchCategories = async () => {
-    try {
-      const categoryData = await getCategory();
-      console.log("All Categories Fetched")
-      setCategories(categoryData); // Example: [{id: 'MEN', name: 'Men', subcategories: [...]}, ...]
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-    }
-  }
-
   // Handle top-level category selection
   const handleCategoryChange = (categoryId) => {
     setSelectedCategory(categoryId);
@@ -112,15 +110,6 @@ const AddProducts = () => {
   const handleNestedSubcategoryChange = (nestedSubcategoryId) => {
     setNestedSubcategory(nestedSubcategoryId);
   };
-
-
-  // Fetch categories on component mount
-  useEffect(() => {
-    fetchCategories();
-    fetchColors();
-    fetchCollections();
-  }, []);
-
   
   // 1. Material and fit (Nid implement or can dont need)
   // 2. Change thumbnail and variant images to URL

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { useCart } from '../../CartContext'; // Import the Cart Context
 import { useWishlist } from '../../WishlistContext'; // Import Wishlist Context
 import './Product.css'; // CSS file for styling
-import { getProductReview } from '../../apiManager/methods/reviewMethods';
+import { useProductReview } from '../../apiManager/methods/reviewMethods';
 
 
 const Product = () => {
@@ -23,22 +23,24 @@ const Product = () => {
     product?.variant[0]?.image || '/placeholder.png'
   );
 
-  useEffect(() => {
-    if (product?.id) {
-      const fetchReviews = async () => {
-        try {
-          const fetchedReviews = await getProductReview(product.id);
-          setReviews(fetchedReviews);
-        } catch (error) {
-          console.error('Error fetching product reviews:', error);
-        } finally {
-          setLoadingReviews(false);
-        }
-      };
+  const fetchedReviews = useProductReview(product?.id)
 
-      fetchReviews();
-    }
-  }, [product?.id]);
+  // useEffect(() => {
+  //   if (product?.id) {
+  //     const fetchReviews = async () => {
+  //       try {
+  //         const fetchedReviews = await getProductReview(product.id);
+  //         setReviews(fetchedReviews);
+  //       } catch (error) {
+  //         console.error('Error fetching product reviews:', error);
+  //       } finally {
+  //         setLoadingReviews(false);
+  //       }
+  //     };
+
+  //     fetchReviews();
+  //   }
+  // }, [product?.id]);
 
   if (!product) {
     return <p>Product not found!</p>;

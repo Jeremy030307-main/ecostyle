@@ -25,6 +25,7 @@
     "client": "react-scripts start",
     "dev": "concurrently -kill-others-on-fail \"npm run server\" \"npm run client\""
   },
+  "proxy": "http://localhost:5001",
   "eslintConfig": {
     "extends": [
       "react-app",
