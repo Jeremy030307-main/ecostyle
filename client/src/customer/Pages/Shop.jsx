@@ -156,6 +156,9 @@ const Shop = () => {
             </button>
             {dropdownOpen.size && (
               <ul className="filter-options">
+                <li>
+                  <button onClick={() => setSelectedSize(null)}>None</button>
+                </li>
                 {sizes.map((size) => (
                   <li key={size}>
                     <button onClick={() => setSelectedSize(size)}>{size}</button>
@@ -174,7 +177,9 @@ const Shop = () => {
             </button>
             {dropdownOpen.category && (
               <ul className="filter-options">
-                {/* Main Categories */}
+                <li>
+                  <button onClick={() => handleCategorySelection(null)}>None</button>
+                </li>
                 {categories.map((cat) => (
                   <li key={cat.id}>
                     <button
@@ -213,6 +218,9 @@ const Shop = () => {
             </button>
             {dropdownOpen.color && (
               <ul className="filter-options">
+                <li>
+                  <button onClick={() => setSelectedColor(null)}>None</button>
+                </li>
                 {availableColors.map((colorHex) => (
                   <li key={colorHex}>
                     <button onClick={() => setSelectedColor(colorHex)}>
