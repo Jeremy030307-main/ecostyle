@@ -111,13 +111,9 @@ const Navbar = () => {
         {/* Display the total number of items in the cart */}
         <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
         <div className="profile-menu">
+          <Link to = {isAuthenticated ? "/myaccount": "/login"}>
           <img onClick={toggleDropdown} src={account_icon} alt="" />
-          {isDropdownOpen && (
-            <div className="dropdown">
-              <NoDecorationLink to="/login" onClick={() => setDropdownOpen(false)}>Login</NoDecorationLink>
-              <NoDecorationLink to="/myaccount" onClick={() => setDropdownOpen(false)}>My Account</NoDecorationLink>
-            </div>
-          )}
+          </Link>
         </div>
         {admin === true ? <Link to="/admin"><img onClick={() => { setMenu('admin'); }} src={admin_icon} alt="" /></Link> : <></>}
       </div>

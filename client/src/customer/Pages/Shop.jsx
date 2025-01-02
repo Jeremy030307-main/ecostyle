@@ -4,23 +4,25 @@ import { useEffect, useState } from 'react';
 import search_icon from '../Components/Assets/search_icon.png';
 import { getProduct, useProduct } from '../../apiManager/methods/productMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
-import { getProductReview } from '../../apiManager/methods/reviewMethods';
+import { useProductReview } from '../../apiManager/methods/reviewMethods';
 
 const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const initialCategory = location.state?.category || "MEN"; // Default to Men's category
-  const [categories, setCategories] = useState([]); 
-  const [products, setProducts] = useState([]); 
-  const [category, setCategory] = useState(initialCategory); 
+  const initialCategory = location.state?.category || "MEN";
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState(initialCategory);
   const [ratings, setRatings] = useState({});
-  const [loading, setLoading] = useState(false); 
-  const [error, setError] = useState(''); 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState({ size: false, color: false }); 
-  const [availableColors, setAvailableColors] = useState([]); // To store colors dynamically
+  const [dropdownOpen, setDropdownOpen] = useState({ size: false, color: false, category: false });
+  const [selectedSubCategory, setSelectedSubCategory] = useState(null);
+  const [availableColors, setAvailableColors] = useState([]);
+
   const sizes = ["S", "M", "L", "XL"];
   const colorNameMap = {
     "#000000": "Black",
@@ -34,32 +36,27 @@ const Shop = () => {
     "#EAD7DB": "Pink",
     "#7285A5": "Pigeon Blue",
     "#964B00": "Brown",
-  }; // Map hex codes to color names
+  };
 
   const productData = useProduct("", { category });
 
   useEffect(() => {
-    // Fetch categories from the API
     const fetchCategories = async () => {
       try {
-        console.log("Fetching products with options:", productData); 
         const data = await getCategory();
-        console.log("Fetched categories:", data);
-        setCategories(data || []); // Ensure categories array is set
+        setCategories(data || []);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
     };
 
     fetchCategories();
-  }, []); // Only run on component mount
+  }, []);
 
   useEffect(() => {
     if (category) {
-      // When the category changes, update products
       setProducts(productData || []);
 
-      // Extract available colors from product variants
       const uniqueColors = new Set();
       productData?.forEach((product) => {
         product.variant.forEach((variant) => {
@@ -70,38 +67,46 @@ const Shop = () => {
     }
   }, [category, productData]);
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      const ratingsMap = {};
-      if (productData) {
-        await Promise.all(
-          productData.map(async (product) => {
-            try {
-              const reviews = await getProductReview(product.id);
-              console.log(`Reviews for product ${product.id}:`, reviews); // Log reviews and ratings here
+  // useEffect(() => {
+  //   const fetchRatings = async () => {
+  //     const ratingsMap = {};
+  //     if (productData) {
+  //       await Promise.all(
+  //         productData.map(async (product) => {
+  //           try {
+  //             const reviews = await getProductReview(product.id);
+  //             const averageRating =
+  //               reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
+  //             ratingsMap[product.id] = {
+  //               averageRating: averageRating.toFixed(1),
+  //               reviewCount: reviews.length,
+  //             };
+  //           } catch (err) {
+  //             console.error(`Error fetching reviews for product ${product.id}:`, err);
+  //             ratingsMap[product.id] = { averageRating: "No rating", reviewCount: 0 };
+  //           }
+  //         })
+  //       );
+  //     }
+  //     setRatings(ratingsMap);
+  //   };
 
-              const averageRating =
-                reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
-              ratingsMap[product.id] = {
-                averageRating: averageRating.toFixed(1),
-                reviewCount: reviews.length,
-              };
-            } catch (err) {
-              console.error(`Error fetching reviews for product ${product.id}:`, err);
-              ratingsMap[product.id] = { averageRating: "No rating", reviewCount: 0 };
-            }
-          })
-        );
-      }
-      setRatings(ratingsMap);
-    };
+  //   fetchRatings();
+  // }, [productData]);
 
-    fetchRatings();
-  }, [productData]);
+  const handleCategorySelection = (subCategoryId) => {
+    setSelectedSubCategory(subCategoryId); 
+    setCategory(subCategoryId); 
+  };
+
+  const getSubcategories = () => {
+    const selectedCategory = categories.find((cat) => cat.id === category);
+    return selectedCategory?.subcategories || [];
+  };
 
   const handleNavigation = (categoryId) => {
-    setCategory(categoryId); // Update selected category ID
-    navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
+    setCategory(categoryId);
+    navigate('/shop', { state: { category: categoryId } });
   };
 
   const handleProductClick = (product) => {
@@ -110,10 +115,9 @@ const Shop = () => {
 
   const getCategoryHeading = () => {
     const selectedCategory = categories.find((cat) => cat.id === category);
-    return selectedCategory ? selectedCategory.name : " "; 
+    return selectedCategory ? selectedCategory.name : " ";
   };
 
-  // Filter products based on selected size and color
   const filteredProducts = products.filter((product) => {
     const matchesSize = selectedSize ? product.size.includes(selectedSize) : true;
     const matchesColor = selectedColor
@@ -143,7 +147,6 @@ const Shop = () => {
         <div className="filters">
           <h4>Filters</h4>
 
-          {/* Size Filter */}
           <div className="filter-section">
             <button
               className="filter-toggle"
@@ -162,7 +165,45 @@ const Shop = () => {
             )}
           </div>
 
-          {/* Color Filter */}
+          <div className="filter-section">
+            <button
+              className="filter-toggle"
+              onClick={() => setDropdownOpen((prev) => ({ ...prev, category: !prev.category }))}
+            >
+              Category
+            </button>
+            {dropdownOpen.category && (
+              <ul className="filter-options">
+                {/* Main Categories */}
+                {categories.map((cat) => (
+                  <li key={cat.id}>
+                    <button
+                      onClick={() => handleCategorySelection(cat.id)}
+                      className={cat.id === selectedSubCategory ? "selected" : ""}
+                    >
+                      {cat.name}
+                    </button>
+                    {/* Subcategories for the selected main category */}
+                    {cat.id === selectedSubCategory && (
+                      <ul className="subcategories">
+                        {getSubcategories().map((subCat) => (
+                          <li key={subCat.id}>
+                            <button
+                              onClick={() => handleCategorySelection(subCat.id)}
+                              className={subCat.id === selectedSubCategory ? "selected" : ""}
+                            >
+                              {subCat.name}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           <div className="filter-section">
             <button
               className="filter-toggle"
