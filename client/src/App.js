@@ -18,13 +18,16 @@ import Cancellation from './customer/Pages/Cancellation';
 import AccountOrder from './customer/Pages/AccountOrder';
 import LoginSignUp from './customer/Pages/LoginSignUp';
 
-//import Admin from './admin/admin';
-import Add from './admin/Pages/Add';
-import Products from './admin/Pages/Products';
+import Admin from './admin/admin';
+import AddProducts from './admin/Pages/products/AddProducts';
+import Products from './admin/Pages/products/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
-import Checkout from './customer/Pages/Checkout';
+import Collections from './admin/Pages/collections/Collections';
+import AddCollections from './admin/Pages/collections/AddCollections';
+
+
 
 function App() {
   return (
@@ -48,12 +51,14 @@ function App() {
 
 
             </Route>
-
-            <Route path="/admin" element={<AdminRoutes />}>
-              <Route path="" element={<Admin />}>
-                <Route path="add" element={<Add />} />
-                <Route path="products" element={<Products />} />
-                <Route path="orders" element={<Orders />} />
+            
+            <Route path='/admin' element={<AdminRoutes/>}>
+              <Route path='' element={<Admin/>}>
+                <Route path='add' element={<AddProducts/>}></Route>
+                <Route path='products' element={<Products/>}></Route>
+                <Route path='orders' element={<Orders/>}></Route>
+                <Route path='collections' element={<Collections/>}></Route>
+                <Route path='addCollections' element={<AddCollections/>}></Route>
               </Route>
             </Route>
           </Routes>
