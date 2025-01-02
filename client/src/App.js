@@ -1,13 +1,14 @@
 import './App.css';
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './CartContext.js'; // Import CartProvider
+import { WishlistProvider } from './WishlistContext'; // Import WishlistProvider
 
 import Customer from './customer/customer';
 import Shop from './customer/Pages/Shop';
 import EcoPoint from './customer/Pages/EcoPoint';
 import About from './customer/Pages/About';
 import Cart from './customer/Pages/Cart';
-import Wishlist from './customer/Pages/Wishlist'; 
+import Wishlist from './customer/Pages/Wishlist';
 import Accout from './customer/Pages/Accout';
 import Product from './customer/Pages/Product';
 import Home from './customer/Pages/Home';
@@ -27,8 +28,9 @@ import Checkout from './customer/Pages/Checkout';
 
 function App() {
   return (
-    <CartProvider>  {/* Wrap the entire app in CartProvider */}
-      <BrowserRouter>
+    <CartProvider> {/* Wrap the entire app in CartProvider */}
+      <WishlistProvider> {/* Wrap the entire app in WishlistProvider */}
+        <BrowserRouter>
           <Routes>
             <Route path='/' element={<Customer/>}>
               <Route path='' element={<Home/>}></Route>
@@ -46,17 +48,17 @@ function App() {
 
 
             </Route>
-            
-            <Route path='/admin' element={<AdminRoutes/>}>
-              <Route path='' element={<Admin/>}>
-                <Route path='add' element={<Add/>}></Route>
-                <Route path='products' element={<Products/>}></Route>
-                <Route path='orders' element={<Orders/>}></Route>
+
+            <Route path="/admin" element={<AdminRoutes />}>
+              <Route path="" element={<Admin />}>
+                <Route path="add" element={<Add />} />
+                <Route path="products" element={<Products />} />
+                <Route path="orders" element={<Orders />} />
               </Route>
             </Route>
-
           </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+      </WishlistProvider>
     </CartProvider>
   );
 }

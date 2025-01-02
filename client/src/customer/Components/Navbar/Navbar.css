@@ -59,6 +59,20 @@
     color: white;
 }
 
+.nav-wishlist-count{
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -30px;
+    margin-left: -40px;
+    border-radius: 11px;
+    font-size: 14px;
+    background: rgb(236, 81, 53);
+    color: white;
+}
+
 .profile-menu {
     position: relative;
     display: inline-block;
