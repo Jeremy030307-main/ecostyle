@@ -1,8 +1,9 @@
-import './MyAccount.css';
-import React, { useState, useEffect } from 'react';
+// src/pages/Cancellation.js
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './MyAccount.css'; // Import the CSS file for styling
 
-const MyAccount = () => {
+const AccountOrder = () => {
     const navigate = useNavigate();
 
     // Handle navigation
@@ -44,12 +45,11 @@ const MyAccount = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="main-con">
-                <h1>My Account</h1>
-                {/* Add orders-related content here */}
+            <main className="main-content">
+                
             </main>
         </div>
     );
 };
 
-export default MyAccount;
+export default AccountOrder;

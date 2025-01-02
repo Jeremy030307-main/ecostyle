@@ -43,6 +43,11 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
   };
 
+  // Function to calculate total number of items in the cart
+  const calculateTotalItems = () => {
+    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  };
+
   return (
     <CartContext.Provider value={{
       cartItems,
@@ -50,7 +55,8 @@ export const CartProvider = ({ children }) => {
       addItemToCart,
       removeItemFromCart,
       updateItemQuantity,
-      calculateSubtotal
+      calculateSubtotal,
+      calculateTotalItems
     }}>
       {children}
     </CartContext.Provider>

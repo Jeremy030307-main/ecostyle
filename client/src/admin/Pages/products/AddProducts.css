@@ -1,0 +1,168 @@
+/* Title container */
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.button-link {
+  text-decoration: none;
+}
+
+.button-link button {
+  display: flex;
+  height: 3em;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+button > svg {
+  margin-right: 5px;
+  margin-left: 5px;
+  font-size: 20px;
+  transition: all 0.4s ease-in;
+}
+
+button:hover > svg {
+  font-size: 1.2em;
+  transform: translateX(-5px);
+}
+
+.button-link button:hover {
+  box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+  transform: translateY(-2px);
+}
+
+/* General form styling */
+.add-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+  gap: 0.75rem; /* gap-3 */
+}
+
+/* Image upload section */
+.upload-section {
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.upload-label img {
+  cursor: pointer; /* Makes the upload image clickable */
+}
+
+.upload-label input {
+  display: none; /* hidden */
+}
+
+.upload-images {
+  display: flex;
+  gap: 0.5rem; /* gap-2 */
+}
+
+/* Input and textarea styling */
+.input-field,
+.textarea-field,
+.select-field {
+  width: 100%;
+  max-width: 500px; /* max-w-[500px] */
+  padding: 0.5rem 0.75rem; /* px-3 py-2 */
+}
+
+.select-field {
+  cursor: pointer; /* Optional for dropdowns */
+}
+
+/* Category section */
+.category-section {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem; /* gap-2 */
+}
+
+.category-section.sm-row {
+  flex-direction: row;
+  gap: 2rem; /* sm:gap-8 */
+}
+
+.category-price-input {
+  width: 7.5rem; /* sm:w-[120px] */
+}
+
+/* Product sizes */
+.size-options {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* Common styles for size-option elements */
+.size-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Styling for the size labels */
+.size-option p {
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-align: center;
+  color: #000;
+}
+
+/* Hover effect for size-option */
+.size-option:hover {
+  transform: scale(1.1); /* Slight scaling for interaction feedback */
+}
+
+/* Active state (selected size) */
+.bg-green-100 {
+  background-color: #2d36437f; /* Light green background */
+  color: #155724; /* Dark green text */
+  border: 1px solid #c3e6cb; /* Green border */
+}
+
+/* Inactive state (unselected size) */
+.bg-slate-200 {
+  background-color: #e2e8f0; /* Light slate gray background */
+  color: #4a5568; /* Slate gray text */
+  border: 1px solid #cbd5e0; /* Slate gray border */
+}
+
+/* Bestseller checkbox */
+.bestseller-section {
+  display: flex;
+  gap: 0.5rem; /* gap-2 */
+  margin-top: 0.5rem; /* mt-2 */
+}
+
+.bestseller-section label {
+  cursor: pointer;
+}
+
+/* Submit button */
+.submit-button {
+  width: 7rem; /* w-28 */
+  padding: 0.75rem; /* py-3 */
+  margin-top: 1rem; /* mt-4 */
+  background-color: black; /* bg-black */
+  color: white; /* text-white */
+  text-align: center;
+  border: none;
+  cursor: pointer;
+}
