@@ -1,13 +1,21 @@
 import { ApiMethods } from "../ApiMethods";
 import ADDRESS_ENDPOINTS from "../endpoints/addressEndpoint";
+import useSEE from "../useSEE";
 
 /**
- * Fetches the list of user addresses.
- * 
- * @returns {Promise} A Promise that resolves to the response of the GET request to the address endpoint.
+ * Custom hook to fetch and listen to real-time updates for the user's address data.
+ *
+ * This hook uses Server-Sent Events (SSE) to connect to the backend endpoint and listen for any changes 
+ * to the user's address data in real-time. It returns the latest address data as received from the server.
+ *
+ * @returns {Object|null} The user's address data, or null if no data is available.
+ *
+ * @example
+ * const userAddress = useUserAddress();
+ * console.log(userAddress); // Logs the current user's address data in real-time
  */
-export const getUserAddress = () => {
-    return ApiMethods.get(ADDRESS_ENDPOINTS.ADDRESS_ROUTE());
+export const useUserAddress = () => {
+    return useSEE(ADDRESS_ENDPOINTS.ADDRESS_ROUTE())
 }
 
 /**

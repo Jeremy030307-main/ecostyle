@@ -195,6 +195,31 @@ body, html {
     border: 1px solid #ccc;
   }
 
+
+  .category-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .category-btn.active {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .subcategory-list {
+    margin-left: 20px;
+    margin-top: 5px;
+  }
+  
+  .subcategory-list button {
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+  }
+
 /* Shop Page Content */
 /* Update main content max-width to accommodate the new sidebar width */
 .main-content {

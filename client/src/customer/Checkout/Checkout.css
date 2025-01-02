@@ -1,0 +1,101 @@
+.checkout-header {
+    display: flex;                 
+    justify-content: space-between;  
+    padding: 50px 40px 20px 40px;
+
+  }
+
+.checkout-header p{
+    font-weight: bolder;
+}
+  
+.checkout-header-logo-text {
+
+    position: absolute;             /* Absolutely position the logo */
+    left: 50%;                      /* Move the image to the horizontal center of the parent container */
+    transform: translateX(-50%);    /* Adjust to make sure it's perfectly centered */
+  }
+
+.checkout-header-back-btn{
+    display: flex;
+    justify-content:baseline;
+    padding: 20px;
+}
+
+  /* Align back button elements horizontally */
+  .checkout-header-back-btn {
+    display: flex;
+    align-items: center; /* Vertically center icon and text */
+    gap: 8px; /* Add space between the icon and text */
+  }
+  
+  /* Style for the Material Symbol icon */
+  .material-symbols-outlined {
+    font-size: 20px; /* Adjust icon size */
+    cursor: pointer; /* Make the icon clickable */
+  }
+  
+  /* Style for the "Back to Cart" text */
+  .checkout-header-back-btn p {
+    margin: 0; /* Remove default margin */
+    font-size: 16px; /* Adjust text size */
+  }
+  .checkout-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .checkout-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .checkout-form {
+    flex: 2; /* Takes more space on the left */
+  }
+  
+  .order-summary {
+    flex: 1; /* Takes less space on the right */
+  }
+  
+  .checkout-form form {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .checkout-form div {
+    margin-bottom: 10px;
+  }
+  
+  .checkout-form input {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .order-summary {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .summary-header {
+    cursor: pointer;
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .summary-details {
+    margin-top: 10px;
+  }
+  
+  .summary-details p {
+    margin: 5px 0;
+  }
+  

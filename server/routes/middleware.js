@@ -9,10 +9,11 @@ const authenticate = async (req, res, next) => {
 
   // If token is missing, return an error
   if (!token) {
+    console.log("missing")
       return res.status(401).send(message('Token missing in cookies'));
   }
 
-  try {
+  try { 
     console.log("Authenticating with token from cookies");
 
     // Verify the ID token using Firebase Admin SDK
