@@ -216,16 +216,24 @@ body, html {
     color: #007bff;
   }
   
-  .subcategory-list {
-    margin-left: 20px;
-    margin-top: 5px;
+  .subcategories {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0 0 0 1rem; /* Indent subcategories */
+    border-left: 2px solid #ddd;
   }
   
-  .subcategory-list button {
-    font-size: 14px;
-    color: #555;
-    cursor: pointer;
+  .subcategories li {
+    margin: 0.3rem 0;
   }
+
+  .subcategories li button.selected {
+    background-color: #007bff; /* Highlight for subcategories */
+    color: white;
+    font-weight: bold;
+    border-left: 4px solid #0056b3; /* Optional: visual cue */
+    padding-left: 10px; /* Align text after border */
+}
 
 /* Shop Page Content */
 /* Update main content max-width to accommodate the new sidebar width */

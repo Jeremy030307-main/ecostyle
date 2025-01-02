@@ -97,6 +97,7 @@ const Shop = () => {
   const handleCategorySelection = (subCategoryId) => {
     setSelectedSubCategory(subCategoryId); 
     setCategory(subCategoryId); 
+    setSelectedSubCategory(subCategoryId);
   };
 
   const getSubcategories = () => {
@@ -143,7 +144,6 @@ filterOptions.forEach(option => {
     });
 });
 
-
   return (
     <div className="container">
       <aside className="sidebar">
@@ -174,15 +174,20 @@ filterOptions.forEach(option => {
             </button>
             {dropdownOpen.size && (
               <ul className="filter-options">
-                <li>
-                  <button onClick={() => setSelectedSize(null)}>None</button>
-                </li>
-                {sizes.map((size) => (
+              <li>
+                <button onClick={() => setSelectedSize(null)}>None ({products.length})</button>
+              </li>
+              {sizes.map((size) => {
+                const count = products.filter((product) => product.size.includes(size)).length;
+                return (
                   <li key={size}>
-                    <button onClick={() => setSelectedSize(size)}>{size}</button>
+                    <button onClick={() => setSelectedSize(size)}>
+                      {size} ({count})
+                    </button>
                   </li>
-                ))}
-              </ul>
+                );
+              })}
+            </ul>
             )}
           </div>
 
@@ -236,18 +241,23 @@ filterOptions.forEach(option => {
             </button>
             {dropdownOpen.color && (
               <ul className="filter-options">
-                <li>
-                  <button onClick={() => setSelectedColor(null)}>None</button>
-                </li>
-                {availableColors.map((colorHex) => (
+              <li>
+                <button onClick={() => setSelectedColor(null)}> None ({products.length})</button>
+              </li>
+              {availableColors.map((colorHex) => {
+                const count = products.filter((product) =>
+                  product.variant.some((variant) => variant.colorCode === colorHex)
+                ).length;
+                return (
                   <li key={colorHex}>
                     <button onClick={() => setSelectedColor(colorHex)}>
                       <span className="color-circle" style={{ backgroundColor: colorHex }}></span>
-                      {colorNameMap[colorHex] || "Unknown Color"}
+                      {colorNameMap[colorHex] || "Unknown Color"} ({count})
                     </button>
                   </li>
-                ))}
-              </ul>
+                );
+              })}
+            </ul>
             )}
           </div>
         </div>
