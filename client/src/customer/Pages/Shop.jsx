@@ -126,6 +126,24 @@ const Shop = () => {
     return matchesSize && matchesColor;
   });
 
+  // Select all filter options
+const filterOptions = document.querySelectorAll('.filter-options li');
+
+// Add click event listeners to each filter option
+filterOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        // Remove the active class from all options
+        filterOptions.forEach(opt => opt.classList.remove('active'));
+        
+        // Add the active class to the clicked option
+        option.classList.add('active');
+
+        // Display the selected filter value (optional, for debugging or UI feedback)
+        console.log('Selected filter:', option.textContent);
+    });
+});
+
+
   return (
     <div className="container">
       <aside className="sidebar">
@@ -177,9 +195,6 @@ const Shop = () => {
             </button>
             {dropdownOpen.category && (
               <ul className="filter-options">
-                <li>
-                  <button onClick={() => handleCategorySelection(null)}>None</button>
-                </li>
                 {categories.map((cat) => (
                   <li key={cat.id}>
                     <button
@@ -191,6 +206,9 @@ const Shop = () => {
                     {/* Subcategories for the selected main category */}
                     {cat.id === selectedSubCategory && (
                       <ul className="subcategories">
+                        <li>
+                          <button onClick={() => handleCategorySelection(null)}>None</button>
+                        </li>
                         {getSubcategories().map((subCat) => (
                           <li key={subCat.id}>
                             <button

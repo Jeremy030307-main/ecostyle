@@ -161,6 +161,13 @@ body, html {
     cursor: pointer;
     transition: background-color 0.3s;
 }
+
+.filter-options li.active {
+    background-color: #ddd; /* Highlight the selected filter */
+    font-weight: bold; /* Make the text bold */
+    border-left: 4px solid #007bff; /* Add a visual indicator */
+    color: #007bff; /* Change text color */
+}
 .filter-options li:hover {
     background-color: #f1f1f1;
 }
