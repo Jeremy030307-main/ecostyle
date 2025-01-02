@@ -93,7 +93,7 @@
 @media (min-width: 768px) { /* md breakpoint */
     .product-action {
         
-        /* margin-left: 4px; */
+        margin-left: 4px;
     }
 
     .product-action-button{
