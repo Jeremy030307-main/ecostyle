@@ -4,6 +4,7 @@ import { COLLECTIONS, message } from "./utility.js";
 
 export const checkProduct = async (body) => {
   try {
+    console.log("fdfdfdsfsd")
     // Ensure the body and product are provided
     if (!body || !body.product) {
       return { isValid: true, errorMessage: null };
@@ -251,7 +252,6 @@ export const getProduct = (req, res, next) => {
     res.status(500).send({ message: error.message });
   }
 };
-
 
 // ---------- Admin action ------------------
 

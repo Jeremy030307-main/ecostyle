@@ -9,7 +9,7 @@ import mega_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useColors } from '../../apiManager/methods/colorMethods';
-import { addNewAddress, deleteAddress, useUserAddress } from '../../apiManager/methods/addressMethods';
+import { addCartProduct, useCart } from '../../apiManager/methods/cartMethods';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -108,16 +108,16 @@ const Home = () => {
     navigate('/shop', { state: { category } });
   };
 
-  const data = useUserAddress();
-  console.log(data);
+  const data = useCart();
+  console.log(data)
 
   // useEffect(() => {
   //   const testing = async () => {
   //     try{
-  //     await deleteAddress("Test");
+  //       await addCartProduct("ES00002", "WHT", "S", 5)
   //   } catch (error) {
   //     console.log("error")
-  //   }
+  //   } 
   // }
 
   // testing();
