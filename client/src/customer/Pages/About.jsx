@@ -1,101 +1,128 @@
-import React from 'react';
-import './About.css';
-import aboutImage from '../Components/Assets/aboutImage.png';
+import React, { useState, useEffect } from "react";
+import Slider  from "react-slick";
+import "./About.css";
+import bannerImage from "../Components/Assets/figma_image_1.jpeg";
+import team1 from "../Components/Assets/old_ceo.jpeg";
+import team2 from "../Components/Assets/female_ceo.jpeg";
+import team3 from "../Components/Assets/new_ceo.jpeg";
+import team4 from "../Components/Assets/ceo1.png";
+import team5 from "../Components/Assets/ceo2.png";
+import team6 from "../Components/Assets/ceo3.png";
+import deliveryIcon from "../Components/Assets/cart.svg";
+import serviceIcon from "../Components/Assets/account.svg";
+import guaranteeIcon from "../Components/Assets/wishlist.svg";
+import { FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
+
+
+
+const teamMembers = [
+  { id: 1, name: "Tom Cruise", role: "Founder & Chairman", image: team1 },
+  { id: 2, name: "Emma Watson", role: "Managing Director", image: team2 },
+  { id: 3, name: "Will Smith", role: "Product Designer", image: team3 },
+  { id: 4, name: "Robert Downey", role: "Marketing Head", image: team4 },
+  { id: 5, name: "Scarlett Johansson", role: "HR Manager", image: team5 },
+  { id: 6, name: "Chris Evans", role: "Sales Lead", image: team6 },
+];
 
 const About = () => {
+  const [activeCard, setActiveCard] = useState(null);
+
+  const stats = [
+    { id: 1, value: "10.5k", description: "Sellers active on our site" },
+    { id: 2, value: "33k", description: "Monthly Product Sale" },
+    { id: 3, value: "45.5k", description: "Customers active on our site" },
+    { id: 4, value: "25k", description: "Annual gross sale" },
+  ];
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 10000,
+    responsive: [
+      { breakpoint: 1024, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+      { breakpoint: 600, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+    ],
+  };
+  
+  
+
   return (
-    <div className="about-container">
-      {/* Our Story Section */}
-      <div className="about-content">
+    <>
+      {/* Header Section */}
+      <section className="about-header">
         <div className="about-text">
-          <h2>Our Story</h2>
+          <h1>Our Story</h1>
           <p>
-            Launched in 2015, Exclusive is South Asia’s premier online shopping
-            marketplace with an active presence in Bangladesh. Supported by wide
-            range of tailored marketing, data and service solutions, Exclusive
-            has 10,500 sellers and 300 brands and serves 3 million customers
-            across the region.
+            Launched in 2015, EcoStyle is South Asia's premier online shopping
+            marketplace with an active presence in Bangladesh. Supported by
+            wide-ranging solutions, we serve millions of customers.
           </p>
           <p>
-            Exclusive has more than 1 million products to offer, growing at a
-            very fast. Exclusive offers a diverse assortment in categories
-            ranging from consumer.
+            EcoStyle offers over 1 million products, tailored marketing, and
+            diverse categories to meet your needs.
           </p>
         </div>
         <div className="about-image">
-          <img src={aboutImage} alt="Our Story" />
+          <img src={bannerImage} alt="About Us" />
         </div>
-      </div>
+      </section>
 
       {/* Stats Section */}
-      <div className="about-stats">
-        <div className="stat-box">
-          <div className="stat-value">10.5k</div>
-          <div className="stat-label">Sellers active on our site</div>
-        </div>
-        <div className="stat-box highlighted">
-          <div className="stat-value">33k</div>
-          <div className="stat-label">Monthly Product Sale</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-value">45.5k</div>
-          <div className="stat-label">Customers active on our site</div>
-        </div>
-        <div className="stat-box">
-          <div className="stat-value">25k</div>
-          <div className="stat-label">Annual gross sale on our site</div>
-        </div>
-      </div>
+      <section className="about-stats">
+        {stats.map((stat) => (
+          <div
+            key={stat.id}
+            className={`stat-card ${activeCard === stat.id ? "active" : ""}`}
+            onClick={() => setActiveCard(stat.id)}
+          >
+            <h3>{stat.value}</h3>
+            <p>{stat.description}</p>
+          </div>
+        ))}
+      </section>
 
       {/* Team Section */}
-      <div className="about-team">
-        <div className="team-member">
-          <img src="person1.png" alt="Tom Cruise" />
-          <h3>Tom Cruise</h3>
-          <p>Founder & Chairman</p>
-          <div className="social-links">
-            <i className="icon-instagram"></i>
-            <i className="icon-linkedin"></i>
-          </div>
-        </div>
+      <section className="about-team">
+        <h2 className="section-title">Meet Our Team</h2>
+        <Slider {...settings}>
+          {teamMembers.map((member) => (
+            <div key={member.id} className="team-member">
+              <img src={member.image} alt={member.name} />
+              <h4>{member.name}</h4>
+              <p>{member.role}</p>
+              <div className="team-socials">
+                <a href="#!"><FaTwitter /></a>
+                <a href="#!"><FaInstagram /></a>
+                <a href="#!"><FaLinkedin /></a>
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </section>
 
-        <div className="team-member">
-          <img src="person2.png" alt="Emma Watson" />
-          <h3>Emma Watson</h3>
-          <p>Managing Director</p>
-          <div className="social-links">
-            <i className="icon-instagram"></i>
-            <i className="icon-linkedin"></i>
-          </div>
-        </div>
-
-        <div className="team-member">
-          <img src="person3.png" alt="Will Smith" />
-          <h3>Will Smith</h3>
-          <p>Product Designer</p>
-          <div className="social-links">
-            <i className="icon-instagram"></i>
-            <i className="icon-linkedin"></i>
-          </div>
-        </div>
-      </div>
-
-      {/* Services */}
-      <div className="about-services">
-        <div className="service-item">
+      {/* Services Section */}
+      <section className="about-services">
+        <div className="service">
+          <img src={deliveryIcon} alt="Free Delivery" />
           <h4>FREE AND FAST DELIVERY</h4>
           <p>Free delivery for all orders over $140</p>
         </div>
-        <div className="service-item">
+        <div className="service">
+          <img src={serviceIcon} alt="Customer Service" />
           <h4>24/7 CUSTOMER SERVICE</h4>
           <p>Friendly 24/7 customer support</p>
         </div>
-        <div className="service-item">
+        <div className="service">
+          <img src={guaranteeIcon} alt="Money Back" />
           <h4>MONEY BACK GUARANTEE</h4>
           <p>We return money within 30 days</p>
         </div>
-      </div>
-    </div>
+      </section>
+    </>
   );
 };
 
