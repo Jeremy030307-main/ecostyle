@@ -266,6 +266,7 @@ filterOptions.forEach(option => {
 
       <main className="main-content">
         <h1>{getCategoryHeading()} Fashion</h1>
+        <p className="product-count">{filteredProducts.length} items</p>
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
