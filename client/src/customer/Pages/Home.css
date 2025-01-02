@@ -100,7 +100,7 @@ h1 {
 }
 
 .banner-description {
-    font-size: 1.8em;
+    font-size: 1.4em;
     margin-bottom: 1.5em;
 }
 
@@ -120,9 +120,17 @@ h1 {
     color: #000;
 }
 
-.product-image {
-    max-width: 40%;
-    height: auto;
+.banner-image{
+    width: 40%;
+    height: 300px;
+    background-color: #000;
+    border-radius: 10px;
+    display: flex;
+    position : right;
+}
+.banner-image img {
+    max-width: 60%; 
+    height: 300px;
 }
 
 .indicators_separators{
@@ -219,6 +227,8 @@ h1 {
     width: 100%;
     display: block;
 }
+
+
 .discount {
     position: absolute;
     top: 10px;
