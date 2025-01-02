@@ -58,3 +58,35 @@
     background: rgb(236, 81, 53);
     color: white;
 }
+
+.profile-menu {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000;
+    flex-direction: column; /* Stack items vertically */
+    gap: 5px; /* Add space between items */
+    display: flex;
+}
+
+.dropdown a {
+    padding: 8px 16px;
+    color: #626262;
+    text-decoration: none;
+    border-radius: 5px; /* Optional rounded corners */
+    white-space: nowrap; /* Prevent text wrapping */
+    display: inline-block; /* Ensure it behaves like a single block */
+}
+
+.dropdown a:hover {
+    background-color: #f0f0f0;
+}

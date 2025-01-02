@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate, isAdmin, validateRequest } from './middleware.js';
+import { validateRequest } from './middleware.js';
 import {getCollection, addCollection, deleteCollection, updateCollection, updateCollectionStatus, getCollectionDetail } from '../controllers/collectionController.js';
 import { newCollectionSchema, updateCollectionSchema } from '../schema/collectionSchema.js';
 

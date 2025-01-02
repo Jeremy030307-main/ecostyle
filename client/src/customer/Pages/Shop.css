@@ -1,0 +1,342 @@
+/* General styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 300px; /* Adjust the width to make it smaller */
+    background-color: #fff;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+/* Remove point form */
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Margin between each category */
+.sidebar nav ul li {
+    margin: 20px 0;
+}
+
+/* Button styles to mimic <a> */
+.sidebar nav ul li button {
+    all: unset; /* Reset button styles */
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Hover effect */
+.sidebar nav ul li button:hover {
+    color: #ff0000; /* Change text color on hover */
+    font-size: 28px;
+    transition: 0.3s, font-size 0.3s;
+}
+
+/* Search bar with icon */
+.sidebar .search input {
+    width: 100%;
+    padding: 10px 40px; /* Adds padding to make room for the icon */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search_icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none; /* Allows clicking inside the input without being blocked by the icon */
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-top: 1rem;
+  }
+  
+  .dropdown-toggle {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    width: 100%; /* Ensure it spans the full width */
+    text-align: left;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .dropdown-toggle:hover {
+    background-color: #ddd;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%; /* Match the toggle width */
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .dropdown-menu li {
+    padding: 8px 12px;
+  }
+  
+  .dropdown-menu li button {
+    all: unset;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 5px 10px;
+  }
+  
+  .dropdown-menu li button:hover {
+    background-color: #f5f5f5;
+    border-radius: 5px;
+  }
+  
+  .filters {
+    margin: 1rem 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .filter-section {
+    margin-bottom: 1rem;
+  }
+  
+  .filter-toggle {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+  
+.filter-toggle:hover {
+    background-color: #ddd;
+}
+  
+.filter-options {
+    margin-top: 10px;
+    list-style: none;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.filter-options li {
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.filter-options li:hover {
+    background-color: #f1f1f1;
+}
+  
+  .filter-options li:last-child {
+    border-bottom: none;
+  }
+  
+  .filter-options button {
+    all: unset;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .filter-options button:hover {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  .filter-options button span {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  
+  .color-circle {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+  }
+
+/* Shop Page Content */
+/* Update main content max-width to accommodate the new sidebar width */
+.main-content {
+    max-width: calc(100% - 300px); /* Update this value to match the new sidebar width */
+    padding: 10px;
+}
+
+/* Product Grid */
+.product-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-card {
+    position: relative;
+    width: calc(33.333% - 20px); /* Adjust card width for three columns with gaps */
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.product-card:hover{
+    cursor: pointer;
+}
+
+.product-card img {
+    width: 100%; /* Ensures the image scales to the card width */
+    height: 300px; /* Maintains the aspect ratio of the image */
+    max-height: 200px; /* Set a maximum height to keep consistency */
+    object-fit: cover; /* Ensures the image fills the space proportionally */
+    margin-bottom: 10px; /* Adds some spacing below the image */
+}
+
+/* Color Swatches */
+.color-swatches {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    justify-content: center; /* Align swatches horizontally */
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; /* Circular swatches */
+    border: 1px solid #ccc;
+    cursor: pointer;
+    transition: transform 0.2s, border 0.2s;
+}
+
+.color-swatch:hover {
+    transform: scale(1.2);
+    border: 2px solid #000; /* Highlight swatch on hover */
+}
+
+/* Rating and Review Count */
+.rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+}
+
+.stars {
+    color: #ffa500; /* Star color */
+    font-weight: bold;
+}
+
+.review-count {
+    font-size: 12px;
+    color: #888; /* Grey text for review count */
+}
+
+/* Product Name */
+.product-name {
+    font-size: 14px; /* Smaller font size */
+    font-weight: normal; /* Make it less bold */
+    margin: 10px 0;
+    text-align: center;
+    color: #333; /* Default color */
+    transition: color 0.3s, font-size 0.3s; /* Add smooth transition for hover effect */
+}
+/* Product Price */
+.product-price {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.discount {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.favorite-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.favorite-btn:hover {
+    background-color: #f0f0f0;
+}
+
+.favorite-btn svg {
+    width: 25px;
+    height: 25px;
+    fill: #333;
+    transition: fill 0.3s;
+}
+
+.favorite-btn.active svg {
+    fill: #e74c3c;
+}

@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import AuthenticationManager from '../../../authentication/authenticationManager';
-
+import { useCart } from '../../../CartContext';
 
 const NoDecorationLink = styled(Link)`
   text-decoration: none;
@@ -21,7 +21,14 @@ const Navbar = () => {
     const [menu,setMenu] = useState("");
     const [admin, setAdmin] = useState(false);
     const [isAuthenticated, setAuthenticated] = useState(false)
+    const [isDropdownOpen, setDropdownOpen] = useState(false); // State to track dropdown visibility
     const location = useLocation(); // Get the current location
+
+  // Get cart items from context
+  const { cartItems } = useCart();
+
+  // Calculate the total number of items in the cart
+  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
     // Monitor authentication state
   useEffect(() => {
@@ -54,6 +61,11 @@ const Navbar = () => {
         const lastSegment = pathSegments[pathSegments.length - 1] || "home";
         setMenu(lastSegment);
     }, [location.pathname]); // Run effect only when the path changes
+
+    // Toggle dropdown visibility
+    const toggleDropdown = () => {
+      setDropdownOpen(!isDropdownOpen);
+  };
     
     return (
         <div className="navbar">
@@ -70,10 +82,18 @@ const Navbar = () => {
             <div className='nav-account-cart-wishlist'>
                 <Link to='/wishlist'><img onClick={() => {setMenu("wishlist")}} src={wishlist_icon} alt="" /></Link>
                 <Link to='/cart'><img onClick={() => {setMenu("cart")}} src={cart_icon} alt="" /></Link>
-                <div className='nav-cart-count'>0</div>
-                <Link to= {(isAuthenticated === true) ? '/account':'/login'}><img onClick={() => {setMenu("profile")}} src={account_icon} alt="" /></Link>
-                {(admin === true) ? <Link to='/admin'><img onClick={() => {setMenu("admin")}} src={admin_icon} alt="" /></Link> : <></>}
-                
+                {/* Display the total number of items in the cart */}
+                <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
+                <div className="profile-menu">
+                    <img onClick={toggleDropdown} src={account_icon} alt="" />
+                    {isDropdownOpen && (
+                        <div className="dropdown">
+                            <NoDecorationLink to='/login' onClick={() => setDropdownOpen(false)}>Login</NoDecorationLink>
+                            <NoDecorationLink to='/myaccount' onClick={() => setDropdownOpen(false)}>My Account</NoDecorationLink>
+                        </div>
+                    )}
+                </div>
+                {(admin === true) ? <Link to='/admin'><img onClick={() => { setMenu("admin") }} src={admin_icon} alt="" /></Link> : <></>}
             </div>
         </div>
     );

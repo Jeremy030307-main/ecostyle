@@ -1,35 +1,27 @@
 import { ApiMethods } from "../ApiMethods";
 import PRODUCT_ENDPOINTS from "../endpoints/productEndpoint";
+import useSEE from "../useSEE";
 
 /**
- * Fetches product data from the API based on the provided product ID and query parameters.
+ * A custom hook for fetching product data via Server-Sent Events (SSE).
  *
- * @param {string} [productID=""] - The ID of the product to fetch. Defaults to an empty string, meaning no specific product.
- * @param {Object} [query={}] - An object containing query parameters for the request. Only applied if no product ID is provided.
- * @param {string} [query.category] - The category of the product (e.g., "men", "women").
- * @param {string} [query.collection] - The collection name of the product (e.g., "Eo Root").
- * @param {string} [query.color] - The color of the product (e.g., "red", "blue").
- * @param {string} [query.sortby] - The field to sort the products by. Currently only supports `"price"`.
- * @param {string} [query.orderby] - The order of sorting. Can be `"asc"` for ascending or `"desc"` for descending.
- * @returns {Promise<Object>} - A promise that resolves to the response data from the API.
- *
- * @throws {Error} - Throws an error if the API request fails.
+ * @function
+ * @param {string} [productID=""] - The ID of the specific product to fetch. If omitted, a query string will be constructed.
+ * @param {Object} [query={}] - A query object used to construct query parameters for fetching multiple products or filtered results.
+ * @param {string} [query.category] - The category to filter products by (optional).
+ * @param {string} [query.priceRange] - The price range to filter products by (optional).
+ * @param {string} [query.sortBy] - The sorting criteria for products (optional).
+ * @returns {Object} - Returns the data fetched from the SSE endpoint as managed by the `useSEE` hook.
  *
  * @example
  * // Fetch a specific product by ID
- * getProduct("123").then(product => console.log(product));
+ * const product = useProduct("12345");
  *
  * @example
- * // Fetch products with query parameters
- * getProduct("", {
- *   category: "men",
- *   collection: "Eo Root",
- *   color: "red",
- *   sortby: "price",
- *   orderby: "asc"
- * }).then(products => console.log(products));
+ * // Fetch products with a query
+ * const products = useProduct("", { category: "electronics", sortBy: "price" });
  */
-export const getProduct = (productID = "", query = {}) => {
+export const useProduct = (productID = "", query = {}) => {
     let url = PRODUCT_ENDPOINTS.PRODUCT_ROUTE(productID);
 
     // Only add query string if productID is not provided
@@ -40,7 +32,7 @@ export const getProduct = (productID = "", query = {}) => {
         }
     }
 
-    return ApiMethods.get(url);
+    return useSEE(url);
 };
 
 /**

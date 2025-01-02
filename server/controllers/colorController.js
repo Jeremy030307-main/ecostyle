@@ -1,8 +1,13 @@
 import { db } from "../firebase.js";
-import { COLLECTIONS, message } from "./utility.js"; 
+import { COLLECTIONS } from "./utility.js"; 
 
 export const checkColor = async (body) => {
     try {
+        // Check if at least one field is present (in this case, 'collection')
+        if (!body || !body.color) {
+            return { isValid: true, errorMessage: null };
+        }
+
         // Reference to the document in the "color" collection
         const colorRef = db.collection(COLLECTIONS.COLOR).doc(body.color);
         const colorDoc = await colorRef.get();
@@ -22,16 +27,26 @@ export const checkColor = async (body) => {
 
 export const checkColors = async (body) => {
     try {
-        // Reference to the document in the "color" collection
-        const colorRef = db.collection(COLLECTIONS.COLOR).doc(body.color);
-        const colorDoc = await colorRef.get();
+        // Check if the 'variant' field is present in the body
+        if (!body.variant) {
+            return { isValid: true, errorMessage: null };  // If no 'variant', return true
+        }
 
-        // Return true if the document exists, otherwise false
-        if (!colorDoc.exists) {
-            return { isValid: false, errorMessage: 'Color does not exist' };
-          }
+        // If 'variant' exists, loop through each object in the 'variant' array
+        for (let variant of body.variant) {
+            if (variant.color) {
+            // Reference to the document in the "color" collection
+            const colorRef = db.collection(COLLECTIONS.COLOR).doc(variant.color);
+            const colorDoc = await colorRef.get();
+    
+            // If the color document doesn't exist, return false with error message
+            if (!colorDoc.exists) {
+                return { isValid: false, errorMessage: `Color ${variant.color} does not exist` };
+            }
+            }
+        }
         
-          return { isValid: true, errorMessage: null };  // Valid color
+        return { isValid: true, errorMessage: null };  // Valid color
 
     } catch (error) {
         console.error('Error checking color:', error);
