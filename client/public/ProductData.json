@@ -1,0 +1,74 @@
+[
+  {
+    "id": "ES00000",
+    "name": "Eo Root T-Shirts",
+    "price": 140,
+    "variant": [
+      {
+        "id": "BLK",
+        "name": "Black",
+        "colorCode": "000000",
+        "image": null
+      },
+      {
+        "id": "GRY",
+        "name": "Gray",
+        "colorCode": "D9D9D9",
+        "image": null
+      },
+      {
+        "id": "NVBL",
+        "name": "Navy Blue",
+        "colorCode": "283950",
+        "image": null
+      },
+      {
+        "id": "WHT",
+        "name": "White",
+        "colorCode": "FFFFFF",
+        "image": null
+      }
+    ],
+    "size": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "rating": null,
+    "reviewCount": null
+  },
+  {
+    "id": "ES00002",
+    "name": "Eo Root Hoodies",
+    "price": 250,
+    "variant": [
+      {
+        "id": "BLK",
+        "name": "Black",
+        "colorCode": "000000",
+        "image": null
+      },
+      {
+        "id": "GRY",
+        "name": "Gray",
+        "colorCode": "D9D9D9",
+        "image": null
+      },
+      {
+        "id": "NVBL",
+        "name": "Navy Blue",
+        "colorCode": "283950",
+        "image": null
+      }
+    ],
+    "size": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "rating": null,
+    "reviewCount": null
+  }
+]

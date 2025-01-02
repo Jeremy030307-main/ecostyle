@@ -1,23 +1,24 @@
-const getHeaders = () => {
+export const getHeaders = async () => {
 
     const App_Key = "randomKey";
-    const authToken = localStorage.getItem('authToken') || null;
 
-    return {
+    // Return headers only if authToken exists
+    const headers = {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
         'App-Key': App_Key,
     };
+
+    return headers;
 };
 
 class ApiMethods {
     
     static apiRequest(method, url, body = null) {
 
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const options = {
                 method: method,
-                headers: getHeaders(), // Make sure getHeaders() is defined correctly
+                headers: await getHeaders(), // Make sure getHeaders() is defined correctly
                 credentials: 'include',
             };
     
@@ -25,7 +26,7 @@ class ApiMethods {
             if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
                 options.body = JSON.stringify(body);
             }
-    
+            
             fetch(url, options)
                 .then(res => {
                     // Check if the response is ok (status in the range 200-299)
@@ -76,8 +77,7 @@ class ApiMethods {
     static patch(url, data){
         return this.apiRequest('PATCH', url, data)
     }
+    
 };
 
 export {ApiMethods}
-
-

@@ -3,11 +3,11 @@ import admin from 'firebase-admin'
 import { COLLECTIONS, formatFirestoreTimestamps, message } from "./utility.js";
 
 const STATUS_TYPES = {
-    NEW: "new",
     DRAFT: "draft",
     ACTIVE: "active",
     INACTIVE: "inactive",
-    RETIRE: "retired"
+    RETIRE: "retired",
+    CANCEL: "cancel"
 };
 
 const isValidStatus = (status) => Object.values(STATUS_TYPES).includes(status);
@@ -92,8 +92,7 @@ export const addCollection = async (req, res) => {
 
         const data = {
             name: name,
-            status: STATUS_TYPES.NEW,
-            createdAt: admin.firestore.Timestamp.now(),
+            status: STATUS_TYPES.DRAFT,
             ...collectionData
         }
 
@@ -112,8 +111,7 @@ export const addCollection = async (req, res) => {
 
             // Add status history document
             t.set(statusHistoryRef, {
-                status: STATUS_TYPES.NEW,
-                updatedAt: admin.firestore.Timestamp.now(),
+                status: STATUS_TYPES.DRAFT,
             });
         });
 
@@ -134,12 +132,7 @@ export const updateCollection = async (req, res) => {
             return res.status(400).send(message(`Category with ID ${collectionID} does not exist.`))
         }
 
-        const data = {
-            updatedAt: admin.firestore.Timestamp.now(),
-            ...collectionData
-        }
-
-        await db.collection(COLLECTIONS.COLLECTION).doc(collectionID).update(data)
+        await db.collection(COLLECTIONS.COLLECTION).doc(collectionID).update(collectionData)
         res.status(200).send(message(`Category Information Updated.`))
 
     } catch (error) {

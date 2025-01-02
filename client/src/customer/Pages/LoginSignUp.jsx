@@ -13,7 +13,14 @@ const LoginSignUp = () => {
 
   useEffect(() => {
     const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
-      setAuthenticated(!!user); // Set to true if user exists, otherwise false
+      if (user) {
+        if (!user.isAnonymous){
+          console.log("authentication is true")
+          setAuthenticated(true);
+        }
+      } else {
+        setAuthenticated(false);
+      }
     });
 
     // Cleanup subscription on unmount

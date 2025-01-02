@@ -1,51 +1,57 @@
 // Import the Firebase Admin SDK
 import admin from 'firebase-admin';
+import { message } from '../controllers/utility.js';
 
 // authenticate that the user has an account and currently log in
 const authenticate = async (req, res, next) => {
+  // Extract the token from cookies
+  const token = req.cookies.authToken;  // Assuming the token is stored in the 'authToken' cookie
 
-    const authHeader = req.headers['authorization'];
+  // If token is missing, return an error
+  if (!token) {
+    console.log("missing")
+      return res.status(401).send(message('Token missing in cookies'));
+  }
 
-    if (!authHeader) {
-        return res.status(401).json({ message: 'Authorization header missing' });
-      }
+  try { 
+    console.log("Authenticating with token from cookies");
 
-    const token = authHeader.split(' ')[1]; // Split "Bearer <token>"
-    if (!token) {
-        return res.status(401).json({ message: 'Token missing in Authorization header' });
-      }
+    // Verify the ID token using Firebase Admin SDK
+    const decodedToken = await admin.auth().verifyIdToken(token);
 
-    try {
-        const decodedToken = await admin.auth().verifyIdToken(token);
-        req.user = decodedToken; // Attach user info to the request
-        next(); // Proceed to the next middleware or route handler
-    } catch (err) {
-        res.status(401).json({ message: "Invalid token" });
+    // Check if the user is anonymous (optional)
+    if (decodedToken.firebase.sign_in_provider === 'anonymous') {
+        return res.status(401).send(message("User must be authenticated for this action."));
     }
+    
+    // Attach the decoded token (user information) to the request object
+    req.user = decodedToken.uid;
+    
+    // Proceed to the next middleware or route handler
+    next();
+  } catch (err) {
+    // If token verification fails, respond with an error
+    res.status(401).json(message("Permission Denied"));
+  }
 };
 
 const isAdmin = async (req, res, next) => {
-    const authHeader = req.headers['authorization'];
 
-    if (!authHeader) {
-        return res.status(401).json({ message: 'Authorization header missing' });
-      }
-
-    const token = authHeader.split(' ')[1]; // Split "Bearer <token>"
+    const token = req.cookies.authToken;
     if (!token) {
-        return res.status(401).json({ message: 'Token missing in Authorization header' });
+        return res.status(401).send(message('Token missing in cookies'));
       }
 
     try {
         const claims = await admin.auth().verifyIdToken(token);
         if (claims.admin !== true){
-            return res.status(401).send("Permission Denied")
+            return res.status(401).send(message("Permission Denied"))
         } 
-        req.user = claims;
+        req.user = claims.uid;
         next()
 
     } catch (err) {
-        res.status(401).json({ message: "Invalid token" });
+        res.status(401).json(message("Permission Denied"));
     }
 };
 

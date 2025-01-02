@@ -1,0 +1,285 @@
+/* Global Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", Arial, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Header Section */
+.about-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 40px 10%;
+}
+
+.about-text {
+    flex: 1 1 500px;
+    max-width: 600px;
+}
+
+.about-text h1 {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.about-text p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.about-image {
+    flex: 1 1 300px;
+    display: flex;
+    justify-content: center;
+}
+
+.about-image img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Stats Section */
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px 10%;
+    text-align: center;
+}
+
+.stat-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.stat-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.stat-card p {
+    color: #555;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+/* Hover Effect */
+.stat-card:hover {
+    transform: translateY(-10px);
+    background-color: #e74c3c;
+}
+
+.stat-card:hover h3,
+.stat-card:hover p {
+    color: #ffffff;
+}
+
+/* Active (Clicked) State */
+.stat-card.active {
+    background-color: #e74c3c;
+    transform: translateY(-10px);
+}
+
+.stat-card.active h3,
+.stat-card.active p {
+    color: #ffffff;
+}
+
+
+/* Team Section */
+/* Team Section */
+.about-team {
+    padding: 60px 5%; /* Spacing around the section */
+    background-color: #f8f9fa; /* Light grey background for clean look */
+}
+
+.about-team .section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #2c3e50; /* Dark grey for title */
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* Team Member Cards */
+.team-member {
+    background-color: #ffffff; /* Clean white background */
+    text-align: center;
+    border-radius: 16px; /* Smooth rounded corners */
+    padding: 30px 20px; /* Adequate space inside */
+    margin: 15px; /* Spacing between cards */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.team-member img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 4px solid #e0e0e0; /* Light border around the image */
+}
+
+.team-member h4 {
+    font-size: 1.5rem; /* Slightly larger for prominence */
+    color: #2c3e50; /* Dark grey for name */
+    margin-bottom: 10px;
+}
+
+.team-member p {
+    font-size: 1rem;
+    color: #7f8c8d; /* Neutral grey for role description */
+    margin-bottom: 10px;
+}
+
+.team-member:hover {
+    transform: translateY(-10px); /* Smooth hover effect */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
+    background-color: #f4f9ff; /* Subtle light blue hover background */
+}
+
+/* Social Icons */
+.team-socials {
+    display: flex;
+    justify-content: center;
+    gap: 12px; /* Space between icons */
+    margin-top: 10px;
+}
+
+.team-socials a {
+    cursor: pointer;
+    font-size: 1.5rem; /* Slightly larger icons */
+    color: #95a5a6; /* Neutral grey for default */
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.team-socials a:hover {
+    color: #3498db; /* Highlight blue on hover */
+    transform: scale(1.2); /* Slight zoom effect */
+}
+
+/* Slick Dots */
+.slick-dots {
+    bottom: -20px; /* Adjust position below slides */
+}
+
+.slick-dots li button:before {
+    font-size: 14px; /* Larger dots */
+    color: #ccc; /* Inactive dots */
+}
+
+.slick-dots li.slick-active button:before {
+    color: #3498db; /* Blue for active dot */
+}
+  
+/* Services Section */
+.about-services {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px 10%;
+    background-color: #f9f9f9;
+}
+
+.service {
+    flex: 1 1 300px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    text-align: center;
+}
+
+.service img {
+    width: 50px;
+    margin-bottom: 10px;
+}
+
+.service h4 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.service p {
+    color: #555;
+}
+
+.service:hover {
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .about-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 30px;
+    }
+
+    .about-text {
+        padding: 0;
+    }
+
+    .about-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .team-grid,
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-text h1 {
+        font-size: 2.2rem;
+    }
+
+    .about-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .service {
+        flex: 1 1 100%;
+    }
+}
