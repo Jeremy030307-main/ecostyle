@@ -23,7 +23,6 @@ import Contact from './customer/Pages/Contact';
 import Footer from './customer/Pages/Footer';
 import NotFound from './customer/Pages/NotFound';
 
-import Admin from './admin/admin';
 import AddProducts from './admin/Pages/products/AddProducts';
 import Products from './admin/Pages/products/Products';
 import Orders from './admin/Pages/Orders';
@@ -31,7 +30,7 @@ import Orders from './admin/Pages/Orders';
 import AdminRoutes from './authentication/protectedRoute';
 import Collections from './admin/Pages/collections/Collections';
 import AddCollections from './admin/Pages/collections/AddCollections';
-
+import Checkout from './customer/Checkout/Checkout.jsx'
 
 
 function App() {
@@ -39,7 +38,7 @@ function App() {
     <CartProvider> {/* Wrap the entire app in CartProvider */}
       <WishlistProvider> {/* Wrap the entire app in WishlistProvider */}
         <BrowserRouter>
-          <MainApp />
+          {/* <MainApp /> */}
           <Routes>
             <Route path='/' element={<Customer/>}>
               <Route path='' element={<Home/>}></Route>

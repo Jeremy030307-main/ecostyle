@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { db } from "../firebase.js";
-import { COLLECTIONS, message } from './utility.js';
+import { COLLECTIONS, message } from './utility.js'; 
 
 export const getUserAddress = (req, res, next) => {
   try {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import search_icon from '../Components/Assets/search_icon.png';
 import { getProduct, useProduct } from '../../apiManager/methods/productMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
-import { getProductReview } from '../../apiManager/methods/reviewMethods';
+import { useProductReview } from '../../apiManager/methods/reviewMethods';
 
 const Shop = () => {
   const location = useLocation();
@@ -67,32 +67,32 @@ const Shop = () => {
     }
   }, [category, productData]);
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      const ratingsMap = {};
-      if (productData) {
-        await Promise.all(
-          productData.map(async (product) => {
-            try {
-              const reviews = await getProductReview(product.id);
-              const averageRating =
-                reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
-              ratingsMap[product.id] = {
-                averageRating: averageRating.toFixed(1),
-                reviewCount: reviews.length,
-              };
-            } catch (err) {
-              console.error(`Error fetching reviews for product ${product.id}:`, err);
-              ratingsMap[product.id] = { averageRating: "No rating", reviewCount: 0 };
-            }
-          })
-        );
-      }
-      setRatings(ratingsMap);
-    };
+  // useEffect(() => {
+  //   const fetchRatings = async () => {
+  //     const ratingsMap = {};
+  //     if (productData) {
+  //       await Promise.all(
+  //         productData.map(async (product) => {
+  //           try {
+  //             const reviews = await getProductReview(product.id);
+  //             const averageRating =
+  //               reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
+  //             ratingsMap[product.id] = {
+  //               averageRating: averageRating.toFixed(1),
+  //               reviewCount: reviews.length,
+  //             };
+  //           } catch (err) {
+  //             console.error(`Error fetching reviews for product ${product.id}:`, err);
+  //             ratingsMap[product.id] = { averageRating: "No rating", reviewCount: 0 };
+  //           }
+  //         })
+  //       );
+  //     }
+  //     setRatings(ratingsMap);
+  //   };
 
-    fetchRatings();
-  }, [productData]);
+  //   fetchRatings();
+  // }, [productData]);
 
   const handleCategorySelection = (subCategoryId) => {
     setSelectedSubCategory(subCategoryId); 

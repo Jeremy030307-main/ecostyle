@@ -62,8 +62,10 @@ AuthenticationManager.auth.onAuthStateChanged(async (user) => {
 
     if (user){
         const token = await user.getIdToken();
+        console.log("user")
         await ApiMethods.post("/user/set-cookie", {token : token})
     } else {
+        console.log("anomynous")
         signInAnonymously(AuthenticationManager.auth)
             .then(() => {
                 console.log("Anomynously")

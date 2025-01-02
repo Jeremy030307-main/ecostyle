@@ -7,9 +7,10 @@ import Product_5 from '../Components/Assets/Eo Root Long Sleeve Polo.png';
 import search_icon from '../Components/Assets/search_icon.png';
 import mega_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useColors } from '../../apiManager/methods/colorMethods';
 import { addNewAddress, deleteAddress, useUserAddress } from '../../apiManager/methods/addressMethods';
+import { getCategory } from '../../apiManager/methods/categoryMethods';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -108,20 +109,10 @@ const Home = () => {
     navigate('/shop', { state: { category } });
   };
 
-  const data = useUserAddress();
-  console.log(data);
+  const handleProductNavigation = (productId) => {
+    navigate('/shop', { state: { productId } });
+  };
 
-  // useEffect(() => {
-  //   const testing = async () => {
-  //     try{
-  //     await deleteAddress("Test");
-  //   } catch (error) {
-  //     console.log("error")
-  //   }
-  // }
-
-  // testing();
-  // });
 
   return (
     <div className="container">
