@@ -23,9 +23,12 @@ import Orders from './admin/Pages/Orders';
 import AdminRoutes from './authentication/protectedRoute';
 import Checkout from './customer/Pages/Checkout';
 
+import { WishlistProvider } from './WishlistContext'; // Import WishlistProvider
+
 function App() {
   return (
     <CartProvider>  {/* Wrap the entire app in CartProvider */}
+    <WishlistProvider>
       <BrowserRouter>
           <Routes>
             <Route path='/' element={<Customer/>}>
@@ -33,7 +36,7 @@ function App() {
               <Route path='shop' element={<Shop/>}></Route>
               <Route path='eco-point' element={<EcoPoint/>}></Route>
               <Route path='about' element={<About/>}></Route>
-              <Route path='wishlist' element={<Wishlist/>}></Route>
+              <Route path="wishlist" element={<Wishlist />} />
               <Route path='cart' element={<Cart />} /> {/* Cart page */}
               <Route path='account' element={<Accout/>}></Route>
               <Route path='product' element={<Product/>}></Route>
@@ -53,6 +56,7 @@ function App() {
 
           </Routes>
       </BrowserRouter>
+      </WishlistProvider>
     </CartProvider>
   );
 }

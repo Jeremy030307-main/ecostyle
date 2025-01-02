@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Product.css'; // CSS file for styling
+import { useWishlist } from '../../WishlistContext'; // Import WishlistContext
 
 const Product = () => {
   const location = useLocation();
   const product = location.state?.product;
+
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist(); // Access wishlist functions and state
 
   // State to track the selected variant's image
   const [selectedImage, setSelectedImage] = useState(
@@ -14,6 +17,9 @@ const Product = () => {
   if (!product) {
     return <p>Product not found!</p>;
   }
+
+  // Check if the product is already in the wishlist
+  const isInWishlist = wishlist.includes(product.id);
 
   return (
     <div className="product-page-container">
@@ -89,7 +95,16 @@ const Product = () => {
           {/* Add to Cart and Favorite Buttons */}
           <div className="action-buttons">
             <button className="add-to-cart-btn">Add to Cart</button>
-            <button className="fav-btn">❤️</button>
+            <button
+              className="fav-btn"
+              onClick={() =>
+                isInWishlist
+                  ? removeFromWishlist(product.id)
+                  : addToWishlist(product.id)
+              }
+            >
+              {isInWishlist ? '💔 Remove from Wishlist' : '❤️ Add to Wishlist'}
+            </button>
           </div>
         </div>
       </div>

@@ -2,57 +2,58 @@ import './Shop.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import search_icon from '../Components/Assets/search_icon.png';
-import { getProduct, useProduct } from '../../apiManager/methods/productMethods';
+import { useWishlist } from '../../WishlistContext'; // Access WishlistContext
 import { getCategory } from '../../apiManager/methods/categoryMethods';
+import ProductCard from '../Components/ProductCard'; // Import ProductCard
 
 const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const initialCategory = location.state?.category || "MEN"; // Default to Men's category ID
-  const [categories, setCategories] = useState([]); // State for categories
-  const [products, setProducts] = useState([]); // State for products
-  const [category, setCategory] = useState(initialCategory); // Selected category ID
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(''); // Error state
+  const initialCategory = location.state?.category || "MEN"; // Default category
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState(initialCategory);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const productData = useProduct("", { category });
   useEffect(() => {
-    // Fetch categories from the API
     const fetchCategories = async () => {
       try {
         const data = await getCategory();
-        console.log("Fetched categories:", data);
-        setCategories(data || []); // Ensure categories array is set
+        setCategories(data || []);
       } catch (err) {
         console.error("Error fetching categories:", err);
       }
     };
 
     fetchCategories();
-  }, []); // Only run on component mount
+  }, []);
 
   useEffect(() => {
-    if (category) {
-      // When the category changes, update products
-      setProducts(productData || []);
-    }
-  }, [category, productData]);
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        // Replace with your product fetching logic
+        const productData = await fetch(`/api/products?category=${category}`).then((res) =>
+          res.json()
+        );
+        setProducts(productData);
+      } catch (err) {
+        setError('Failed to fetch products.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // Handle navigation to shop with a selected category
+    fetchProducts();
+  }, [category]);
+
   const handleNavigation = (categoryId) => {
-    setCategory(categoryId); // Update selected category ID
-    navigate('/shop', { state: { category: categoryId } }); // Navigate with category state
-    // fetchCategory(categoryId); // Fetch products for the selected category
-  };
-
-  const handleProductClick = (product) => {
-    navigate('/product', { state: { product } });
-  };
-
-  const getCategoryHeading = () => {
-    const selectedCategory = categories.find((cat) => cat.id === category);
-    return selectedCategory ? selectedCategory.name : "Fashion"; // Default to "Fashion" if category not found
+    setCategory(categoryId);
+    navigate('/shop', { state: { category: categoryId } });
   };
 
   return (
@@ -60,7 +61,7 @@ const Shop = () => {
       <aside className="sidebar">
         <div className="search">
           <div className="search-wrapper">
-            <img src={search_icon} className="search_icon" alt="" />
+            <img src={search_icon} alt="Search" className="search_icon" />
             <input type="text" placeholder="What are you looking for?" />
           </div>
         </div>
@@ -80,7 +81,7 @@ const Shop = () => {
       </aside>
 
       <main className="main-content">
-        <h1>{getCategoryHeading()} Fashion</h1>
+        <h1>{categories.find((cat) => cat.id === category)?.name || 'Fashion'} Fashion</h1>
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
@@ -88,33 +89,7 @@ const Shop = () => {
 
         <div className="product-grid">
           {products.map((product) => (
-            <button
-              key={product.id}
-              className="product-card"
-              onClick={() => handleProductClick(product)}
-            >
-              <img
-                src={product.variant[0]?.image || '/placeholder.png'}
-                alt={product.name}
-                className="product-image"
-              />
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-price">${product.price.toFixed(2)}</p>
-              <div className="color-swatches">
-                {product.variant.map((variant) => (
-                  <div
-                    key={variant.id}
-                    className="color-swatch"
-                    style={{ backgroundColor: variant.colorCode }}
-                    title={variant.name}
-                  />
-                ))}
-              </div>
-              <div className="rating">
-                <span className="stars">⭐ {product.rating || 'No rating'}</span>
-                <span className="review-count">({product.reviewCount || 0})</span>
-              </div>
-            </button>
+            <ProductCard key={product.id} productId={product.id} />
           ))}
         </div>
       </main>

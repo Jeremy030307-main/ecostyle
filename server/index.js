@@ -8,7 +8,23 @@ import config from './config.js';
 import publicRouter from './routes/publicRoute.js';
 import adminRouter from './routes/adminRoute.js';
 
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { WishlistProvider } from './context/WishlistContext';
+import wishlistRoutes from './routes/wishlist.js';
+
+ReactDOM.render(
+    <WishlistProvider>
+        <App />
+    </WishlistProvider>,
+    document.getElementById('root')
+);
+
 const app = express();
+
+const wishlistRoutes = require('./routes/wishlist'); // Import Wishlist Routes
+app.use('/wishlist', wishlistRoutes); // Add Wishlist Routes
 
 app.use(express.json());
 app.use(cookieParser())

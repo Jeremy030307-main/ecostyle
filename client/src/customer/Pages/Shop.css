@@ -218,3 +218,34 @@ body, html {
 .favorite-btn.active svg {
     fill: #e74c3c;
 }
+
+.wishlist-button {
+    margin-top: 10px;
+  }
+  
+  .add-wishlist-btn,
+  .remove-wishlist-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-wishlist-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .add-wishlist-btn:hover {
+    background-color: #218838;
+  }
+  
+  .remove-wishlist-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .remove-wishlist-btn:hover {
+    background-color: #c82333;
+  }
