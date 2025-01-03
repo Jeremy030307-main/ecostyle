@@ -15,7 +15,7 @@ export const getUserCart = (req, res) => {
   try {
     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
 
-    // Set up a Firestore snapshot listener for real-time updates
+  // Set up a Firestore snapshot listener for real-time updates
   const unsubscribe = userCartRef.onSnapshot(
     async (snapshot) => {
       const cart = await Promise.all(
@@ -24,17 +24,24 @@ export const getUserCart = (req, res) => {
             id: doc.id, // Include document ID for reference
             ...doc.data(),
           };
-
+  
           // Retrieve the product ID from the cart data and fetch the product details
           const productId = cartData.product; // Assuming 'product' field contains the product ID
           const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productId);
-          
+  
           try {
             const productDoc = await productRef.get();
             if (productDoc.exists) {
               const productData = productDoc.data();
-              // Include the product information in the cart
-              cartData.productDetails = productData;
+              
+              // Extract only the required fields
+              const selectedVariant = productData.variant.find(
+                (v) => v.color === cartData.variant
+              );
+  
+              cartData.name = productData.name;
+              cartData.price =  productData.price;
+              cartData.image =  selectedVariant ? selectedVariant.image : null;
             } else {
               console.warn(`Product with ID ${productId} not found`);
               cartData.productDetails = null;
@@ -43,7 +50,7 @@ export const getUserCart = (req, res) => {
             console.error(`Error fetching product data for productId ${productId}:`, productError);
             cartData.productDetails = null;
           }
-
+  
           return cartData;
         })
       );
@@ -72,14 +79,13 @@ export const getUserCart = (req, res) => {
 export const addProductToCart = async (req, res) => {
   const userId = req.user;
   const { product, variant, size, quantity } = req.body;
-
+ 
   try {
     const cartProductID = `${product}_${variant}_${size}`
     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
     const productRef = userCartRef.doc(cartProductID);
 
     const productDoc = await productRef.get();
-
     if (productDoc.exists) {
       return res.status(400).send(message("Product already in cart."))
     }

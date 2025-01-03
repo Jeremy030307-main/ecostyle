@@ -4,6 +4,7 @@ import { COLLECTIONS, message } from "./utility.js";
 
 export const checkProduct = async (body) => {
   try {
+    console.log("fdfdfdsfsd")
     // Ensure the body and product are provided
     if (!body || !body.product) {
       return { isValid: true, errorMessage: null };
@@ -167,6 +168,8 @@ export const getProducts = async (req, res) => {
                 size: productData.size,
                 rating: productData.rating || null,
                 reviewCount: productData.reviewCount || null,
+                category: productData.category,
+                collection: productData.collection
               };
             })
         );
@@ -231,6 +234,8 @@ export const getProduct = (req, res, next) => {
           size: productData.size,
           rating: productData.rating || null,
           reviewCount: productData.reviewCount || null,
+          category: productData.category,
+          collection: productData.collection
         };
 
         // Send the updated product data to the client
@@ -251,7 +256,6 @@ export const getProduct = (req, res, next) => {
     res.status(500).send({ message: error.message });
   }
 };
-
 
 // ---------- Admin action ------------------
 

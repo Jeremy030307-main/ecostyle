@@ -2,6 +2,15 @@ import Stripe from "stripe";
 
 const stripe = new Stripe("sk_test_51PnWiiGrBUkxkf9EdcXsp1T9Fn665nEHB6O4S71UTyBO3Vv3K3qxBmoAT2qmU3Br6W6XYZ7o22o9OZlS6XcEquBf00KwLFLKNI")
 
+export const createStripeCustomer = async (name, email) => {
+
+  const customer = await stripe.customers.create({
+    name: name,
+    email: email
+  })
+
+}
+
 const calculateOrderAmount = (items) => {
     // Calculate the order total on the server to prevent
     // people from directly manipulating the amount on the client
@@ -30,4 +39,16 @@ export const createPayment = async (req, res) => {
         clientSecret: paymentIntent.client_secret,
     });
 };
+
+export const createCheckoutSession = async (req,res) => {
+  const sesion = await stripe.checkout.sessions.create({
+    currency: 'usd',
+    mode: 'setup',
+    ui_mode: 'embedded',
+    customer: '',
+    return_url: 'https://example.com/return?session_id={CHECKOUT_SESSION_ID}'
+  });
+
+  res.send({clientSecret: session.client_secret});
+}
 

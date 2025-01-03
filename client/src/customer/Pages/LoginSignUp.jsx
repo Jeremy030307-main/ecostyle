@@ -9,11 +9,12 @@ const LoginSignUp = () => {
 
   const [isSignUp, setIsSignUp] = useState(false);
   const formRef = useRef(null);
-  const [isAuthenticated, setAuthenticated] = useState(false)
+  const [isAuthenticated, setAuthenticated] = useState(null)
 
   useEffect(() => {
     const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
       if (user) {
+        console.log("fdfdfdfdd")
         if (!user.isAnonymous){
           console.log("authentication is true")
           setAuthenticated(true);
@@ -49,14 +50,20 @@ const LoginSignUp = () => {
     const email = formData.get('email');
     const password = formData.get('password');
 
-    if (isSignUp){
-      const fname = formData.get('fname');
-      const lname = formData.get('lname');
-      await AuthenticationManager.signUp(fname, lname, email, password)
+    try {
+      if (isSignUp){
+        const fname = formData.get('fname');
+        const lname = formData.get('lname');
+        await AuthenticationManager.signUp(fname, lname, email, password)
+  
+      } else {
+        await AuthenticationManager.signIn(email, password)
+      }
 
-    } else {
-      await AuthenticationManager.signIn(email, password)
-    }
+      setAuthenticated(true)
+    } catch (error) {
+      console.log("Error", error.message)
+  }
   };
 
   if (isAuthenticated === true) {
