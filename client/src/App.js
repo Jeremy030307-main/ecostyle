@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route, useLocation  } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './CartContext.js'; // Import CartProvider
 import { WishlistProvider } from './WishlistContext'; // Import WishlistProvider
 
@@ -30,47 +30,14 @@ import Orders from './admin/Pages/Orders';
 import AdminRoutes from './authentication/protectedRoute';
 import Collections from './admin/Pages/collections/Collections';
 import AddCollections from './admin/Pages/collections/AddCollections';
-import Checkout from './customer/Checkout/Checkout.jsx'
-
+import Checkout from './customer/Checkout/Checkout.jsx';
 
 function App() {
   return (
     <CartProvider> {/* Wrap the entire app in CartProvider */}
       <WishlistProvider> {/* Wrap the entire app in WishlistProvider */}
         <BrowserRouter>
-          {/* <MainApp /> */}
-          <Routes>
-            <Route path='/' element={<Customer/>}>
-              <Route path='' element={<Home/>}></Route>
-              <Route path='shop' element={<Shop/>}></Route>
-              <Route path='eco-point' element={<EcoPoint/>}></Route>
-              <Route path='about' element={<About/>}></Route>
-              <Route path='wishlist' element={<Wishlist/>}></Route>
-              <Route path='cart' element={<Cart />} /> {/* Cart page */}
-              <Route path='account' element={<Account/>}></Route>
-              <Route path='product' element={<Product/>}></Route>
-              <Route path='login' element={<LoginSignUp/>}></Route>
-              <Route path='myaccount' element={<MyAccount/>}></Route>
-              <Route path='cancellation' element={<Cancellation/>}></Route>
-              <Route path='AccountOrder' element={<AccountOrder/>}></Route>
-
-
-            </Route>
-
-            <Route path='/checkout' element={<Checkout/>}>
-
-            </Route>
-            
-            <Route path='/admin' element={<AdminRoutes/>}>
-              <Route path='' element={<Admin/>}>
-                <Route path='add' element={<AddProducts/>}></Route>
-                <Route path='products' element={<Products/>}></Route>
-                <Route path='orders' element={<Orders/>}></Route>
-                <Route path='collections' element={<Collections/>}></Route>
-                <Route path='addCollections' element={<AddCollections/>}></Route>
-              </Route>
-            </Route>
-          </Routes>
+          <MainApp /> {/* Use MainApp to handle routing and footer */}
         </BrowserRouter>
       </WishlistProvider>
     </CartProvider>
@@ -81,7 +48,7 @@ function MainApp() {
   const location = useLocation();
 
   // List of paths where the footer should not appear
-  const noFooterPaths = ['/admin', '/login'];
+  const noFooterPaths = ['/admin', '/login', '/contact'];
 
   return (
     <>
@@ -96,13 +63,25 @@ function MainApp() {
           <Route path='account' element={<Account />} />
           <Route path='product' element={<Product />} />
           <Route path='login' element={<LoginSignUp />} />
+          <Route path='myaccount' element={<MyAccount />} />
+          <Route path='cancellation' element={<Cancellation />} />
+          <Route path='AccountOrder' element={<AccountOrder />} />
           <Route path='contact' element={<Contact />} />
         </Route>
 
-        <Route element={<AdminRoutes />}>
-          <Route path='/admin' element={<Admin />} />
+        <Route path='/checkout' element={<Checkout />} />
+
+        <Route path='/admin' element={<AdminRoutes />}>
+          <Route path='' element={<Admin />}>
+            <Route path='add' element={<AddProducts />} />
+            <Route path='products' element={<Products />} />
+            <Route path='orders' element={<Orders />} />
+            <Route path='collections' element={<Collections />} />
+            <Route path='addCollections' element={<AddCollections />} />
+          </Route>
         </Route>
 
+        {/* Catch-all route for 404 */}
         <Route path='*' element={<NotFound />} />
       </Routes>
 
