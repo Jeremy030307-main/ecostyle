@@ -32,6 +32,8 @@ import Collections from './admin/Pages/collections/Collections';
 import AddCollections from './admin/Pages/collections/AddCollections';
 import Checkout from './customer/Checkout/Checkout.jsx'
 
+import HomePage from './customer/Pages/HomePage.jsx';
+
 
 function App() {
   return (
@@ -41,7 +43,7 @@ function App() {
           {/* <MainApp /> */}
           <Routes>
             <Route path='/' element={<Customer/>}>
-              <Route path='' element={<Home/>}></Route>
+              <Route path='' element={<HomePage/>}></Route>
               <Route path='shop' element={<Shop/>}></Route>
               <Route path='eco-point' element={<EcoPoint/>}></Route>
               <Route path='about' element={<About/>}></Route>
