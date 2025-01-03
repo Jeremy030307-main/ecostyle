@@ -168,6 +168,8 @@ export const getProducts = async (req, res) => {
                 size: productData.size,
                 rating: productData.rating || null,
                 reviewCount: productData.reviewCount || null,
+                category: productData.category,
+                collection: productData.collection
               };
             })
         );
@@ -232,6 +234,8 @@ export const getProduct = (req, res, next) => {
           size: productData.size,
           rating: productData.rating || null,
           reviewCount: productData.reviewCount || null,
+          category: productData.category,
+          collection: productData.collection
         };
 
         // Send the updated product data to the client
