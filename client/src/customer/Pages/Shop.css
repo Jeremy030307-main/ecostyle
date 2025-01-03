@@ -7,35 +7,36 @@ html {
   background-color: #fff;
 }
 
-.container {
+.shop-container {
   display: flex;
   min-height: 100vh;
+  width: 100%;
 }
 
-/* Sidebar styles */
-.sidebar {
+/* shop-Sidebar styles */
+.shop-sidebar {
   width: 300px; /* Adjust the width to make it smaller */
   background-color: #fff;
   padding: 20px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid black;
 }
 
 /* Remove point form */
-.sidebar nav ul {
+.shop-sidebar nav ul {
   list-style: none;
   padding: 0;
 }
 
 /* Margin between each category */
-.sidebar nav ul li {
+.shop-sidebar nav ul li {
   margin: 20px 0;
 }
 
 /* Button styles to mimic <a> */
-.sidebar nav ul li button {
+.shop-sidebar nav ul li button {
   all: unset; /* Reset button styles */
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   color: #333;
   cursor: pointer;
   padding: 5px 10px;
@@ -44,14 +45,13 @@ html {
 }
 
 /* Hover effect */
-.sidebar nav ul li button:hover {
-  color: #ff0000; /* Change text color on hover */
-  font-size: 28px;
-  transition: 0.3s, font-size 0.3s;
+.shop-sidebar nav ul li button:hover {
+  font-size: 20px;
+  transition: 0.2s;
 }
 
 /* Search bar with icon */
-.sidebar .search input {
+.shop-sidebar .search input {
   width: 100%;
   padding: 10px 40px; /* Adds padding to make room for the icon */
   border: 1px solid #ddd;
@@ -221,16 +221,16 @@ html {
 }
 
 /* Shop Page Content */
-/* Update main content max-width to accommodate the new sidebar width */
-.main-content {
+/* Update main content max-width to accommodate the new shop-sidebar width */
+.shop-main-content {
   max-width: calc(
     100% - 300px
-  ); /* Update this value to match the new sidebar width */
-  padding: 10px;
+  ); /* Update this value to match the new shop-sidebar width */
+  padding: 20px 50px 0px 50px ;
 }
 
 /* Product Grid */
-.product-grid {
+.shop-product-grid {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -239,12 +239,12 @@ html {
   margin: 0 auto;
 }
 
-.product-card {
+.shop-product-card {
   position: relative;
   width: calc(
     33.333% - 20px
   ); /* Adjust card width for three columns with gaps */
-  background-color: #fff;
+  background-color: rgba(211, 211, 211, 0.767);
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -254,27 +254,27 @@ html {
   box-sizing: border-box;
 }
 
-.product-card:hover {
+.shop-product-card:hover {
   cursor: pointer;
 }
 
-.product-card img {
+.shop-product-card img {
   width: 100%; /* Ensures the image scales to the card width */
   height: 300px; /* Maintains the aspect ratio of the image */
-  max-height: 200px; /* Set a maximum height to keep consistency */
+  /* max-height: 200px; Set a maximum height to keep consistency */
   object-fit: cover; /* Ensures the image fills the space proportionally */
   margin-bottom: 10px; /* Adds some spacing below the image */
 }
 
 /* Color Swatches */
-.color-swatches {
+.shop-color-swatches {
   display: flex;
   gap: 5px;
   margin: 10px 0;
   justify-content: center; /* Align swatches horizontally */
 }
 
-.color-swatch {
+.shop-color-swatch {
   width: 20px;
   height: 20px;
   border-radius: 50%; /* Circular swatches */
@@ -283,13 +283,13 @@ html {
   transition: transform 0.2s, border 0.2s;
 }
 
-.color-swatch:hover {
+.shop-color-swatch:hover {
   transform: scale(1.2);
   border: 2px solid #000; /* Highlight swatch on hover */
 }
 
 /* Rating and Review Count */
-.rating {
+.shop-rating {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -299,34 +299,34 @@ html {
   color: #333;
 }
 
-.stars {
+.shop-stars {
   color: #ffa500; /* Star color */
   font-weight: bold;
 }
 
-.review-count {
+.shop-review-count {
   font-size: 12px;
   color: #888; /* Grey text for review count */
 }
 
 /* Product Name */
-.product-name {
+.shop-product-name {
   font-size: 14px; /* Smaller font size */
   font-weight: normal; /* Make it less bold */
   margin: 10px 0;
-  text-align: center;
+  text-align: left;
   color: #333; /* Default color */
   transition: color 0.3s, font-size 0.3s; /* Add smooth transition for hover effect */
 }
 /* Product Price */
-.product-price {
+.shop-product-price {
   font-size: 14px;
   color: #333;
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-.discount {
+.shop-discount {
   position: absolute;
   top: 10px;
   left: 10px;

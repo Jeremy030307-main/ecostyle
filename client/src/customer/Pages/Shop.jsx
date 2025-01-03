@@ -127,12 +127,12 @@ const Shop = () => {
   });
 
   return (
-    <div className="container">
-      <aside className="sidebar">
+    <div className="shop-container">
+      <aside className="shop-sidebar">
         <div className="search">
           <div className="search-wrapper">
             <img src={search_icon} className="search_icon" alt="" />
-            <input type="text" placeholder="What are you looking for?" />
+            <input type="text" placeholder="Whatchu looking for?" />
           </div>
         </div>
         <nav>
@@ -228,40 +228,40 @@ const Shop = () => {
       </aside>
 
 
-      <main className="main-content">
+      <main className="shop-main-content">
         <h1>{getCategoryHeading()} Fashion</h1>
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
         {!loading && filteredProducts.length === 0 && <p>Loading Products.</p>}
 
-        <div className="product-grid">
+        <div className="shop-product-grid">
           {filteredProducts.map((product) => (
             <button
               key={product.id}
-              className="product-card"
+              className="shop-product-card"
               onClick={() => handleProductClick(product)}
             >
               <img
                 src={product.variant[0]?.image || '/placeholder.png'}
                 alt={product.name}
-                className="product-image"
+                className="shop-product-image"
               />
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-price">${product.price.toFixed(2)}</p>
-              <div className="color-swatches">
+              <h3 className="shop-product-name">{product.name}</h3>
+              <p className="shop-product-price">${product.price.toFixed(2)}</p>
+              <div className="shop-color-swatches">
                 {product.variant.map((variant) => (
                   <div
                     key={variant.id}
-                    className="color-swatch"
+                    className="shop-color-swatch"
                     style={{ backgroundColor: variant.colorCode }}
                     title={variant.name}
                   />
                 ))}
               </div>
-              <div className="rating">
-                <span className="stars">⭐ {ratings[product.id]?.averageRating || 'No rating'}</span>
-                <span className="review-count">({ratings[product.id]?.reviewCount || 0} reviews)</span>
+              <div className="shop-rating">
+                <span className="shop-stars">⭐ {ratings[product.id]?.averageRating || 'No rating'}</span>
+                <span className="shop-review-count">({ratings[product.id]?.reviewCount || 0} reviews)</span>
               </div>
             </button>
           ))}
