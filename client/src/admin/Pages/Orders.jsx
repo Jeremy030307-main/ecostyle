@@ -1,27 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { currency } from "../admin";
 import { assets } from "../Components/Assets/assets";
-import { getCategory } from "../../apiManager/methods/categoryMethods";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
 
-  // Fetch categories on component mount
-  const [categoryData, setCategoryData] = useState(null);
-
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const data = await getCategory();
-        console.log(data);
-      } catch (err) {
-        console.log("Error");
-      }
-    };
-
-    fetchCategory(); // Fetch data when component mounts or categoryID changes
-  }, []); // Dependency array: only rerun if categoryID changes
-  
   return (
     <div>
       <h3>Order Page</h3>
