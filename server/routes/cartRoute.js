@@ -9,7 +9,7 @@ const cartRouter = express.Router();
 cartRouter.get('/', getUserCart); 
 
 // Add product to cart
-cartRouter.post('/', validateRequest(cartItemSchema, checkProduct), addProductToCart);
+cartRouter.post('/', addProductToCart);
 
 // Update cart product quantity
 cartRouter.put('/', validateRequest(cartItemSchema), updateCartProductQuantity);
