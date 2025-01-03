@@ -1,6 +1,7 @@
 /* Style for the img element with class 'logo-img' */
 .img {
     width: max(10%, 80px);
+    cursor: pointer;
 }
 
 /* Style for the button with class 'logout-btn' */

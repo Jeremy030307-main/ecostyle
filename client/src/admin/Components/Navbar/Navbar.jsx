@@ -26,7 +26,9 @@ const Navbar = () => {
 
   return (
     <div className="navbar-container">
-      <img src={assets.logo_text} alt="" />
+      <Link to={"/"}>
+        <img src={assets.logo_text} alt="" />
+      </Link>
 
       <AlertDialog
         isOpen={isAlertOpen}
