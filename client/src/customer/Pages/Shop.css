@@ -13,7 +13,7 @@ body, html {
 
 /* Sidebar styles */
 .sidebar {
-    width: 300px; /* Adjust the width to make it smaller */
+    width: 300px; 
     background-color: #fff;
     padding: 20px;
     border-right: 1px solid #ddd;
@@ -32,7 +32,7 @@ body, html {
 
 /* Button styles to mimic <a> */
 .sidebar nav ul li button {
-    all: unset; /* Reset button styles */
+    all: unset; 
     text-decoration: none;
     font-size: 18px;
     color: #333;
@@ -44,7 +44,7 @@ body, html {
 
 /* Hover effect */
 .sidebar nav ul li button:hover {
-    color: #ff0000; /* Change text color on hover */
+    color: #ff0000; 
     font-size: 28px;
     transition: 0.3s, font-size 0.3s;
 }
@@ -52,7 +52,7 @@ body, html {
 /* Search bar with icon */
 .sidebar .search input {
     width: 100%;
-    padding: 10px 40px; /* Adds padding to make room for the icon */
+    padding: 10px 40px; 
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
@@ -70,7 +70,7 @@ body, html {
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    pointer-events: none; /* Allows clicking inside the input without being blocked by the icon */
+    pointer-events: none; 
 }
 
 .dropdown {
@@ -84,7 +84,7 @@ body, html {
     border: none;
     padding: 10px 15px;
     cursor: pointer;
-    width: 100%; /* Ensure it spans the full width */
+    width: 100%; 
     text-align: left;
     border-radius: 5px;
     transition: background-color 0.3s;
@@ -98,7 +98,7 @@ body, html {
     position: absolute;
     top: 100%;
     left: 0;
-    width: 100%; /* Match the toggle width */
+    width: 100%; 
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -163,10 +163,10 @@ body, html {
 }
 
 .filter-options li.active {
-    background-color: #ddd; /* Highlight the selected filter */
-    font-weight: bold; /* Make the text bold */
-    border-left: 4px solid #007bff; /* Add a visual indicator */
-    color: #007bff; /* Change text color */
+    background-color: #ddd; 
+    font-weight: bold; 
+    border-left: 4px solid #007bff;
+    color: #007bff; 
 }
 .filter-options li:hover {
     background-color: #f1f1f1;
@@ -219,7 +219,7 @@ body, html {
   .subcategories {
     list-style: none;
     margin: 0.5rem 0 0;
-    padding: 0 0 0 1rem; /* Indent subcategories */
+    padding: 0 0 0 1rem; 
     border-left: 2px solid #ddd;
   }
   
@@ -228,24 +228,23 @@ body, html {
   }
 
   .subcategories li button.selected {
-    background-color: #007bff; /* Highlight for subcategories */
+    background-color: #007bff; 
     color: white;
     font-weight: bold;
-    border-left: 4px solid #0056b3; /* Optional: visual cue */
-    padding-left: 10px; /* Align text after border */
+    border-left: 4px solid #0056b3; 
+    padding-left: 10px; 
 }
 
 /* Shop Page Content */
-/* Update main content max-width to accommodate the new sidebar width */
 .main-content {
-    max-width: calc(100% - 300px); /* Update this value to match the new sidebar width */
+    max-width: calc(100% - 300px); 
     padding: 10px;
 }
 .product-count {
     font-size: 16px;
     font-weight: bold;
     color: #555;
-    margin-bottom: 20px; /* Adjust spacing */
+    margin-bottom: 20px; 
   }
 
 /* Product Grid */
@@ -260,13 +259,13 @@ body, html {
 
 .product-card {
     position: relative;
-    width: calc(33.333% - 20px); /* Adjust card width for three columns with gaps */
+    width: calc(33.333% - 20px); 
     background-color: #fff;
     border-radius: 10px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center content */
+    align-items: center; 
     padding: 20px;
     box-sizing: border-box;
 }
@@ -276,11 +275,11 @@ body, html {
 }
 
 .product-card img {
-    width: 100%; /* Ensures the image scales to the card width */
-    height: 300px; /* Maintains the aspect ratio of the image */
-    max-height: 200px; /* Set a maximum height to keep consistency */
-    object-fit: cover; /* Ensures the image fills the space proportionally */
-    margin-bottom: 10px; /* Adds some spacing below the image */
+    width: 100%;
+    height: 300px; 
+    max-height: 200px; 
+    object-fit: cover; 
+    margin-bottom: 10px;
 }
 
 /* Color Swatches */
@@ -288,13 +287,13 @@ body, html {
     display: flex;
     gap: 5px;
     margin: 10px 0;
-    justify-content: center; /* Align swatches horizontally */
+    justify-content: center; 
 }
 
 .color-swatch {
     width: 20px;
     height: 20px;
-    border-radius: 50%; /* Circular swatches */
+    border-radius: 50%;
     border: 1px solid #ccc;
     cursor: pointer;
     transition: transform 0.2s, border 0.2s;
@@ -302,7 +301,7 @@ body, html {
 
 .color-swatch:hover {
     transform: scale(1.2);
-    border: 2px solid #000; /* Highlight swatch on hover */
+    border: 2px solid #000; 
 }
 
 /* Rating and Review Count */
@@ -317,23 +316,23 @@ body, html {
 }
 
 .stars {
-    color: #ffa500; /* Star color */
+    color: #ffa500; 
     font-weight: bold;
 }
 
 .review-count {
     font-size: 12px;
-    color: #888; /* Grey text for review count */
+    color: #888;
 }
 
 /* Product Name */
 .product-name {
-    font-size: 14px; /* Smaller font size */
-    font-weight: normal; /* Make it less bold */
+    font-size: 14px; 
+    font-weight: normal; 
     margin: 10px 0;
     text-align: center;
-    color: #333; /* Default color */
-    transition: color 0.3s, font-size 0.3s; /* Add smooth transition for hover effect */
+    color: #333; 
+    transition: color 0.3s, font-size 0.3s; 
 }
 /* Product Price */
 .product-price {
