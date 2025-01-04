@@ -1,7 +1,6 @@
 import admin from 'firebase-admin';
 import { db } from "../firebase.js";
 import { COLLECTIONS } from './utility.js';
-import { createStripeCustomer } from './paymentController.js';
 
 // set user cookie
 export const setCookie = async (req, res) => {
@@ -55,7 +54,6 @@ export const newUser = async (req, res, next) => {
     // Create a new document under the 'users' collection with no fields
     const userRef = db.collection(COLLECTIONS.USER).doc(id);
     await userRef.set({}); // Set an empty document
-    await createStripeCustomer()
 
     res.status(200).send("User Sign Up successful, empty document created with subcollections");
   } catch (error) {

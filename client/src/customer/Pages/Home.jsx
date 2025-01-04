@@ -8,13 +8,13 @@ import search_icon from '../Components/Assets/search_icon.png';
 import mega_sale_icon from '../Components/Assets/flash_sale_rectangle.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useColors } from '../../apiManager/methods/colorMethods';
-import { addNewAddress, deleteAddress, useUserAddress } from '../../apiManager/methods/addressMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
+import { useOrder, useUserOrder } from '../../apiManager/methods/orderMethod';
 
 const Home = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]); 
+  const data = useOrder();
 
   useEffect(() => {
     // Fetch categories from the API
@@ -30,6 +30,10 @@ const Home = () => {
 
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    console.log(data)
+  }, [data])
 
   // Target date for Mega Sale: February 12, 2025
   const targetDate = new Date('February 12, 2025 00:00:00').getTime();

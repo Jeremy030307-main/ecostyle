@@ -1,0 +1,227 @@
+.account-content-wrapper {
+    display: flex;
+    width: 100%;
+}
+  
+/* Main content styling */
+.account-main-content {
+    width: 80%; 
+}
+
+.bank-card-container{
+    width: 300px;
+    height: 200px;
+    background: #F5F5F5;
+    border-radius: 25px;
+    padding: 20px 30px 20px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.address-card-container{
+    width: 450px;
+    height: 290px;
+    background: #F5F5F5;
+    border-radius: 25px;
+    padding: 20px 30px 20px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.address-info{
+    padding-top: 10px;
+}
+
+.bank-brand-logo{
+    width: 80px;
+    height: 60px;
+}
+
+.bank-card-btn{
+    display: flex;
+    justify-content: right;
+}
+
+
+.bank-card-btn button {
+    background: #DB4444;
+    border-radius: 10px;
+    width: 92px;
+    height: 37px;
+    color: #FFFFFF;
+    border-width: 0;
+    font-size: large;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s ease-in-out; /* Smooth transitions */
+    cursor: pointer; /* Change the cursor to indicate it's clickable */
+}
+
+.address-card-btn{
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+}
+
+.address-delete-btn {
+    background: #DB4444;
+    border-radius: 10px;
+    width: 92px;
+    height: 37px;
+    color: #FFFFFF;
+    border-width: 0;
+    font-size: large;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s ease-in-out; /* Smooth transitions */
+    cursor: pointer; /* Change the cursor to indicate it's clickable */
+}
+
+.address-edit-btn{
+    background: #000000;    
+    border-radius: 10px;
+    width: 92px;
+    height: 37px;
+    color: #FFFFFF;
+    border-width: 0;
+    font-size: large;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s ease-in-out; /* Smooth transitions */
+    cursor: pointer; /* Change the cursor to indicate it's clickable */
+}
+
+.bank-card-btn button:active {
+    background: #b73232; /* Darker shade for click effect */
+    transform: scale(0.98); /* Slightly shrink the button */
+}
+
+.bank-card-btn button:hover {
+    background: #FF5C5C; /* Lighter shade on hover */
+}
+
+.bank-card-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 20px; /* Space between each card */
+    justify-content: flex-start; /* Align items to the left */
+    padding-top: 50px;
+}
+
+.payment-option-header{
+    display:  flex;
+    justify-content:space-between;
+    align-items: baseline;
+}
+
+.payment-option-header button{
+    width: 216px;
+    height: 46px;
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #363738;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.payment-option-container{
+    padding: 50px 50px; /* Optional: space around the container */
+}
+
+.card-detail-form{
+    padding: 10px 50px;
+    display: flex;
+    flex-direction: column; /* Arrange children in a column */
+    gap: 20px; /* Adds space between children */
+}
+
+.card-detail-form button{
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #363738;
+    font-weight: bold;
+    font-size: larger;
+    width: 100px;
+    height: 30px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between label and input */
+}
+
+
+.status-container {
+  max-width: 600px;
+  width: fit-content;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
+.status-container h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.status-box {
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-box.success {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.status-box.processing {
+  color: #856404;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+
+.status-box.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.status-box.info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+}
+
+.status-icon {
+  font-size: 2rem;
+}
+
+.success {
+  color: #28a745;
+}
+
+.processing {
+  color: #ffc107;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.info {
+  color: #17a2b8;
+}

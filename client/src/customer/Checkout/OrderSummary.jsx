@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Checkout.css"
-import { useCart } from "../../apiManager/methods/cartMethods";
+import { checkoutCart, useUserCart } from "../../apiManager/methods/cartMethods";
 import { useProduct } from "../../apiManager/methods/productMethods";
 
 // OrderSummaryLine component: Accepts productID and quantity as props
@@ -12,7 +12,7 @@ const OrderSummaryLine = ({productData, quantity}) => {
       <img 
         src={productData.image} 
         alt={productData.name} 
-        className="product-image" 
+        className="summary-product-image" 
       />
 
       <div className="summary-line-detail">
@@ -21,7 +21,7 @@ const OrderSummaryLine = ({productData, quantity}) => {
           <p style={{ margin: "0", padding: "0" }}  className="summary-product-code">Item: #{productData.product}/ {productData.variant}/ {productData.size}</p>
         </div>
 
-        <div className="price-quantity">
+        <div className="summary-price-quantity ">
           <p>RM{productData.price}</p>
           <p>× {quantity}</p>
         </div>
@@ -50,7 +50,7 @@ const OrderSummaryTotal = ({subtotal, shippingFee}) => {
 
       <hr />
 
-      <div className="summary-total final_amount" style={{fontSize: "larger"}}>
+      <div className="summary-total summary-final_amount" style={{fontSize: "larger"}}>
         <p>Total</p>
         <p>RM{subtotal + shippingFee}</p>
       </div>
@@ -58,21 +58,13 @@ const OrderSummaryTotal = ({subtotal, shippingFee}) => {
   )
 }
 
-const OrderSummary = () => {
-  const userCart = useCart();
+const OrderSummary = ({userCart, total, isLoading, stripe, elements, message}) => {
 
   console.log(userCart)
-
   // Check if userCart is null or undefined before rendering
   if (userCart === null || userCart === undefined) { 
     return <p>Loading...</p>; // Render loading state while the cart is fetching
   }
-
-  // Calculate the total price
-  const total = userCart.reduce((accumulatedTotal, cartLine) => {
-    // Multiply price of product with quantity and add to the accumulated total
-    return accumulatedTotal + (cartLine.price * cartLine.quantity);
-  }, 0);
 
   return (
     <div className="order-summary">
@@ -97,6 +89,14 @@ const OrderSummary = () => {
       <OrderSummaryTotal 
         subtotal = {total}
         shippingFee={0}/>
+
+      <button disabled={isLoading || !stripe || !elements} id="submit">
+        <span id="button-text">
+          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+        </span>
+      </button>
+      {/* Show any error or success messages */}
+      {message && <div id="payment-message">{message}</div>}
     </div>
   );
 };

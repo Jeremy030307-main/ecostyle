@@ -117,7 +117,8 @@ export const getUserAddress = (req, res, next) => {
     try {
       const { addressName } = req.params;
       const userID = req.user;
-  
+
+      console.log(COLLECTIONS.USER,userID,COLLECTIONS.ADDRESS,addressName)
       const addressRef = db.collection(COLLECTIONS.USER).doc(userID).collection(COLLECTIONS.ADDRESS).doc(addressName);
   
       await addressRef.delete();
