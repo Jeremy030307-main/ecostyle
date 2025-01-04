@@ -28,7 +28,7 @@ const Navbar = () => {
   const { cartItems } = useCart();
 
   // Calculate the total number of items in the cart
-  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalItems = 0;
 
   // Get wishlist items from context
   const { wishlistItems } = useWishlist(); // Access wishlist items
@@ -111,7 +111,7 @@ const Navbar = () => {
         {/* Display the total number of items in the cart */}
         <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
         <div className="profile-menu">
-          <Link to = {isAuthenticated ? "/myaccount": "/login"}>
+          <Link to = {isAuthenticated ? "/account": "/login"}>
           <img onClick={toggleDropdown} src={account_icon} alt="" />
           </Link>
         </div>

@@ -51,7 +51,7 @@ const isAdmin = async (req, res, next) => {
         next()
 
     } catch (err) {
-        res.status(401).json(message("Permission Denied"));
+        return res.status(401).json(message("Permission Denied"));
     }
 };
 

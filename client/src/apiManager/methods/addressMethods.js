@@ -32,13 +32,33 @@ export const useUserAddress = () => {
  * 
  * @returns {Promise} A Promise that resolves to the response of the POST request to add the address.
  */
-export const addNewAddress = (addressName, firstName, lastName, address, city, state, postalCode, phone) => {
+export const addNewAddress = (addressName, name, line1, line2, city, state, postalCode, country, phone) => {
+    // Create an object with the required fields first
     const data = {
-        addressName, firstName, lastName, address, city, state, postalCode, phone
-    }
-    return ApiMethods.post(ADDRESS_ENDPOINTS.ADDRESS_ROUTE(), data)
-}
+        addressName,
+        name,
+        line1,
+        city,
+        state,
+        postalCode,
+        country
+    };
 
+    // Conditionally add line2 if it's not null or undefined
+    if (line2 !== null && line2 !== undefined && line2 !== "") {
+        data.line2 = line2;
+    }
+
+    // Conditionally add phone if it's not null or undefined
+    if (phone !== null && phone !== undefined && phone !== "") {
+        data.phone = phone;
+    }
+
+    console.log(data)
+
+    // Make the API call
+    return ApiMethods.post(ADDRESS_ENDPOINTS.ADDRESS_ROUTE(), data);
+}
 
 /**
  * Edits an existing address.
@@ -55,10 +75,28 @@ export const addNewAddress = (addressName, firstName, lastName, address, city, s
  * 
  * @returns {Promise} A Promise that resolves to the response of the PUT request to edit the address.
  */
-export const editAddress = (addressID, addressName, firstName, lastName, address, city, state, postalCode, phone) => {
+export const editAddress = (addressID, addressName, name, line1, line2, city, state, postalCode, country, phone) => {
+    // Create an object with the required fields first
     const data = {
-        addressName, firstName, lastName, address, city, state, postalCode, phone
+        addressName,
+        name,
+        line1,
+        city,
+        state,
+        postalCode,
+        country
+    };
+
+    // Conditionally add line2 if it's not null or undefined
+    if (line2 !== null && line2 !== undefined && line2 !== "") {
+        data.line2 = line2;
     }
+
+    // Conditionally add phone if it's not null or undefined
+    if (phone !== null && phone !== undefined && phone !== "") {
+        data.phone = phone;
+    }
+
     return ApiMethods.put(ADDRESS_ENDPOINTS.ADDRESS_ROUTE(addressID), data)
 }
 

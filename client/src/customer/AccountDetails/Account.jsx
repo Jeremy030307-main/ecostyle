@@ -1,7 +1,9 @@
 import React from 'react'
 import { useState } from 'react';
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import AuthenticationManager from '../../authentication/authenticationManager';
+import AccountSidebar from '../Components/AccountSidebar/AccountSidebar';
+import "./Account.css"
 
 const Account = () => {
 
@@ -29,7 +31,14 @@ const Account = () => {
 
   return (
     <div>
-      <button onClick={handleLogOut}>LogOut</button>
+      <div className="account-content-wrapper">
+        <AccountSidebar/>
+        <div className="account-main-content">
+          <Outlet/>
+        </div>
+      </div>
+      {/* <button onClick={handleLogOut}>LogOut</button> */}
+
     </div>
   )
 }

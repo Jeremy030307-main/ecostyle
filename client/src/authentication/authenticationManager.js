@@ -79,7 +79,7 @@ AuthenticationManager.auth.onAuthStateChanged(async (user) => {
 
     if (user){
         const token = await user.getIdToken();
-        console.log("user")
+        console.log("user", token)
         await ApiMethods.post("/user/set-cookie", {token : token})
     } else {
         await AuthenticationManager.signInAnonymously();

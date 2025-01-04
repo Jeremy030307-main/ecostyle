@@ -167,35 +167,63 @@ export const clearCart = async (req, res) => {
   }
 };
 
-// export const checkout = async (req, res) => {
-//   const userId = req.user;
+export const checkout = async (req, res) => {
+  const userId = req.user;
 
-//   try {
-//     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
+  try {
+    let cartData = [];
+    const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
 
-//     await db.runTransaction( async (transaction) => {
-//       const cartDoc = await transaction.get(userCartRef);
+    await db.runTransaction(async (transaction) => {
+      const cartSnapshot = await transaction.get(userCartRef);
+      
+      // Iterate over each cart document
+      cartData = await Promise.all(
+        cartSnapshot.docs.map(async (doc) => {
+          const cartItem = doc.data();
+          const productId = cartItem.product; // Assuming 'product' field contains the product ID
+          const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productId);
 
-//       if (!cartDoc.exists()) {
-//           throw new Error("Cart does not exist!");
-//       }
+          try {
+            // Fetch the product details
+            const productDoc = await productRef.get();
+            if (productDoc.exists) {
+              const productData = productDoc.data();
 
-//       const cartData = cartDoc.data();
+              // Assuming product has a 'variant' field and we want to find the selected variant
+              const selectedVariant = productData.variant.find(
+                (v) => v.color === cartItem.variant
+              );
 
-//       if (cartData.isLocked) {
-//           throw new Error("Cart is already locked. Another checkout might be in progress.");
-//       }
+              // Add the product details to the cart item
+              cartItem.name = productData.name;
+              cartItem.price = productData.price;
+              cartItem.image = selectedVariant ? selectedVariant.image : null;
+            } else {
+              console.warn(`Product with ID ${productId} not found`);
+              cartItem.productDetails = null;
+            }
+          } catch (productError) {
+            console.error(`Error fetching product data for productId ${productId}:`, productError);
+            cartItem.productDetails = null;
+          }
 
-//       // Lock the cart
-//       transaction.update(cartRef, {
-//           isLocked: true,
-//       });
-//   });
+          return {
+            id: doc.id, // Include document ID for reference
+            ...cartItem,
+          };
+        })
+      );
+    });
 
-//   console.log("Checkout started: Cart locked successfully.");
+    // Send the updated cart data back to the client
+    res.status(200).send(cartData);
 
-//   } catch (error) {
-//     res.status(400).send(message(error.message))
-//   }
-// }
+  } catch (error) {
+    console.error('Error during checkout:', error);
+    res.status(400).send({ message: error.message });
+  }
+};
+
+
 

@@ -8,10 +8,10 @@ const Cart = () => {
   const navigate = useNavigate();
 
   // Calculate total price of all items in the cart
-  const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
+  const totalPrice = 0;
 
   // Calculate total quantity of all items in the cart
-  const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  const totalQuantity = 0;
 
   const handleCheckout = () => {
     navigate('/checkout'); // Navigate to the Checkout page
@@ -22,6 +22,7 @@ const Cart = () => {
       <div className="breadcrumbs">
         <span>Home</span> / <span>Cart</span>
       </div>
+      <p>dfdfd</p>
       <h1 className="cart-title">Your Cart</h1>
       {cartItems.length === 0 ? (
         <p>Your cart is empty</p>

@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useUserCart } from './apiManager/methods/cartMethods';
 
 // Create the context
 const CartContext = createContext();
@@ -10,8 +11,15 @@ export const useCart = () => useContext(CartContext);
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
+  const cartData = useUserCart()
+
+  useEffect(() => {
+    setCartItems(cartData)
+  }, [cartData])
+
   // Function to add an item to the cart
   const addItemToCart = (product) => {
+    
     setCartItems((prevItems) => {
       const existingItem = prevItems.find(item => item.id === product.id);
       if (existingItem) {

@@ -7,7 +7,7 @@ const CheckoutHeader = () => {
     return (
         <div className="checkout-header">
             <div className="checkout-header-back-btn">
-            <span class="material-symbols-outlined">arrow_back_ios_new</span>
+            <span className="material-symbols-outlined">arrow_back_ios_new</span>
             <p>Back to Cart</p>
             </div>
             <img src={logo_text_image} alt="" className="checkout-header-logo-text"/>
