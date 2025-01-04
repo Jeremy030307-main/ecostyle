@@ -1,33 +1,49 @@
 import admin from 'firebase-admin';
 import { db } from "../firebase.js";
-import { COLLECTIONS, message } from './utility.js';
+import { COLLECTIONS, message } from './utility.js'; 
 
-// get all user address
-export const getUserAddress = async (req, res, next) => {
+export const getUserAddress = (req, res, next) => {
+  try {
+    const userID = req.user;
 
-    try {
-      const userID = req.user;
-  
-      const addressRef = db.collection(COLLECTIONS.USER).doc(userID).collection(COLLECTIONS.ADDRESS);
-      const addressSnapshot =  await addressRef.get();
-  
+    // Set up SSE headers
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', "*");
+    res.setHeader('Content-Encoding', "none");
+    res.flushHeaders(); // Flush headers to establish SSE connection
+
+    // Firestore reference to the user's address collection
+    const addressRef = db.collection(COLLECTIONS.USER).doc(userID).collection(COLLECTIONS.ADDRESS);
+    
+    // Listen to real-time updates on the address collection
+    const unsubscribe = addressRef.onSnapshot((addressSnapshot) => {
       if (addressSnapshot.empty) {
-        console.log("fdfdfdf4")
-  
-        return res.status(200).send([]);
+        // If there are no addresses, send an empty array
+        res.write(`data: ${JSON.stringify([])}\n\n`);
+        return;
       }
-      console.log("fdfdfdf")
-  
+
       // Extract addresses from the snapshot
       const addresses = addressSnapshot.docs.map((doc) => ({
+        id: doc.id,  // Include the document ID in case the client needs it
         ...doc.data(), // Address data
       }));
-  
-      res.status(200).send(addresses);
-    } catch (error) {
-  
-    }
+
+      // Send the addresses as an SSE message
+      res.write(`data: ${JSON.stringify(addresses)}\n\n`);
+    });
+
+    // Clean up when the connection is closed
+    req.on('close', () => {
+      unsubscribe();  // Unsubscribe from the Firestore snapshot listener
+      res.end();       // End the response when the client disconnects
+    });
+  } catch (error) {
+    res.status(400).send(message(error.message));
   }
+};
   
   // let user to add an address
   export const addNewAddress = async (req, res, next) => {

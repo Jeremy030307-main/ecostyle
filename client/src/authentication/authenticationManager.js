@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInAnonymously } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInAnonymously, updateProfile, EmailAuthCredential, EmailAuthProvider, linkWithCredential, GithubAuthProvider } from "firebase/auth";
 import { ApiMethods } from "../apiManager/ApiMethods";
 
 // Firebase project configuration
@@ -19,34 +19,52 @@ class AuthenticationManager {
 
     static auth = getAuth(app);
 
+    static signInAnonymously = async () => {
+        try {
+            await signInAnonymously(this.auth);
+            console.log("Signed in anonymously");
+        } catch (error) {
+            console.error("Anonymous sign-in failed:", error.code, error.message);
+        }
+    };
+
     static signUp = async(fname, lname, email, password) => {
 
-        createUserWithEmailAndPassword(this.auth, email, password)
-            .then((userCredential) => {
-                // Signed up 
-                console.log("User sign up successful")
-            })
-            .catch((error) => {
-                console.log("User failed to sign in.")
+        try {
+            const credential = EmailAuthProvider.credential(email, password);
+            const currentUser = this.auth.currentUser;
+
+            if (!currentUser || !currentUser.isAnonymous) {
+                console.log(currentUser)
+                throw new Error("No anonymous user available to upgrade.");
+            }
+
+            // Link the anonymous account with the email/password credential
+            const userCredential = await linkWithCredential(currentUser, credential);
+            await updateProfile(userCredential.user, {
+                displayName: `${fname} ${lname}`,
             });
+            console.log("User sign-up successful:", userCredential.user.displayName);
+            return userCredential.user; // Return the user object for further use.
+        } catch (error) {
+            throw new Error("User sign-up failed:")
+        }
     }
 
     static signIn = async (email, password) => {
-        signInWithEmailAndPassword(this.auth, email, password)
-            .then((userCredential) => {
-                // Signed in 
-                const user = userCredential.user;
-                console.log("User sign up successful")
-            })
-            .catch((error) => {
-                console.log("User failed to sign in.")
-            });
+        try {
+            const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+            console.log("User sign-in successful:", userCredential.user.displayName);
+            return userCredential.user; // Return the user object for further use.
+        } catch (error) {
+            throw new Error("User sign-in failed:")
+        }
     };
 
     static signOut = async() => {
 
         try{
-            const logout = await signOut(this.auth)
+            await signOut(this.auth)
             console.log("User Sign Out")
             return true
         } catch (error) {
@@ -54,26 +72,18 @@ class AuthenticationManager {
             console.log("User sign out fail", error)
             return false
         }
-    }
-    
+    }  
 }
 
 AuthenticationManager.auth.onAuthStateChanged(async (user) => {
 
     if (user){
         const token = await user.getIdToken();
+        console.log("user")
         await ApiMethods.post("/user/set-cookie", {token : token})
     } else {
-        signInAnonymously(AuthenticationManager.auth)
-            .then(() => {
-                console.log("Anomynously")
-            })
-            .catch((error) => {
-                console.log("Sign In Anomynously Fail")
-            });
+        await AuthenticationManager.signInAnonymously();
     }
-    
-
 });
 
 export default AuthenticationManager;

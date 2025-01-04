@@ -31,9 +31,11 @@ export const useCart = () => {
  *   .then(updatedCart => console.log(updatedCart))
  *   .catch(err => console.error(err));
  */
-export const addCartProduct = (productID, quantity) => {
+export const addCartProduct = (productID, variant, size, quantity) => {
     return ApiMethods.post(CART_ENDPOINTS.CART_ROUTE(), {
         product: productID,
+        variant,
+        size,
         quantity
     })
 };
@@ -49,9 +51,9 @@ export const addCartProduct = (productID, quantity) => {
  *   .then(updatedCart => console.log(updatedCart))
  *   .catch(err => console.error(err));
  */
-export const updateCartProduct = (productID, quantity) => {
+export const updateCartProduct = (cartProductID, quantity) => {
     return ApiMethods.put(CART_ENDPOINTS.CART_ROUTE(), {
-        product: productID,
+        cartProductID,
         quantity
     })
 };
@@ -66,8 +68,8 @@ export const updateCartProduct = (productID, quantity) => {
  *   .then(updatedCart => console.log(updatedCart))
  *   .catch(err => console.error(err));
  */
-export const deleteCartProduct = (productID) => {
-    return ApiMethods.delete(CART_ENDPOINTS.CART_ROUTE(productID));
+export const deleteCartProduct = (cartProductID) => {
+    return ApiMethods.delete(CART_ENDPOINTS.CART_ROUTE(cartProductID));
 }
 
 

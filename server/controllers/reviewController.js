@@ -11,7 +11,16 @@ export const getProductReview = async (req, res) => {
         return res.status(400).send(message("Missing product ID."));
     }
 
+    // Set up SSE headers
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', "*");
+    res.setHeader('Content-Encoding', "none");
+    res.flushHeaders(); // Flush headers to establish SSE connection
+
     try {
+
         let reviewQuery = db.collection(COLLECTIONS.REVIEW)
             .where("product", "==", productID);
         
@@ -25,25 +34,44 @@ export const getProductReview = async (req, res) => {
         }
 
         // Execute the query
-        const reviewSnapshot = await reviewQuery.get();
-        if (reviewSnapshot.empty) {
-            // Return an empty array for consistency
-            return res.status(200).send([]);
-        }
+        const unsubscribe = reviewQuery.onSnapshot(
+            async (snapshot) => {
 
-        // Process reviews, omitting 'product' field
-        const reviews = reviewSnapshot.docs.map(doc => {
-            const { product, ...reviewWithoutProduct } = doc.data();
-            return {
-                id: doc.id, // Include the review ID
-                ...reviewWithoutProduct,
-            };
+                if (snapshot.empty){
+                    res.write(`event: error\ndata: ${JSON.stringify({ message: 'No Reviews found' })}\n\n`);
+                    return;
+                }
+
+                // Process reviews, omitting 'product' field
+                const reviews = snapshot.docs.map(doc => {
+                    const { product, ...reviewWithoutProduct } = doc.data();
+                    return {
+                        id: doc.id, // Include the review ID
+                        ...reviewWithoutProduct,
+                    };
+                });
+
+                // Stream updated products to the client
+                res.write(`data: ${JSON.stringify(reviews)}\n\n`);
+            },
+            (error) => {
+                // Handle Firestore listener errors
+                console.error('Firestore listener error:', error);
+                res.write(`event: error\ndata: ${JSON.stringify({ message: error.message })}\n\n`);
+            }
+        );
+
+        // Cleanup when the client disconnects
+        req.on('close', () => {
+            console.log('Client disconnected');
+            unsubscribe(); // Stop Firestore listener
+            res.end();
         });
-
-        res.status(200).send(reviews); // Respond with processed reviews
     } catch (error) {
-        console.error(`Error fetching reviews for product ${productID}:`, error);
-        res.status(500).send(message(`Failed to fetch reviews. ${error.message}`));
+        // Handle any unexpected errors
+        console.error('Error setting up SSE:', error);
+        res.write(`event: error\ndata: ${JSON.stringify({ message: error.message })}\n\n`);
+        res.end();
     }
 };
 
@@ -105,7 +133,6 @@ export const addReview = async (req, res) => {
             transaction.set(reviewRef, {
                 ...req.body,
                 reviewer: user,
-                createdAt: admin.firestore.Timestamp.now(),
             });
 
             // Update the product's review count and rating (if needed)
@@ -162,10 +189,7 @@ export const updateReview = async (req, res) => {
             }
 
             // Update the review with the new data
-            transaction.update(reviewRef, {
-                ...req.body, // Update the review fields with the new data
-                updatedAt: admin.firestore.Timestamp.now(), // Add an updated timestamp
-            });
+            transaction.update(reviewRef, req.body);
 
             // Check if the rating has changed and if so, update the product's rating
             const currentRating = productDoc.data().rating || 0;
@@ -248,14 +272,12 @@ export const deleteReview = async (req, res) => {
             }
 
             return "Review successfully deleted and product updated.";
-        });
-
-        res.status(200).send(message(result));
+        })
+        .then((result) => res.status(200).send(message(result)))
+        .catch((error) => res.status(400).send(message(error.message)))
 
     } catch (error) {
         console.error('Error deleting review:', error);
         res.status(500).send(message(`Failed to delete review. ${error.message}`));
     }
 };
-
-

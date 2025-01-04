@@ -1,6 +1,7 @@
 /* Style for the img element with class 'logo-img' */
 .img {
     width: max(10%, 80px);
+    cursor: pointer;
 }
 
 /* Style for the button with class 'logout-btn' */
@@ -10,12 +11,16 @@
     padding: 0.5rem 1.25rem;
     border-radius: 9999px;
     font-size: 0.75rem;
+    text-decoration: none;
+    border: solid;
+    cursor: pointer;
+    height: 50px;
 }
 
 @media (min-width: 640px) { /* Small screen and above (sm:) */
     .logout-btn {
         padding: 0.5rem 1.75rem;
-        font-size: 0.875rem;
+        font-size: 0.99rem;
     }
 }
 

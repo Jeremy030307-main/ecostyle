@@ -4,26 +4,53 @@ import { COLLECTIONS, message } from "./utility.js";
 
 export const checkProduct = async (body) => {
   try {
-      // Check if at least one field is present (in this case, 'collection')
-      if (!body || !body.product) {
-          return { isValid: true, errorMessage: null };
+    console.log("fdfdfdsfsd")
+    // Ensure the body and product are provided
+    if (!body || !body.product) {
+      return { isValid: true, errorMessage: null };
+    }
+
+    // Reference to the document in the "product" collection
+    const productRef = db.collection(COLLECTIONS.PRODUCT).doc(body.product);
+    const productDoc = await productRef.get();
+
+    // Check if the product document exists
+    if (!productDoc.exists) {
+      return { isValid: false, errorMessage: 'Product does not exist' };
+    }
+
+    const productData = productDoc.data(); // Retrieve product data
+
+    // Check if the body includes a size and validate it against product sizes
+    if (body.size) {
+      if (!productData.sizes || !Array.isArray(productData.sizes)) {
+        return { isValid: false, errorMessage: 'Product sizes are not defined or invalid.' };
       }
-      // Reference to the document in the "category" collection
-      const productRef = db.collection(COLLECTIONS.PRODUCT).doc(body.product);
-      const productDoc = await productRef.get();
+      if (!productData.sizes.includes(body.size)) {
+        return { isValid: false, errorMessage: `Size "${body.size}" is not available for this product.` };
+      }
+    }
 
-      // Return true if the document exists, otherwise false
-      if (!productDoc.exists) {
-          return { isValid: false, errorMessage: 'Product does not exist' };
-        }
-      
-        return { isValid: true, errorMessage: null };  // Valid collection
+    // Check if the body includes a variant and validate it against product variants
+    if (body.variant) {
+      if (!productData.variants || !Array.isArray(productData.variants)) {
+        return { isValid: false, errorMessage: 'Product variants are not defined or invalid.' };
+      }
 
+      const variantColors = productData.variants.map(variant => variant.color);
+      if (!variantColors.includes(body.variant)) {
+        return { isValid: false, errorMessage: `Variant color "${body.variant}" is not available for this product.` };
+      }
+    }
+
+    // All checks passed
+    return { isValid: true, errorMessage: null };
   } catch (error) {
-      console.error('Error checking product:', error);
-      throw new Error(`Unable to check product existence: ${error.message}`);
+    console.error('Error checking product:', error);
+    throw new Error(`Unable to check product existence: ${error.message}`);
   }
-}
+};
+ 
 
 const getVariantDetails = async (variantData) => {
   try{
@@ -141,6 +168,8 @@ export const getProducts = async (req, res) => {
                 size: productData.size,
                 rating: productData.rating || null,
                 reviewCount: productData.reviewCount || null,
+                category: productData.category,
+                collection: productData.collection
               };
             })
         );
@@ -205,6 +234,8 @@ export const getProduct = (req, res, next) => {
           size: productData.size,
           rating: productData.rating || null,
           reviewCount: productData.reviewCount || null,
+          category: productData.category,
+          collection: productData.collection
         };
 
         // Send the updated product data to the client
@@ -224,10 +255,6 @@ export const getProduct = (req, res, next) => {
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
-};
-
-export const getadminProducts = async (req, res) => {
-
 };
 
 // ---------- Admin action ------------------

@@ -1,19 +1,18 @@
 /* Wrapper for content below the navbar */
 .content-wrapper {
-    display: flex;
-    width: 100%;
-}
-  
-/* Main content styling */
-.main-content {
-    width: 70%; /* w-[70%] */
-    margin-left: max(5vw, 25px); /* ml-[max(5vw, 25px)] */
-    margin-top: 2rem; /* my-8 (top margin) */
-    margin-bottom: 2rem; /* my-8 (bottom margin) */
-    margin-right: auto; /* mx-auto (horizontal centering) */
+  display: flex;
+  width: 100%;
 }
 
-hr{
-    margin-bottom: 0px;
+/* Main content styling */
+.main-content {
+  width: 70%; /* w-[70%] */
+  margin-left: max(5vw, 25px); /* ml-[max(5vw, 25px)] */
+  margin-top: 2rem; /* my-8 (top margin) */
+  margin-bottom: 2rem; /* my-8 (bottom margin) */
+  margin-right: auto; /* mx-auto (horizontal centering) */
 }
-  
+
+hr {
+  margin-bottom: 0px;
+}

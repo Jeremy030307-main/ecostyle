@@ -4,6 +4,7 @@
     padding: 5px 15px 5px 15px;
     box-shadow: 0 1px 3px -2px black;
     height: 60px;
+    border-bottom: 1px solid black;
 }
 
 .nav-logo{
@@ -46,6 +47,20 @@
 }
 
 .nav-cart-count{
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -30px;
+    margin-left: -40px;
+    border-radius: 11px;
+    font-size: 14px;
+    background: rgb(236, 81, 53);
+    color: white;
+}
+
+.nav-wishlist-count{
     width: 20px;
     height: 20px;
     display: flex;

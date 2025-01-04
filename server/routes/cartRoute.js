@@ -9,13 +9,13 @@ const cartRouter = express.Router();
 cartRouter.get('/', getUserCart); 
 
 // Add product to cart
-cartRouter.post('/', validateRequest(cartItemSchema, checkProduct), addProductToCart);
+cartRouter.post('/', addProductToCart);
 
 // Update cart product quantity
 cartRouter.put('/', validateRequest(cartItemSchema), updateCartProductQuantity);
 
 // Remove a product from the cart
-cartRouter.delete('/:productId', removeCartProduct);
+cartRouter.delete('/:cartProductID', removeCartProduct);
 
 // Clear the cart
 cartRouter.delete('/', clearCart);

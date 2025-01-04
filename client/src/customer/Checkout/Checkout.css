@@ -1,0 +1,161 @@
+.checkout-header {
+    display: flex;                 
+    justify-content: space-between;  
+    padding: 50px 40px 20px 40px;
+
+  }
+
+.checkout-header p{
+    font-weight: bolder;
+}
+  
+.checkout-header-logo-text {
+
+    position: absolute;             /* Absolutely position the logo */
+    left: 50%;                      /* Move the image to the horizontal center of the parent container */
+    transform: translateX(-50%);    /* Adjust to make sure it's perfectly centered */
+  }
+
+.checkout-header-back-btn{
+    display: flex;
+    justify-content:baseline;
+    padding: 20px;
+}
+
+  /* Align back button elements horizontally */
+  .checkout-header-back-btn {
+    display: flex;
+    align-items: center; /* Vertically center icon and text */
+    gap: 8px; /* Add space between the icon and text */
+  }
+  
+  /* Style for the Material Symbol icon */
+  .material-symbols-outlined {
+    font-size: 20px; /* Adjust icon size */
+    cursor: pointer; /* Make the icon clickable */
+  }
+  
+  /* Style for the "Back to Cart" text */
+  .checkout-header-back-btn p {
+    margin: 0; /* Remove default margin */
+    font-size: 16px; /* Adjust text size */
+  }
+  .checkout-container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .checkout-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 10px 60px;
+  }
+  
+  .checkout-form {
+    flex: 2; /* Takes more space on the left */
+  }
+  
+  .order-summary {
+    flex: 1; /* Takes less space on the right */
+  }
+  
+  .checkout-form form {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .checkout-form div {
+    margin-bottom: 10px;
+  }
+  
+  .checkout-form input {
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .order-summary {
+    background-color: #F5F5F5;
+    padding: 20px;
+    border-radius: 25px;
+    padding: 10px 40px;
+  }
+  
+  .summary-header {
+    cursor: pointer;
+    font-weight:bolder;
+    font-size: 24px;
+    line-height: 24px;
+  }
+  
+  .summary-details {
+    margin-top: 10px;
+  }
+  
+  .summary-details p {
+    margin: 5px 0;
+  }
+  
+  .product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+
+  .order-summary-line {
+    display: flex;
+    align-items: stretch;
+    padding: 20px 10px;
+  }
+  
+  .summary-line-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+  }
+
+  .summary-line-detail h4{
+    margin: "0";
+     padding: "0" 
+  }
+  
+  .summary-line-total {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    font-weight: bold;
+    padding-left: 20px;
+  }
+
+  .price-quantity {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 50px;
+  }
+  
+  .summary-product-code{
+    opacity: 70%;
+  }
+
+  .summary-total{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px 10px 20px;
+  }
+
+  .summary-total p{
+    padding: 0;
+    margin: 0;
+  }
+
+  .final_amount p{
+    font-weight:bold;
+    font-size: large;
+  }

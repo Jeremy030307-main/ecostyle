@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import search_icon from '../Components/Assets/search_icon.png';
 import { getProduct, useProduct } from '../../apiManager/methods/productMethods';
 import { getCategory } from '../../apiManager/methods/categoryMethods';
-import { getProductReview } from '../../apiManager/methods/reviewMethods';
+import { useProductReview } from '../../apiManager/methods/reviewMethods';
 
 const Shop = () => {
   const location = useLocation();
@@ -67,32 +67,32 @@ const Shop = () => {
     }
   }, [category, productData]);
 
-  useEffect(() => {
-    const fetchRatings = async () => {
-      const ratingsMap = {};
-      if (productData) {
-        await Promise.all(
-          productData.map(async (product) => {
-            try {
-              const reviews = await getProductReview(product.id);
-              const averageRating =
-                reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
-              ratingsMap[product.id] = {
-                averageRating: averageRating.toFixed(1),
-                reviewCount: reviews.length,
-              };
-            } catch (err) {
-              console.error(`Error fetching reviews for product ${product.id}:`, err);
-              ratingsMap[product.id] = { averageRating: "No rating", reviewCount: 0 };
-            }
-          })
-        );
-      }
-      setRatings(ratingsMap);
-    };
+  // useEffect(() => {
+  //   const fetchRatings = async () => {
+  //     const ratingsMap = {};
+  //     if (productData) {
+  //       await Promise.all(
+  //         productData.map(async (product) => {
+  //           try {
+  //             const reviews = await getProductReview(product.id);
+  //             const averageRating =
+  //               reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length || 0;
+  //             ratingsMap[product.id] = {
+  //               averageRating: averageRating.toFixed(1),
+  //               reviewCount: reviews.length,
+  //             };
+  //           } catch (err) {
+  //             console.error(`Error fetching reviews for product ${product.id}:`, err);
+  //             ratingsMap[product.id] = { averageRating: "No rating", reviewCount: 0 };
+  //           }
+  //         })
+  //       );
+  //     }
+  //     setRatings(ratingsMap);
+  //   };
 
-    fetchRatings();
-  }, [productData]);
+  //   fetchRatings();
+  // }, [productData]);
 
   const handleCategorySelection = (subCategoryId) => {
     setSelectedSubCategory(subCategoryId); 
@@ -145,12 +145,12 @@ filterOptions.forEach(option => {
 });
 
   return (
-    <div className="container">
-      <aside className="sidebar">
+    <div className="shop-container">
+      <aside className="shop-sidebar">
         <div className="search">
           <div className="search-wrapper">
             <img src={search_icon} className="search_icon" alt="" />
-            <input type="text" placeholder="What are you looking for?" />
+            <input type="text" placeholder="Whatchu looking for?" />
           </div>
         </div>
         <nav>
@@ -264,7 +264,7 @@ filterOptions.forEach(option => {
       </aside>
 
 
-      <main className="main-content">
+      <main className="shop-main-content">
         <h1>{getCategoryHeading()} Fashion</h1>
         <p className="product-count">{filteredProducts.length} items</p>
 
@@ -272,33 +272,33 @@ filterOptions.forEach(option => {
         {error && <p className="error">{error}</p>}
         {!loading && filteredProducts.length === 0 && <p>Loading Products.</p>}
 
-        <div className="product-grid">
+        <div className="shop-product-grid">
           {filteredProducts.map((product) => (
             <button
               key={product.id}
-              className="product-card"
+              className="shop-product-card"
               onClick={() => handleProductClick(product)}
             >
               <img
                 src={product.variant[0]?.image || '/placeholder.png'}
                 alt={product.name}
-                className="product-image"
+                className="shop-product-image"
               />
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-price">${product.price.toFixed(2)}</p>
-              <div className="color-swatches">
+              <h3 className="shop-product-name">{product.name}</h3>
+              <p className="shop-product-price">${product.price.toFixed(2)}</p>
+              <div className="shop-color-swatches">
                 {product.variant.map((variant) => (
                   <div
                     key={variant.id}
-                    className="color-swatch"
+                    className="shop-color-swatch"
                     style={{ backgroundColor: variant.colorCode }}
                     title={variant.name}
                   />
                 ))}
               </div>
-              <div className="rating">
-                <span className="stars">⭐ {ratings[product.id]?.averageRating || 'No rating'}</span>
-                <span className="review-count">({ratings[product.id]?.reviewCount || 0} reviews)</span>
+              <div className="shop-rating">
+                <span className="shop-stars">⭐ {ratings[product.id]?.averageRating || 'No rating'}</span>
+                <span className="shop-review-count">({ratings[product.id]?.reviewCount || 0} reviews)</span>
               </div>
             </button>
           ))}
