@@ -97,6 +97,7 @@ const Shop = () => {
   const handleCategorySelection = (subCategoryId) => {
     setSelectedSubCategory(subCategoryId); 
     setCategory(subCategoryId); 
+    setSelectedSubCategory(subCategoryId);
   };
 
   const getSubcategories = () => {
@@ -125,6 +126,23 @@ const Shop = () => {
       : true;
     return matchesSize && matchesColor;
   });
+
+  // Select all filter options
+const filterOptions = document.querySelectorAll('.filter-options li');
+
+// Add click event listeners to each filter option
+filterOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        // Remove the active class from all options
+        filterOptions.forEach(opt => opt.classList.remove('active'));
+        
+        // Add the active class to the clicked option
+        option.classList.add('active');
+
+        // Display the selected filter value (optional, for debugging or UI feedback)
+        console.log('Selected filter:', option.textContent);
+    });
+});
 
   return (
     <div className="shop-container">
@@ -156,12 +174,20 @@ const Shop = () => {
             </button>
             {dropdownOpen.size && (
               <ul className="filter-options">
-                {sizes.map((size) => (
+              <li>
+                <button onClick={() => setSelectedSize(null)}>None ({products.length})</button>
+              </li>
+              {sizes.map((size) => {
+                const count = products.filter((product) => product.size.includes(size)).length;
+                return (
                   <li key={size}>
-                    <button onClick={() => setSelectedSize(size)}>{size}</button>
+                    <button onClick={() => setSelectedSize(size)}>
+                      {size} ({count})
+                    </button>
                   </li>
-                ))}
-              </ul>
+                );
+              })}
+            </ul>
             )}
           </div>
 
@@ -174,7 +200,6 @@ const Shop = () => {
             </button>
             {dropdownOpen.category && (
               <ul className="filter-options">
-                {/* Main Categories */}
                 {categories.map((cat) => (
                   <li key={cat.id}>
                     <button
@@ -186,6 +211,9 @@ const Shop = () => {
                     {/* Subcategories for the selected main category */}
                     {cat.id === selectedSubCategory && (
                       <ul className="subcategories">
+                        <li>
+                          <button onClick={() => handleCategorySelection(null)}>None</button>
+                        </li>
                         {getSubcategories().map((subCat) => (
                           <li key={subCat.id}>
                             <button
@@ -213,15 +241,23 @@ const Shop = () => {
             </button>
             {dropdownOpen.color && (
               <ul className="filter-options">
-                {availableColors.map((colorHex) => (
+              <li>
+                <button onClick={() => setSelectedColor(null)}> None ({products.length})</button>
+              </li>
+              {availableColors.map((colorHex) => {
+                const count = products.filter((product) =>
+                  product.variant.some((variant) => variant.colorCode === colorHex)
+                ).length;
+                return (
                   <li key={colorHex}>
                     <button onClick={() => setSelectedColor(colorHex)}>
                       <span className="color-circle" style={{ backgroundColor: colorHex }}></span>
-                      {colorNameMap[colorHex] || "Unknown Color"}
+                      {colorNameMap[colorHex] || "Unknown Color"} ({count})
                     </button>
                   </li>
-                ))}
-              </ul>
+                );
+              })}
+            </ul>
             )}
           </div>
         </div>
@@ -230,6 +266,7 @@ const Shop = () => {
 
       <main className="shop-main-content">
         <h1>{getCategoryHeading()} Fashion</h1>
+        <p className="product-count">{filteredProducts.length} items</p>
 
         {loading && <p>Loading products...</p>}
         {error && <p className="error">{error}</p>}
