@@ -21,7 +21,7 @@ const Wishlist = () => {
         <div className="wishlist-items">
           {wishlistItems.map((item) => (
             <div key={item.id} className="wishlist-item">
-              <img src={item.image} alt={item.name} className="wishlist-item-image" />
+              <img src={item.thumbnail} alt={item.name} className="wishlist-item-image" />
               <div className="wishlist-item-details">
                 <h2>{item.name}</h2>
                 <p>${item.price.toFixed(2)}</p>

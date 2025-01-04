@@ -88,10 +88,10 @@ const Navbar = () => {
           <NoDecorationLink to={`/shop`}>Shop</NoDecorationLink>
           {menu === 'shop' ? <hr /> : <></>}
         </li>
-        <li onClick={() => { setMenu('eco-point'); }}>
+        {/* <li onClick={() => { setMenu('eco-point'); }}>
           <NoDecorationLink to={`/eco-point`}>EcoPoint</NoDecorationLink>
           {menu === 'eco-point' ? <hr /> : <></>}
-        </li>
+        </li> */}
         <li onClick={() => { setMenu('about'); }}>
           <NoDecorationLink to={`/about`}>About</NoDecorationLink>
           {menu === 'about' ? <hr /> : <></>}

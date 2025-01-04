@@ -57,7 +57,7 @@ const Products = () => {
         {list.map((item, index) => (
           <div className="product-item" key={index}>
             {/* <img className="product-image" src={item.image[8]} alt="" /> */}
-            <p>{item.thumbnail}</p>
+            <p><img className="product-item-img" src={item.thumbnail}/></p>
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>
