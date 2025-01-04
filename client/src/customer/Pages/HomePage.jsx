@@ -6,6 +6,7 @@ import Heroimage from '../Components/Assets/home_page.png'
 import Mencategory from '../Components/Assets/men_category.png'
 import Womencategory from '../Components/Assets/women_category.png'
 import Footerimage from '../Components/Assets/Footer.png'
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   // Environmental impact data
@@ -45,9 +46,12 @@ const HomePage = () => {
             Every piece tells a story of sustainability, crafted from recycled
             materials with love for our environment.
           </p>
-          <button className="cta-button">
-            Shop Now <ArrowRight size={20} />
-          </button>
+          <Link className="homepage-link" to={"/shop"}>
+            <button className="cta-button">
+              Shop Now <ArrowRight size={20} />
+            </button>
+          </Link>
+          
         </div>
       </div>
 
@@ -87,9 +91,12 @@ const HomePage = () => {
               <div className="category-content">
                 <h3>{category.title}</h3>
                 <p>{category.description}</p>
+                <Link className="homepage-link" to={"/shop"}>
                 <button className="category-button">
                   Shop Now <ArrowRight size={16} />
                 </button>
+                </Link>
+                
               </div>
             </div>
           ))}
@@ -110,9 +117,12 @@ const HomePage = () => {
               manufacturing processes, and ensure fair labor practices
               throughout our supply chain.
             </p>
+            <Link className="homepage-link" to={"/about"}>
             <button className="cta-button">
               Learn More <ArrowRight size={20} />
             </button>
+            </Link>
+            
           </div>
         </div>
       </div>

@@ -33,6 +33,7 @@ import AddCollections from './admin/Pages/collections/AddCollections';
 import Checkout from './customer/Checkout/Checkout.jsx'
 
 import HomePage from './customer/Pages/HomePage.jsx';
+import ScrollToTop from './ScrollToTop.jsx';
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
       <WishlistProvider> {/* Wrap the entire app in WishlistProvider */}
         <BrowserRouter>
           {/* <MainApp /> */}
+          <ScrollToTop/>
           <Routes>
             <Route path='/' element={<Customer/>}>
               <Route path='' element={<HomePage/>}></Route>
