@@ -1,10 +1,13 @@
-import './Shop.css';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import search_icon from '../Components/Assets/search_icon.png';
-import { getProduct, useProduct } from '../../apiManager/methods/productMethods';
-import { getCategory } from '../../apiManager/methods/categoryMethods';
-import { useProductReview } from '../../apiManager/methods/reviewMethods';
+import "./Shop.css";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import search_icon from "../Components/Assets/search_icon.png";
+import {
+  getProduct,
+  useProduct,
+} from "../../apiManager/methods/productMethods";
+import { getCategory } from "../../apiManager/methods/categoryMethods";
+import { useProductReview } from "../../apiManager/methods/reviewMethods";
 
 const Shop = () => {
   const location = useLocation();
@@ -16,10 +19,14 @@ const Shop = () => {
   const [category, setCategory] = useState(initialCategory);
   const [ratings, setRatings] = useState({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState({ size: false, color: false, category: false });
+  const [dropdownOpen, setDropdownOpen] = useState({
+    size: false,
+    color: false,
+    category: false,
+  });
   const [selectedSubCategory, setSelectedSubCategory] = useState(null);
   const [availableColors, setAvailableColors] = useState([]);
 
@@ -95,8 +102,8 @@ const Shop = () => {
   // }, [productData]);
 
   const handleCategorySelection = (subCategoryId) => {
-    setSelectedSubCategory(subCategoryId); 
-    setCategory(subCategoryId); 
+    setSelectedSubCategory(subCategoryId);
+    setCategory(subCategoryId);
     setSelectedSubCategory(subCategoryId);
   };
 
@@ -107,11 +114,11 @@ const Shop = () => {
 
   const handleNavigation = (categoryId) => {
     setCategory(categoryId);
-    navigate('/shop', { state: { category: categoryId } });
+    navigate("/shop", { state: { category: categoryId } });
   };
 
   const handleProductClick = (product) => {
-    navigate('/product', { state: { product } });
+    navigate("/product", { state: { product } });
   };
 
   const getCategoryHeading = () => {
@@ -120,7 +127,9 @@ const Shop = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSize = selectedSize ? product.size.includes(selectedSize) : true;
+    const matchesSize = selectedSize
+      ? product.size.includes(selectedSize)
+      : true;
     const matchesColor = selectedColor
       ? product.variant.some((variant) => variant.colorCode === selectedColor)
       : true;
@@ -128,21 +137,21 @@ const Shop = () => {
   });
 
   // Select all filter options
-const filterOptions = document.querySelectorAll('.filter-options li');
+  const filterOptions = document.querySelectorAll(".filter-options li");
 
-// Add click event listeners to each filter option
-filterOptions.forEach(option => {
-    option.addEventListener('click', () => {
-        // Remove the active class from all options
-        filterOptions.forEach(opt => opt.classList.remove('active'));
-        
-        // Add the active class to the clicked option
-        option.classList.add('active');
+  // Add click event listeners to each filter option
+  filterOptions.forEach((option) => {
+    option.addEventListener("click", () => {
+      // Remove the active class from all options
+      filterOptions.forEach((opt) => opt.classList.remove("active"));
 
-        // Display the selected filter value (optional, for debugging or UI feedback)
-        console.log('Selected filter:', option.textContent);
+      // Add the active class to the clicked option
+      option.classList.add("active");
+
+      // Display the selected filter value (optional, for debugging or UI feedback)
+      console.log("Selected filter:", option.textContent);
     });
-});
+  });
 
   return (
     <div className="shop-container">
@@ -157,7 +166,9 @@ filterOptions.forEach(option => {
           <ul>
             {categories.map((cat) => (
               <li key={cat.id}>
-                <button onClick={() => handleNavigation(cat.id)}>{cat.name}</button>
+                <button onClick={() => handleNavigation(cat.id)}>
+                  {cat.name}
+                </button>
               </li>
             ))}
           </ul>
@@ -168,33 +179,44 @@ filterOptions.forEach(option => {
           <div className="filter-section">
             <button
               className="filter-toggle"
-              onClick={() => setDropdownOpen((prev) => ({ ...prev, size: !prev.size }))}
+              onClick={() =>
+                setDropdownOpen((prev) => ({ ...prev, size: !prev.size }))
+              }
             >
               Size
             </button>
             {dropdownOpen.size && (
               <ul className="filter-options">
-              <li>
-                <button onClick={() => setSelectedSize(null)}>None ({products.length})</button>
-              </li>
-              {sizes.map((size) => {
-                const count = products.filter((product) => product.size.includes(size)).length;
-                return (
-                  <li key={size}>
-                    <button onClick={() => setSelectedSize(size)}>
-                      {size} ({count})
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+                <li>
+                  <button onClick={() => setSelectedSize(null)}>
+                    None ({products.length})
+                  </button>
+                </li>
+                {sizes.map((size) => {
+                  const count = products.filter((product) =>
+                    product.size.includes(size)
+                  ).length;
+                  return (
+                    <li key={size}>
+                      <button onClick={() => setSelectedSize(size)}>
+                        {size} ({count})
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
           </div>
 
           <div className="filter-section">
             <button
               className="filter-toggle"
-              onClick={() => setDropdownOpen((prev) => ({ ...prev, category: !prev.category }))}
+              onClick={() =>
+                setDropdownOpen((prev) => ({
+                  ...prev,
+                  category: !prev.category,
+                }))
+              }
             >
               Category
             </button>
@@ -204,7 +226,9 @@ filterOptions.forEach(option => {
                   <li key={cat.id}>
                     <button
                       onClick={() => handleCategorySelection(cat.id)}
-                      className={cat.id === selectedSubCategory ? "selected" : ""}
+                      className={
+                        cat.id === selectedSubCategory ? "selected" : ""
+                      }
                     >
                       {cat.name}
                     </button>
@@ -212,13 +236,19 @@ filterOptions.forEach(option => {
                     {cat.id === selectedSubCategory && (
                       <ul className="subcategories">
                         <li>
-                          <button onClick={() => handleCategorySelection(null)}>None</button>
+                          <button onClick={() => handleCategorySelection(null)}>
+                            None
+                          </button>
                         </li>
                         {getSubcategories().map((subCat) => (
                           <li key={subCat.id}>
                             <button
                               onClick={() => handleCategorySelection(subCat.id)}
-                              className={subCat.id === selectedSubCategory ? "selected" : ""}
+                              className={
+                                subCat.id === selectedSubCategory
+                                  ? "selected"
+                                  : ""
+                              }
                             >
                               {subCat.name}
                             </button>
@@ -235,34 +265,43 @@ filterOptions.forEach(option => {
           <div className="filter-section">
             <button
               className="filter-toggle"
-              onClick={() => setDropdownOpen((prev) => ({ ...prev, color: !prev.color }))}
+              onClick={() =>
+                setDropdownOpen((prev) => ({ ...prev, color: !prev.color }))
+              }
             >
               Color
             </button>
             {dropdownOpen.color && (
               <ul className="filter-options">
-              <li>
-                <button onClick={() => setSelectedColor(null)}> None ({products.length})</button>
-              </li>
-              {availableColors.map((colorHex) => {
-                const count = products.filter((product) =>
-                  product.variant.some((variant) => variant.colorCode === colorHex)
-                ).length;
-                return (
-                  <li key={colorHex}>
-                    <button onClick={() => setSelectedColor(colorHex)}>
-                      <span className="color-circle" style={{ backgroundColor: colorHex }}></span>
-                      {colorNameMap[colorHex] || "Unknown Color"} ({count})
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+                <li>
+                  <button onClick={() => setSelectedColor(null)}>
+                    {" "}
+                    None ({products.length})
+                  </button>
+                </li>
+                {availableColors.map((colorHex) => {
+                  const count = products.filter((product) =>
+                    product.variant.some(
+                      (variant) => variant.colorCode === colorHex
+                    )
+                  ).length;
+                  return (
+                    <li key={colorHex}>
+                      <button onClick={() => setSelectedColor(colorHex)}>
+                        <span
+                          className="color-circle"
+                          style={{ backgroundColor: colorHex }}
+                        ></span>
+                        {colorNameMap[colorHex] || "Unknown Color"} ({count})
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
           </div>
         </div>
       </aside>
-
 
       <main className="shop-main-content">
         <h1>{getCategoryHeading()} Fashion</h1>
@@ -280,7 +319,7 @@ filterOptions.forEach(option => {
               onClick={() => handleProductClick(product)}
             >
               <img
-                src={product.variant[0]?.image || '/placeholder.png'}
+                src={product.variant[0]?.image || "/placeholder.png"}
                 alt={product.name}
                 className="shop-product-image"
               />
@@ -297,8 +336,12 @@ filterOptions.forEach(option => {
                 ))}
               </div>
               <div className="shop-rating">
-                <span className="shop-stars">⭐ {ratings[product.id]?.averageRating || 'No rating'}</span>
-                <span className="shop-review-count">({ratings[product.id]?.reviewCount || 0} reviews)</span>
+                <span className="shop-stars">
+                  ⭐ {ratings[product.id]?.averageRating || "No rating"}
+                </span>
+                <span className="shop-review-count">
+                  ({ratings[product.id]?.reviewCount || 0} reviews)
+                </span>
               </div>
             </button>
           ))}
