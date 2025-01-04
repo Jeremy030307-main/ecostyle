@@ -2,7 +2,7 @@
 .admin-sidebar-container {
   width: 18%;
   min-height: 100vh;
-  border-right: 2px solid;
+  border-right: 1px solid;
 }
 
 .admin-sidebar-section {
