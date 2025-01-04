@@ -1,6 +1,6 @@
 # FIT3170
-
-
+# EcoStyle - Sustainable Fashion E-commerce Platform
+EcoStyle is a modern e-commerce platform that promotes sustainability and recyclability in the fashion industry. Shop eco-friendly clothing while contributing to a greener planet.
 
 ## Getting started
 
