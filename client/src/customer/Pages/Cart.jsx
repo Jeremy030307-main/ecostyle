@@ -1,42 +1,72 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCart } from '../../CartContext.js';
 import { useNavigate } from 'react-router-dom';
 import './Cart.css';
+import { deleteCartProduct, updateCartProduct, useUserCart } from '../../apiManager/methods/cartMethods.js';
 
 const Cart = () => {
-  const { cartItems, removeItemFromCart, updateItemQuantity } = useCart();
+
+  const cartItems = useUserCart();
+  // const {cartItems} = useCart
   const navigate = useNavigate();
 
-  // Calculate total price of all items in the cart
-  const totalPrice = 0;
+  const [totalItem, setTotalItem] = useState(0)
+  const [totalAmount, setTotalAmount] = useState(0)
 
-  // Calculate total quantity of all items in the cart
-  const totalQuantity = 0;
+  useEffect(() => {
+    if (cartItems && cartItems.length > 0) {
+      // Calculate total items and total amount
+      const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+      const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+      setTotalItem(totalQuantity);
+      setTotalAmount(totalPrice);
+    } else {
+      setTotalItem(0);
+      setTotalAmount(0);
+    }
+    console.log(cartItems)
+  }, [cartItems]);
 
   const handleCheckout = () => {
     navigate('/checkout'); // Navigate to the Checkout page
   };
+
+  const updateItemQuantity = async(cartProductID, quantity) => {
+    try {
+      await updateCartProduct(cartProductID, quantity);
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  const deleteCartItem = async (cartProductID) => {
+    try {
+      await deleteCartProduct(cartProductID);
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   return (
     <div className="cart-container">
       <div className="breadcrumbs">
         <span>Home</span> / <span>Cart</span>
       </div>
-      <p>dfdfd</p>
       <h1 className="cart-title">Your Cart</h1>
-      {cartItems.length === 0 ? (
+      {cartItems && cartItems.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (
         <div className="cart-content">
           <div className="cart-items">
-            {cartItems.map((item, index) => (
+            {cartItems && cartItems.map((item, index) => (
               <div key={item.id}>
                 <div className="cart-item">
-                  <img src={item.thumbnail} alt={item.name} className="cart-item-image" />
+                  <img src={item.image} alt={item.name} className="cart-item-image" />
                   <div className="cart-item-details">
                     <h2 className="cart-item-name">{item.name}</h2>
                     <p className="cart-item-id">
-                      #{item.id} / {item.color} / {item.size}
+                      #{item.product} / {item.color} / {item.size}
                     </p>
                   </div>
                   <div className="cart-item-price-details">
@@ -62,13 +92,13 @@ const Cart = () => {
                     </p>
                     <button
                       className="remove-item-btn"
-                      onClick={() => removeItemFromCart(item.id)}
+                      onClick={() => deleteCartItem(item.id)}
                     >
                       Remove
                     </button>
                   </div>
                 </div>
-                {index < cartItems.length - 1 && <hr className="divider" />}
+                {/* {index < cartItems.length - 1 && <hr className="divider" />} */}
               </div>
             ))}
           </div>
@@ -77,10 +107,10 @@ const Cart = () => {
           <div className="cart-order-summary">
             <h2>Order Summary</h2>
             {/* Update this line to show total quantity */}
-            <p>{totalQuantity} items subtotal</p>
+            <p>{totalItem} items subtotal</p>
             <div className="cart-order-total">
               <h3>Order Total</h3>
-              <p>${totalPrice}</p>
+              <p>${totalAmount}</p>
             </div>
             <button className="checkout-btn" onClick={handleCheckout}>
               Checkout
