@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { currency } from "../admin";
 import { assets } from "../Components/Assets/assets";
 import { useOrder } from "../../apiManager/methods/orderMethod";
+import './Orders.css'
 
 const Orders = () => {
 
