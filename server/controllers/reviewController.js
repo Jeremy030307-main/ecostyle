@@ -6,74 +6,60 @@ export const getProductReview = async (req, res) => {
     const productID = req.params.productID;
     const { rating } = req.query; // Extract query parameters
 
-
+    // Ensure that the product ID is provided
     if (!productID) {
-        return res.status(400).send(message("Missing product ID."));
+        return res.status(400).send({ message: "Missing product ID." });
     }
 
-    // Set up SSE headers
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Content-Encoding', "none");
-    res.flushHeaders(); // Flush headers to establish SSE connection
-
     try {
-
+        // Set up the Firestore query to fetch reviews for the product
         let reviewQuery = db.collection(COLLECTIONS.REVIEW)
             .where("product", "==", productID);
         
-        // Apply additional filtering based on query parameters
+        // Apply additional filtering based on the 'rating' query parameter
         if (rating) {
             const ratingValue = parseFloat(rating);
             if (isNaN(ratingValue)) {
-                return res.status(400).send(message("Invalid rating value."));
+                return res.status(400).send({ message: "Invalid rating value." });
             }
             reviewQuery = reviewQuery.where("rating", "==", ratingValue);
         }
 
         // Execute the query
-        const unsubscribe = reviewQuery.onSnapshot(
-            async (snapshot) => {
+        const snapshot = await reviewQuery.get();
 
-                if (snapshot.empty){
-                    res.write(`event: error\ndata: ${JSON.stringify({ message: 'No Reviews found' })}\n\n`);
-                    return;
-                }
+        // Check if there are reviews for the product
+        if (snapshot.empty) {
+            return res.status(404).send({ message: 'No Reviews found' });
+        }
 
-                // Process reviews, omitting 'product' field
-                const reviews = snapshot.docs.map(doc => {
-                    const { product, ...reviewWithoutProduct } = doc.data();
-                    return {
-                        id: doc.id, // Include the review ID
-                        ...reviewWithoutProduct,
-                    };
-                });
+        let reviews = []
+        for (const doc of snapshot.docs) {
+            const reviewData = doc.data();
+            const { product, reviewer, ...reviewWithoutProduct } = reviewData;
+            
+            // Fetch the user info using the reviewer (user ID) field
+            const userRecord = await admin.auth().getUser(reviewer);
 
-                // Stream updated products to the client
-                res.write(`data: ${JSON.stringify(reviews)}\n\n`);
-            },
-            (error) => {
-                // Handle Firestore listener errors
-                console.error('Firestore listener error:', error);
-                res.write(`event: error\ndata: ${JSON.stringify({ message: error.message })}\n\n`);
-            }
-        );
+            const userData = userRecord.displayName
 
-        // Cleanup when the client disconnects
-        req.on('close', () => {
-            console.log('Client disconnected');
-            unsubscribe(); // Stop Firestore listener
-            res.end();
-        });
+            // Add user data along with review information
+            reviews.push({
+                id: doc.id, // Include the review ID
+                ...reviewWithoutProduct,
+                user: userData // Include user information
+            });
+        }
+
+        // Return the reviews in the response
+        return res.status(200).json(reviews);
     } catch (error) {
         // Handle any unexpected errors
-        console.error('Error setting up SSE:', error);
-        res.write(`event: error\ndata: ${JSON.stringify({ message: error.message })}\n\n`);
-        res.end();
+        console.error('Error fetching reviews:', error);
+        return res.status(500).send({ message: error.message });
     }
 };
+
 
 export const getUserReview = async (req, res) => {
     const userID = req.user;

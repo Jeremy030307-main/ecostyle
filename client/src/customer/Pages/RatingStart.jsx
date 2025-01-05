@@ -18,7 +18,7 @@ const RatingStar = ({ rating }) => {
         <i
           key={index}
           className={getStarType(index)}
-          style={{ color: "black"}} // Gold color
+          style={{ color: "#17A375"}} // Gold color
         ></i>
       ))}
     </div>
@@ -43,7 +43,7 @@ const SmallRatingStar = ({ rating }) => {
           <i
             key={index}
             className={getStarType(index)}
-            style={{ color: "black"}} // Gold color
+            style={{ color: "#17A375"}} // Gold color
           ></i>
         ))}
       </div>

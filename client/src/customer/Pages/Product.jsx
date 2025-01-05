@@ -3,23 +3,40 @@ import {useParams } from 'react-router-dom';
 import { useCart } from '../../CartContext'; // Import the Cart Context
 import { useWishlist } from '../../WishlistContext'; // Import Wishlist Context
 import './Product.css'; // CSS file for styling
-import { useProductReview } from '../../apiManager/methods/reviewMethods';
+import { getProductReview } from '../../apiManager/methods/reviewMethods';
 import { useProduct } from '../../apiManager/methods/productMethods';
 import { addCartProduct } from '../../apiManager/methods/cartMethods';
-import { RatingStar } from './RatingStart';
+import { RatingStar, SmallRatingStar } from './RatingStart';
 
+const ReviewCard = ({review}) => {
 
+  return(
+    <div className="product-review-card" id={review.id}>
+      <div className='product-review-user-circle'>
+        <h3>{review.user[0]}</h3>
+      </div>
+
+      <div className='product-review-card-main-content'>
+
+        <div className='product-review-user-rating-container'>
+          <p>{review.user}</p>
+          <SmallRatingStar rating={review.rating}/>
+        </div>
+
+        <p>{review.comment}</p>
+
+      </div>
+    </div>
+
+  )
+}
 
 const Product = () => {
 
   const { productID } = useParams();
   const product = useProduct(productID);
-  console.log(product)
-
   const { addItemToWishlist } = useWishlist(); // Access Wishlist functions
 
-  const [reviews, setReviews] = useState([]); // State to store reviews
-  const [loadingReviews, setLoadingReviews] = useState(true); // State to track loading
 
   const handleAddToWishlist = () => {
     addItemToWishlist({ ...product, quantity: 1 });
@@ -37,7 +54,22 @@ const Product = () => {
     }
   }, [product])
 
-  // const fetchedReviews = useProductReview(product?.id)
+  const [reviews, setReview] = useState([])
+
+
+  useEffect(() => {
+    const fetchReview = async() => {
+      try{
+        const data = await getProductReview(productID)
+        console.log(data)
+        setReview(data)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+
+    fetchReview()
+  }, [productID])
 
   if (!product) {
     return <p>Product not found!</p>;
@@ -72,7 +104,7 @@ const Product = () => {
             {product && product.rating && product.reviewCount ? (
               <div className='product-rating-reviewCount'>
                 <RatingStar rating={product.rating}/>
-                <p>{product.reviewCount} reviews</p>
+                <p>({product.reviewCount})</p>
               </div>
             ): (
               <p>This product has no reviews yet.</p>
@@ -143,22 +175,28 @@ const Product = () => {
 
       {/* Reviews Section */}
       <div className="reviews-section">
-        <h2>Customer Reviews</h2>
-        {loadingReviews ? (
-          <p>Loading reviews...</p>
-        ) : reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <div key={index} className="review-item">
-              <p className="review-header">{review.user || 'Anonymous'}</p>
-              <p className="review-details">
-                Height: {review.height || 'N/A'} | Weight: {review.weight || 'N/A'}
-              </p>
-              <p className="review-text">{review.text || 'No review text'}</p>
-            </div>
-          ))
-        ) : (
-          <p>No reviews available</p>
-        )}
+
+        <div className='product-review-section-header'>
+          <h1>Reviews</h1>
+          {product && product.rating && product.reviewCount ? (
+              <div className='product-rating-reviewCount'>
+                <RatingStar rating={product.rating}/>
+                <p>({product.reviewCount})</p>
+              </div>
+            ): (
+              <p>This product has no reviews yet.</p>
+            )}
+        </div>
+
+        {reviews ? (
+          reviews.length > 0 ? (
+            reviews.map((review, index) => (
+              <ReviewCard review={review}/>
+            ))
+          ) : (
+            <p>No reviews available</p>
+          )
+        ) :<p>Loading reviews...</p> }
       </div>
     </div>
   );

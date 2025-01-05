@@ -18,7 +18,7 @@ publicRouter.use("/collection", publicCollectionRouter);
 publicRouter.use("/color", publicColorRouter);
 publicRouter.use("/category", publicCategoryRouter);
 publicRouter.use("/product", publicProductRouter);
-publicRouter.use("/review", authenticate, publicReviewRouter);
+publicRouter.use("/review", publicReviewRouter);
 publicRouter.use("/cart", authenticate, cartRouter);
 publicRouter.use("/address", authenticate, addressRouter);
 publicRouter.use("/payment", authenticate, paymentRoute);

@@ -5,8 +5,6 @@
     gap: 2rem;
     padding: 80px 100px;
     font-family: Arial, sans-serif;
-    background-color: #f7f7f7; /* Subtle background color for better contrast */
-
 }
 
 /* Main Content Layout */
@@ -20,6 +18,12 @@
 .product-image-section {
     flex: 2;
     max-width: 500px; /* Limits the image size for large screens */
+}
+
+.product-rating-reviewCount{
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
 }
 
 .product-image-section img{
@@ -127,35 +131,40 @@
     transform: scale(1.1);
 }
 
-/* Reviews Section */
-.reviews-section {
-    margin-top: 2rem;
-}
-.review-item {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-.review-header {
-    font-weight: bold;
-}
-.review-details {
-    font-size: 0.9rem;
-    color: #555;
-}
-.review-text {
-    margin-top: 0.5rem;
-    font-size: 1rem;
+.product-review-card{
+    display: flex;
+    justify-content: left;
+    gap: 20px;
 }
 
-.product-rating-reviewCount{
+.product-review-user-circle{
+    background-color: #8cbcac;
+    height: 40px;
+    width: 40px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    border-radius: 50%;
+}
+
+.product-review-section-header{
     display: flex;
     justify-content: flex-start;
-    gap: 20px;
-    align-items: baseline;
+    gap: 50px;
+    align-items: center;
+    padding: 20px 0px;
+}
+
+.product-review-card-main-content{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.product-review-user-rating-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px
 }
 
 .rating-star-container{
