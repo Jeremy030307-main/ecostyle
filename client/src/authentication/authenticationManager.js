@@ -80,7 +80,11 @@ AuthenticationManager.auth.onAuthStateChanged(async (user) => {
     if (user){
         const token = await user.getIdToken();
         console.log("user", token)
-        await ApiMethods.post("/user/set-cookie", {token : token})
+        try{
+            await ApiMethods.post("/user/set-cookie", {token : token})
+        } catch (error) {
+            console.log(error.message)
+        }
     } else {
         await AuthenticationManager.signInAnonymously();
     }

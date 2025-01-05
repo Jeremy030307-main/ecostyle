@@ -128,6 +128,7 @@ export const updateCartProductQuantity = async (req, res) => {
 
 // Remove a product from the user's cart
 export const removeCartProduct = async (req, res) => {
+  console.log("fdfdfsdf")
   const userId = req.user;
   const product = req.params.cartProductID;
 

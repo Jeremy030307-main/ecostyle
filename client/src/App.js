@@ -53,22 +53,8 @@ import CheckoutComplete from './customer/Checkout/CheckoutComplete.jsx';
 
 function App() {
 
-  useEffect(() => {
-    AuthenticationManager.auth.onAuthStateChanged(async (user) => {
-    
-        if (user){
-            const token = await user.getIdToken();
-            console.log("user", token)
-            await ApiMethods.post("/user/set-cookie", {token : token})
-        } else {
-            await AuthenticationManager.signInAnonymously();
-        }
-    });
-
-  }, [])
-
   return (
-    <CartProvider> {/* Wrap the entire app in CartProvider */}
+    // <CartProvider> {/* Wrap the entire app in CartProvider */}
       <WishlistProvider> {/* Wrap the entire app in WishlistProvider */}
         <BrowserRouter>
           {/* <MainApp /> */}
@@ -81,7 +67,7 @@ function App() {
               <Route path='about' element={<About/>}></Route>
               <Route path='wishlist' element={<Wishlist/>}></Route>
               <Route path='cart' element={<Cart />} /> {/* Cart page */}
-              <Route path='product' element={<Product/>}></Route>
+              <Route path='product/:productID' element={<Product/>}></Route>
               <Route path='login' element={<LoginSignUp/>}></Route>
           
               <Route path='account' element={<Account/>}>
@@ -125,7 +111,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </WishlistProvider>
-    </CartProvider>
+    // </CartProvider>
   );
 }
 

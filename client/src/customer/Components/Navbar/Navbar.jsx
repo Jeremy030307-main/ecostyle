@@ -11,6 +11,7 @@ import { useLocation } from 'react-router-dom';
 import AuthenticationManager from '../../../authentication/authenticationManager';
 import { useCart } from '../../../CartContext';
 import { useWishlist } from '../../../WishlistContext';  // Import WishlistContext
+import { useUserCart } from '../../../apiManager/methods/cartMethods';
 
 const NoDecorationLink = styled(Link)`
   text-decoration: none;
@@ -18,17 +19,28 @@ const NoDecorationLink = styled(Link)`
 `;
 
 const Navbar = () => {
+  const cartData = useUserCart()
+
+  const [totalItem, setTotalItem] = useState(0)
+  
+    useEffect(() => {
+      if (cartData && cartData.length > 0) {
+        // Calculate total items and total amount
+        const totalQuantity = cartData.reduce((acc, item) => acc + item.quantity, 0);
+        const totalPrice = cartData.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  
+        setTotalItem(totalQuantity);
+      } else {
+        setTotalItem(0);
+      }
+      console.log(cartData)
+    }, [cartData]);
+
   const [menu, setMenu] = useState('');
   const [admin, setAdmin] = useState(false);
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false); // State to track dropdown visibility
   const location = useLocation(); // Get the current location
-
-  // Get cart items from context
-  const { cartItems } = useCart();
-
-  // Calculate the total number of items in the cart
-  const totalItems = 0;
 
   // Get wishlist items from context
   const { wishlistItems } = useWishlist(); // Access wishlist items
@@ -109,7 +121,7 @@ const Navbar = () => {
           <img onClick={() => { setMenu('cart'); }} src={cart_icon} alt="" />
         </Link>
         {/* Display the total number of items in the cart */}
-        <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
+        <div className="nav-cart-count">{totalItem > 0 ? totalItem : 0}</div>
         <div className="profile-menu">
           <Link to = {isAuthenticated ? "/account": "/login"}>
           <img onClick={toggleDropdown} src={account_icon} alt="" />
