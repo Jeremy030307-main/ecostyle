@@ -44,25 +44,33 @@ Ensure you have the following installed on your system:
    git clone https://git.infotech.monash.edu/fit31701/fit3170.git
    ```
 
-2. Navigate to the Project Directory
+2. Navigate to the Client Directory and install npm
 
    ```bash
-   cd fit3170
+   cd client
    ```
 
-3. Install Dependencies
+   ```bash
+   npm i
+   ```
+
+3. Navigate to the Server Directory and install npm
 
    ```bash
-   npm install
+   cd ../server
+   ```
+
+   ```bash
+   npm i
    ```
 
 4. Start the Development Server
 
    ```bash
-   npm start
+   npm run dev
    ```
 
-   Open the app in your browser at [http://localhost:3000](http://localhost:3000).
+   You will be directed to the app on your browser at [http://localhost:3000](http://localhost:3000).
 
 ## Usage
 
