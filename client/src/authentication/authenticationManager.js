@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInAnonymously, updateProfile, EmailAuthCredential, EmailAuthProvider, linkWithCredential, GithubAuthProvider } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut, signInAnonymously, updateProfile, EmailAuthProvider, linkWithCredential } from "firebase/auth";
 import { ApiMethods } from "../apiManager/ApiMethods";
 
 // Firebase project configuration

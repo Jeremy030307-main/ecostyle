@@ -12,9 +12,7 @@ import USER_ENDPOINTS from "../endpoints/userEndpoint";
  * @throws {Error} If there is no authenticated user.
  */
 export const getUser = () => {
-    const currentUser = AuthenticationManager.getCurrentUser();
-
-    return ApiMethods.get(USER_ENDPOINTS.USER_ROUTE(currentUser.uid));
+    return ApiMethods.get(USER_ENDPOINTS.USER_ROUTE());
 }
 
 /**
@@ -56,28 +54,18 @@ export const createUser = (fname, lname, email) => {
  * @returns {Promise<Object>} The response from the API after updating the user data.
  * @throws {Error} If there is no authenticated user.
  */
-export const updateUser = (fname = null, lname=null, email=null) => {
+export const updateUser = (name = null, phone=null) => {
 
-    const currentUser = AuthenticationManager.getCurrentUser();
+    const body = {phone};
 
-
-    const body = {};
-
-    if (fname !== null && fname !== undefined) {
-        body.firstName = fname;
+    if (name !== null && name !== undefined && name !== "") {
+        body.name = name;
     }
 
-    if (lname !== null && lname !== undefined) {
-        body.lastName = lname;
-    }
-
-    if (email !== null && email !== undefined) {
-        body.email = email;
-    }
-
-    return ApiMethods.patch(USER_ENDPOINTS.USER_ROUTE(currentUser.uid), body)
-
+    return ApiMethods.put(USER_ENDPOINTS.USER_ROUTE(), body)
 }
+
+
 
 /**
  * Deletes the currently authenticated user.

@@ -18,7 +18,7 @@ const AccountSidebar = () => {
                         <li className="account-main-option">Manage My Account
                             <ul className="account-sub-options">
                                 <li>
-                                    <button onClick={() => handleNavigation('./profile')}>My Profile</button>
+                                    <button onClick={() => handleNavigation('')}>My Profile</button>
                                 </li>
                                 <li>
                                     <button onClick={() => handleNavigation('./address-book')}>Address Book</button>

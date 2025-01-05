@@ -6,16 +6,29 @@ const Cancellation = () => {
 
     return (
         <div>
-            {/* Main Content */}
-            <main className="main-content">
-                <h1>Cancellation Page</h1>
-                {/* Display the Image and Text */}
-                <div className="cancellation-info">
-                    <img src={Image70} alt="No Cancellations" className="cancellation-image" />
-                    <p>Great to see you're happy with your purchases!</p>
-                    <p>No Cancellations so far!</p>
-                </div>
-            </main>
+            <div className='payment-option-container'>
+                    <div className='payment-option-header'>
+                        < h1>Cancellation</h1>  
+                    </div>
+            </div>
+
+
+        <div className='no-cancellation-container'>
+            <div className='smile-face-container'>
+                <i class="fa-regular fa-face-smile fa-bounce fa-2xl"></i>     
+                <i class="fa-regular fa-face-smile fa-bounce fa-2xl"></i> 
+                <i class="fa-regular fa-face-smile fa-bounce fa-2xl"></i>  
+                <i class="fa-regular fa-face-smile fa-bounce fa-2xl"></i>     
+                <i class="fa-regular fa-face-smile fa-bounce fa-2xl"></i>  
+            </div>
+
+            <div>
+                <h2>Great to see you're happy with your purchases! </h2>
+                <h2>No Cancellation Yet</h2>
+            </div>
+           
+        </div>
+        
         </div>
     );
 };

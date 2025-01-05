@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import search_icon from "../Components/Assets/search_icon.png";
 import {
-  getProduct,
   useProduct,
 } from "../../apiManager/methods/productMethods";
 import { getCategory } from "../../apiManager/methods/categoryMethods";
+import {SmallRatingStar} from "./RatingStart";
+
 
 // Recursive component to render categories and subcategories
-
 const CategoryMenu = ({ categories, level = 0, selectedCategory, setSelectedCategory }) => {
   const [isExpanded, setIsExpanded] = useState({});
 
@@ -106,6 +106,58 @@ const Dropdown = ({ title, children }) => {
   );
 };
 
+const ProductCard = ({productData}) => {
+
+  const [selectImage, setSelectImage] = useState(productData.thumbnail)
+  const navigate = useNavigate()
+  
+  return (
+    <div className="shop-productCard" onClick={() => navigate(`/product/${productData.id}`)}>
+      <div className="product-card-image-container">
+        <img
+          src={selectImage || "/placeholder.png"}
+          alt={productData.name}
+          className="shop-product-image"
+        />
+      </div>
+
+    <div className="product-card-info-container">
+
+      <div className="shop-color-swatches">
+        {productData.variant.map((variant) => (
+          <div
+            key={variant.id}
+            className="shop-color-swatch"
+            style={{ backgroundColor: variant.colorCode }}
+            title={variant.name}
+            onClick={(e) => {
+              setSelectImage(variant.image)
+            }}
+          />
+        ))}
+      </div>
+
+      <h4>{productData.name}</h4>
+
+      <p>RM {productData.price}</p>
+
+      <div className="product-card-review-container">
+      {productData.reviewCount && productData.reviewCount>0 ? (
+        <>
+          <SmallRatingStar rating={productData.rating}/>
+          <p>({productData.reviewCount})</p>
+        </>
+        
+      ): (
+        <p>This product has no reviews.</p>
+      )}
+      </div>
+    </div>
+    </div>
+
+  )
+}
+
 const Shop = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -138,42 +190,6 @@ const Shop = () => {
 
   const productData = useProduct("", { category });
 
-  useEffect(() => {
-    setCategories([
-      {
-        id: "MEN",
-        name: "Men",
-        subcategories: [
-          {
-            id: "MEN_BOT",
-            name: "Bottoms",
-            subcategories: [
-              { id: "MEN_BOT_HS", name: "Pants" },
-              { id: "MEN_BOT_PL", name: "Shorts" }
-            ]
-          },
-          { id: "MEN_TOP", name: "Tops", subcategories: [] }
-        ]
-      },
-      {
-        id: "WMN",
-        name: "Women",
-        subcategories: [
-          {
-            id: "WMN_BOT",
-            name: "Bottoms",
-            subcategories: [
-              { id: "WMN_BOT_HS", name: "Pants" },
-              { id: "WMN_BOT_SK", name: "Skirts" }
-            ]
-          },
-          { id: "WMN_DRS", name: "Dresses", subcategories: [] },
-          { id: "WMN_TOP", name: "Tops", subcategories: [] }
-        ]
-      }
-    ])
-  }, [])
-
   // Fetch category
   useEffect(() => {
     const fetchCategories = async () => {
@@ -185,8 +201,10 @@ const Shop = () => {
       }
     };
 
-    fetchCategories();
-  }, []);
+    if (!categories || categories.length <= 0){
+      fetchCategories();
+    }
+  }, [categories]);
 
   // Compute available color of the product data
   useEffect(() => {
@@ -236,15 +254,26 @@ const Shop = () => {
 
   }, [selectedSize, categoryProduct])
 
-
-  const handleProductClick = (productID) => {
-    navigate(`/product/${productID}`);
-  };
-
   const getCategoryHeading = () => {
     const selectedCategory = categories.find((cat) => cat.id === category);
     return selectedCategory ? selectedCategory.name : " ";
   };
+
+  const selectSize = (size) => {
+    if (size === selectedSize){
+      setSelectedSize(null)
+    } else {
+      setSelectedSize(size)
+    }
+  }
+
+  const selectColor = (color) => {
+    if (color === selectedColor){
+      setSelectedColor(null)
+    } else {
+      setSelectedColor(color)
+    }
+  }
 
 
   return (
@@ -271,8 +300,10 @@ const Shop = () => {
                 product.size.includes(size)
               ).length;
               return (
-                <li key={size}>
-                  <button onClick={() => setSelectedSize(size)}>
+                <li key={size} className={`dropdown-option-container ${
+                  selectedSize === size ? 'active' : ''
+                }`}>
+                  <button onClick={() => selectSize(size)}>
                     {size} ({count})
                   </button>
                 </li>
@@ -295,8 +326,10 @@ const Shop = () => {
               ).length;
         
               return (
-                <li key={color.code}>
-                  <button onClick={() => setSelectedColor(color.id)}>
+                <li key={color.code} className={`dropdown-option-container ${
+                  selectedColor === color.id ? 'active' : ''
+                }`}>
+                  <button onClick={() => selectColor(color.id)}>
                     <span
                       className="color-circle"
                       style={{ backgroundColor: color.code }}
@@ -318,39 +351,9 @@ const Shop = () => {
         <h1>{getCategoryHeading()} Fashion</h1>
         <p className="product-count">{filteredProducts ? filteredProducts.length : 0} items</p>
 
-        <div className="shop-product-grid">
+        <div className="shop-productCard-grid">
           {filteredProducts && filteredProducts.map((product) => (
-            <button
-              key={product.id}
-              className="shop-product-card"
-              onClick={() => handleProductClick(product.id)}
-            >
-              <img
-                src={product.variant[0]?.image || "/placeholder.png"}
-                alt={product.name}
-                className="shop-product-image"
-              />
-              <h3 className="shop-product-name">{product.name}</h3>
-              <p className="shop-product-price">${product.price.toFixed(2)}</p>
-              <div className="shop-color-swatches">
-                {product.variant.map((variant) => (
-                  <div
-                    key={variant.id}
-                    className="shop-color-swatch"
-                    style={{ backgroundColor: variant.colorCode }}
-                    title={variant.name}
-                  />
-                ))}
-              </div>
-              <div className="shop-rating">
-                <span className="shop-stars">
-                  ⭐ {product.rating || "No rating"}
-                </span>
-                <span className="shop-review-count">
-                  ({product.reviewCount || 0} reviews)
-                </span>
-              </div>
-            </button>
+            <ProductCard productData={product}/>
           ))}
         </div>
       </main>

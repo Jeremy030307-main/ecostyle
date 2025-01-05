@@ -46,6 +46,8 @@ import AddAcountAddress from './customer/AccountDetails/AddAccountAddress.jsx';
 import AuthenticationManager from './authentication/authenticationManager.js';
 import CheckoutWrapper from './customer/Checkout/CheckoutWrapper.jsx';
 import CheckoutComplete from './customer/Checkout/CheckoutComplete.jsx';
+import AccountProfile from './customer/AccountDetails/AccountProfile.jsx';
+import UpdateProfile from './customer/AccountDetails/UpdateProfile.jsx';
 
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
@@ -72,15 +74,16 @@ function App() {
           
               <Route path='account' element={<Account/>}>
 
-                <Route path='address-book' element={<AccountAddressbook/>}></Route>
+                <Route index element={<AccountProfile/>}></Route>
+                <Route path='update-profile' element={<UpdateProfile/>}></Route>
 
+                <Route path='address-book' element={<AccountAddressbook/>}></Route>
                 <Route path="address-book/address-management" element={<AccountCardManagement includeClientSecret={false}/>}>
                   <Route path='add' element={<AddAcountAddress/>}></Route>
                   <Route path='edit' element={<AddAcountAddress/>}></Route>
                 </Route>
 
                 <Route path="payment-options" element={<AccountPaymentOptions />} /> {/* Default: List cards */}
-
                 <Route path="payment-options/card-management" element={<AccountCardManagement includeClientSecret={true}/>}>
                   <Route path="add" element={<AddPaymentMethod />} />
                   <Route path="success" element={<AddPaymentStatus />} />

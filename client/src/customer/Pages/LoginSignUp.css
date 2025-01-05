@@ -84,10 +84,11 @@
 
 .field-label{
     position: absolute;
-    height: 100%;
+    height: fit-content;
     display: flex;
     align-items: center;
     transition: 300ms ease;
+    width: 100%;
 }
 
 .field-label label{
@@ -141,4 +142,19 @@
   .success-message {
     color: green;
     margin-top: 10px;
+  }
+
+  .login-error-message{
+    font-size: 12px !important;
+    gap: 10px;
+    display: flex;
+    justify-content: baseline;
+    align-items: baseline;
+  }
+
+  .login-error-message.error{
+    color: red;
+  }
+  .login-error-message.ok{
+    color: green;
   }

@@ -35,6 +35,10 @@ const AccountAddressbook = () => {
   const addressData = useUserAddress();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    console.log(addressData)
+  }, [addressData])
+
   const handleDelete = async (addressName) => {
     try {
       await deleteAddress(addressName);
@@ -70,7 +74,7 @@ const AccountAddressbook = () => {
               /> 
             ))
           ) : (
-            <p>No payment methods available.</p> // Show a message if no payment methods exist
+            <p>No address available.</p> // Show a message if no payment methods exist
           )}
         </div>
     </div>

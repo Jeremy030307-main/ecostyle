@@ -4,12 +4,13 @@ import React from 'react';
 const AccountOrder = () => {
 
     return (
-        <div className="container">
-
-            {/* Main Content */}
-            <main className="main-content">
-                
-            </main>
+        <div className='payment-option-container'>
+            
+                <div className='payment-option-header'>
+                    < h1>Order</h1>
+                    
+                </div>
+        
         </div>
     );
 };

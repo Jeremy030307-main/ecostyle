@@ -6,32 +6,9 @@ import './Product.css'; // CSS file for styling
 import { useProductReview } from '../../apiManager/methods/reviewMethods';
 import { useProduct } from '../../apiManager/methods/productMethods';
 import { addCartProduct } from '../../apiManager/methods/cartMethods';
+import { RatingStar } from './RatingStart';
 
 
-const RatingStar = ({ rating }) => {
-  // Helper function to determine the star type based on index
-  const getStarType = (index) => {
-    if (rating >= index + 1) {
-      return "fa-solid fa-star"; // Full star
-    } else if (rating >= index + 0.5) {
-      return "fa-solid fa-star-half-stroke"; // Half star
-    } else {
-      return "fa-regular fa-star"; // Empty star
-    }
-  };
-
-  return (
-    <div className="rating-star-container">
-      {[...Array(5)].map((_, index) => (
-        <i
-          key={index}
-          className={getStarType(index)}
-          style={{ color: "black"}} // Gold color
-        ></i>
-      ))}
-    </div>
-  );
-};
 
 const Product = () => {
 
