@@ -83,7 +83,7 @@ const getVariantDetails = async (variantData) => {
   } catch (error) {
     throw new Error(error.message)
   }
-}
+} 
 
 const checkStock = async (stockData) => {
 
@@ -111,20 +111,24 @@ export const getProducts = async (req, res) => {
 
   try {
     let query = db.collection(COLLECTIONS.PRODUCT);
+    console.log(req.query)
 
-    if (category) {
+    if (category && category !== 'null') {
+      console.log(1)
       query = query.where('category', '>=', category).where('category', '<=', category + '\uf8ff');
     }
 
-    if (collection) {
+    if (collection && collection !== 'null') {
+      console.log(2)
       query = query.where('collection', '==', collection);
     }
 
-    if (color) {
+    if (color && color !== 'null') {
+      console.log(3)
       query = query.where('color', 'array-contains-any', color.split(','));
     }
 
-    if (sortBy) {
+    if (sortBy && sortBy !== 'null') {
       if (orderBy === 'asc' || orderBy === 'desc') {
         query = query.orderBy(sortBy, orderBy); // Apply sorting with specified order
       } else {
@@ -169,7 +173,8 @@ export const getProducts = async (req, res) => {
                 rating: productData.rating || null,
                 reviewCount: productData.reviewCount || null,
                 category: productData.category,
-                collection: productData.collection
+                collection: productData.collection,
+                color: productData.color
               };
             })
         );

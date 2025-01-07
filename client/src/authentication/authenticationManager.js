@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, signInAnonymously, updateProfile, EmailAuthCredential, EmailAuthProvider, linkWithCredential, GithubAuthProvider } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signOut, signInAnonymously, updateProfile, EmailAuthProvider, linkWithCredential } from "firebase/auth";
 import { ApiMethods } from "../apiManager/ApiMethods";
 
 // Firebase project configuration
@@ -79,8 +79,12 @@ AuthenticationManager.auth.onAuthStateChanged(async (user) => {
 
     if (user){
         const token = await user.getIdToken();
-        console.log("user")
-        await ApiMethods.post("/user/set-cookie", {token : token})
+        console.log("user", token)
+        try{
+            await ApiMethods.post("/user/set-cookie", {token : token})
+        } catch (error) {
+            console.log(error.message)
+        }
     } else {
         await AuthenticationManager.signInAnonymously();
     }

@@ -53,7 +53,7 @@ import useSEE from "../useSEE";
  *       console.error("Error fetching reviews:", error);
  *   });
  */
-export const useProductReview = (productID, query) => {
+export const getProductReview = (productID, query) => {
     // Construct base URL for the reviews endpoint
     let url = REVIEW_ENDPOINTS.REVIEW_ROUTE(productID);
 
@@ -63,7 +63,7 @@ export const useProductReview = (productID, query) => {
         url += `?${queryString}`;
     }
 
-    return useSEE(url);
+    return ApiMethods.get(url);
 };
 
 /**

@@ -32,6 +32,8 @@ export const useProduct = (productID = "", query = {}) => {
         }
     }
 
+    console.log(url)
+
     return useSEE(url);
 };
 

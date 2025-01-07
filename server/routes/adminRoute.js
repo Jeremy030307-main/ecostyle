@@ -4,6 +4,7 @@ import { adminColorRouter } from './colorRoute.js';
 import { adminCategoryRouter } from './categoryRoute.js';
 import { adminUserRouter } from './userRoute.js';
 import { adminProductRouter } from './productRoute.js';
+import { adminOrderRouter } from './orderRoute.js';
 
 const adminRouter = express.Router();
 
@@ -12,5 +13,6 @@ adminRouter.use("/collection", adminCollectionRouter);
 adminRouter.use("/color", adminColorRouter);
 adminRouter.use('/category', adminCategoryRouter);
 adminRouter.use("/product", adminProductRouter);
+adminRouter.use("/order", adminOrderRouter);
 
 export default adminRouter;

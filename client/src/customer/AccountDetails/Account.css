@@ -1,0 +1,394 @@
+.account-content-wrapper {
+    display: flex;
+    width: 100%;
+}
+  
+/* Main content styling */
+.account-main-content {
+    width: 80%; 
+}
+
+.bank-card-container{
+    width: 300px;
+    height: 200px;
+    background: #F5F5F5;
+    border-radius: 25px;
+    padding: 20px 30px 20px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.address-card-container{
+    width: 450px;
+    height: 290px;
+    background: #F5F5F5;
+    border-radius: 25px;
+    padding: 20px 30px 20px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.address-info{
+    padding-top: 10px;
+}
+
+.bank-brand-logo{
+    width: 80px;
+    height: 60px;
+}
+
+.bank-card-btn{
+    display: flex;
+    justify-content: right;
+}
+
+
+.bank-card-btn button {
+    background: #DB4444;
+    border-radius: 10px;
+    width: 92px;
+    height: 37px;
+    color: #FFFFFF;
+    border-width: 0;
+    font-size: large;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s ease-in-out; /* Smooth transitions */
+    cursor: pointer; /* Change the cursor to indicate it's clickable */
+}
+
+.address-card-btn{
+    display: flex;
+    justify-content: right;
+    gap: 20px;
+}
+
+.address-delete-btn {
+    background: #DB4444;
+    border-radius: 10px;
+    width: 92px;
+    height: 37px;
+    color: #FFFFFF;
+    border-width: 0;
+    font-size: large;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s ease-in-out; /* Smooth transitions */
+    cursor: pointer; /* Change the cursor to indicate it's clickable */
+}
+
+.address-edit-btn{
+    background: #000000;    
+    border-radius: 10px;
+    width: 92px;
+    height: 37px;
+    color: #FFFFFF;
+    border-width: 0;
+    font-size: large;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.1s ease-in-out; /* Smooth transitions */
+    cursor: pointer; /* Change the cursor to indicate it's clickable */
+}
+
+.bank-card-btn button:active {
+    background: #b73232; /* Darker shade for click effect */
+    transform: scale(0.98); /* Slightly shrink the button */
+}
+
+.bank-card-btn button:hover {
+    background: #FF5C5C; /* Lighter shade on hover */
+}
+
+.bank-card-wrapper {
+    display: flex;
+    flex-wrap: wrap; /* Allow items to wrap to the next line */
+    gap: 20px; /* Space between each card */
+    justify-content: flex-start; /* Align items to the left */
+    padding-top: 50px;
+}
+
+.payment-option-header{
+    display:  flex;
+    justify-content:space-between;
+    align-items: baseline;
+}
+
+.payment-option-header button{
+    width: 216px;
+    height: 46px;
+    background: #FFFFFF;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #363738;
+    font-weight: bold;
+    font-size: larger;
+}
+
+.payment-option-container{
+    padding: 50px 50px; /* Optional: space around the container */
+}
+
+.card-detail-form{
+    padding: 10px 50px;
+    display: flex;
+    flex-direction: column; /* Arrange children in a column */
+    gap: 20px; /* Adds space between children */
+}
+
+.card-detail-form button{
+    border: 2px solid #000000;
+    border-radius: 10px;
+    box-sizing: border-box;
+    color: #363738;
+    font-weight: bold;
+    font-size: larger;
+    width: 100px;
+    height: 30px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* Space between label and input */
+}
+
+
+.status-container {
+  max-width: 600px;
+  width: fit-content;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  position: absolute;
+  left: 0; 
+  right: 0; 
+  margin-inline: auto; 
+  width: fit-content;
+}
+
+.status-container h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.status-box {
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.status-box.success {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+}
+
+.status-box.processing {
+  color: #856404;
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+}
+
+.status-box.error {
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+}
+
+.status-box.info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+}
+
+.status-icon {
+  font-size: 2rem;
+}
+
+.success {
+  color: #28a745;
+}
+
+.processing {
+  color: #ffc107;
+}
+
+.error {
+  color: #dc3545;
+}
+
+.info {
+  color: #17a2b8;
+}
+
+.account-personal-detail{
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: #f5f5f5;
+  padding: 30px 40px;
+  border-radius: 25px;
+  margin-bottom: 30px;
+}
+
+.account-personal-title-content{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.account-personal-title-content h2{
+  font-style: normal;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 26px;
+}
+.account-personal-title-content h3{
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.account-detail-button-container{
+  display: flex;
+  justify-content:flex-end;
+  gap: 20px;
+}
+
+.account-detail-button{
+  border-radius: 10px;
+  width: 127px;
+  height: 37px;
+  color: white;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 29px;
+  border: 0em;
+}
+
+.account-detail-button-container .edit{
+  background: black
+}
+
+.account-detail-button-container .delete{
+  background: #DB4444;
+}
+
+.account-detail-button-container  .change-password{
+  width: fit-content;
+  padding: 10px 10px;
+  height: fit-content;
+  background: black;
+  border-radius: 15px;
+}
+
+.account-password-container{
+  display: flex;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 30px 40px;
+  border-radius: 25px;
+}
+
+.no-cancellation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh; /* Full viewport height */
+  text-align: center;
+  gap: 20px
+}
+
+.smile-face-container {
+  display: flex;
+  gap: 10px; /* Add spacing between smile faces */
+}
+
+/* Container for the update profile section */
+.profile-update-container {
+  margin: 50px auto;
+  padding: 20px;
+  /* border: 1px solid #ddd; */
+  border-radius: 25px;
+  background-color: #f9f9f9;
+}
+
+/* Title for the form */
+.profile-update-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Form structure */
+.profile-update-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Individual field wrapper */
+.profile-update-field {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label styling */
+.profile-update-label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Input field styling */
+.profile-update-input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Read-only email input styling */
+.profile-update-email {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+}
+
+/* Action buttons container */
+.profile-update-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Button styling */
+.profile-update-btn {
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.profile-update-save {
+  background-color: #17a375;
+  color: #fff;
+}
+
+.profile-update-cancel {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.profile-update-btn:hover {
+  opacity: 0.9;
+}
+.profile-update-error {
+  color: red;
+  font-size: 12px;
+}
