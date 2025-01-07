@@ -66,9 +66,11 @@
     font-size: 14px;
     font-weight: 300;
     transition: 300ms ease;
+    cursor: text;
 }
 
 .form-field input::placeholder {
+    cursor: text;
     visibility: hidden;
 }
 
@@ -89,12 +91,14 @@
     align-items: center;
     transition: 300ms ease;
     width: 100%;
+    cursor: text;
 }
 
 .field-label label{
     display: block;
     font-size: 14px;
     color: #b0b0b0;
+    cursor: text;
 }
 
 .form-field input:focus + .field-label,
