@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { currency } from "../admin";
 import { assets } from "../Components/Assets/assets";
 import { useOrder } from "../../apiManager/methods/orderMethod";
-import './Orders.css'
+import "./Orders.css";
 
 const Orders = () => {
-
   const orderData = useOrder();
   if (!orderData) {
     return <p>Loading...</p>;
@@ -24,21 +23,22 @@ const Orders = () => {
                   if (index === order.products.length - 1) {
                     return (
                       <p key={index}>
-                        {product.name} x {product.quantity} <span> {product.size} </span>
+                        {product.name} x {product.quantity}{" "}
+                        <span> {product.size} </span>
                       </p>
                     );
                   } else {
                     return (
                       <p key={index}>
-                        {product.name} x {product.quantity} <span> {product.size} </span>
-                        ,{" "}
+                        {product.name} x {product.quantity}{" "}
+                        <span> {product.size} </span>,{" "}
                       </p>
                     );
                   }
                 })}
               </div>
-                
-                {/* Can be used for future(Change the order data structure) */}
+
+              {/* Can be used for future(Change the order data structure) */}
               {/* <p className="order-address">
                 {order.address.firstName + " " + order.address.lastName}
               </p>
@@ -57,12 +57,13 @@ const Orders = () => {
 
               <p>{order.address.phone}</p> */}
 
-              <p className="order-address">{order.shippingAddress}</p>
-
+              <p className="order-address">Address: {order.shippingAddress}</p>
             </div>
             <div className="order-info">
               <p className="sm">Items : {order.products.length}</p>
-              <p className="mt-3">Method : {order.paymentDetails.paymentMethod.join(", ")}</p>
+              <p className="mt-3">
+                Method : {order.paymentDetails.paymentMethod.join(", ")}
+              </p>
               <p>Payment ID: {order.paymentDetails.paymentID}</p>
               {/* <p>Payment : {order.payment ? "Done" : "Pending"}</p>
               <p>Date : {new Date(order.date).toLocaleDateString()}</p> */}
@@ -72,7 +73,7 @@ const Orders = () => {
               {currency}
               {order.total}
             </p>
-            <select className="order-select">
+            <select value={order.status} className="order-select">
               <option value="Order Placed">Order Placed</option>
               <option value="Packing">Packing</option>
               <option value="Shipped">Shipped</option>
