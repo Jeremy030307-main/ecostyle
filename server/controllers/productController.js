@@ -83,7 +83,7 @@ const getVariantDetails = async (variantData) => {
   } catch (error) {
     throw new Error(error.message)
   }
-}
+} 
 
 const checkStock = async (stockData) => {
 
