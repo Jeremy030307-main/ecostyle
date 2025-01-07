@@ -7,6 +7,7 @@ const stripe = new Stripe("sk_test_51PnWiiGrBUkxkf9EdcXsp1T9Fn665nEHB6O4S71UTyBO
 async function createStripeCustomer(uid) {
   try {
     // Retrieve the user document
+    console.log(uid)
     const userDocRef = db.collection(COLLECTIONS.USER).doc(uid);
     const userDoc = await userDocRef.get();
 

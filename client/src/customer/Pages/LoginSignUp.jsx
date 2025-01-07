@@ -3,32 +3,17 @@ import './LoginSignUp.css';
 import formImage from '../Components/Assets/form-bg.png'
 import logo from '../Components/Assets/logo_image.png'
 import { Navigate } from "react-router-dom";
-import AuthenticationManager from '../../authentication/authenticationManager';
 import { validatePassword } from 'firebase/auth';
+import { useAuth } from '../../authentication/authenticationManager';
 
 const LoginSignUp = () => {
+
+  const {auth, signUp, signIn} = useAuth()
 
   const [isSignUp, setIsSignUp] = useState(false);
   const formRef = useRef(null);
   const [isAuthenticated, setAuthenticated] = useState(null)
   const [enterfail, setEnterFail] = useState(false)
-
-  useEffect(() => {
-    const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("fdfdfdfdd")
-        if (!user.isAnonymous){
-          console.log("authentication is true")
-          setAuthenticated(true);
-        }
-      } else {
-        setAuthenticated(false);
-      }
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
 
   const [containsLowerCase, setContainsLowerCase] = useState(false); // Fixed naming
   const [containsUpperCase, setContainsUpperCase] = useState(false);
@@ -36,7 +21,7 @@ const LoginSignUp = () => {
   const [contians6character, setContians6character] = useState(false)
 
   const validPassword = async (password) => {
-    const status = await validatePassword(AuthenticationManager.auth, password);
+    const status = await validatePassword( auth, password);
 
     if (!status.isValid) {
       setContainsLowerCase(status.containsLowercaseLetter);
@@ -84,11 +69,11 @@ const LoginSignUp = () => {
     try {
       if (isSignUp){
         if (samePassword && containsLowerCase && containsNumeric && containsUpperCase && contians6character){
-        await AuthenticationManager.signUp(fname, lname, email, password)
+        await signUp(fname, lname, email, password)
         }
   
       } else {
-        await AuthenticationManager.signIn(email, password)
+        await signIn(email, password)
       }
 
       setAuthenticated(true)

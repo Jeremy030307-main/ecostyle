@@ -1,4 +1,4 @@
-import AuthenticationManager from "../../authentication/authenticationManager";
+import { useAuth } from "../../authentication/authenticationManager";
 import { ApiMethods } from "../ApiMethods";
 import USER_ENDPOINTS from "../endpoints/userEndpoint";
 
@@ -30,15 +30,13 @@ export const getUser = () => {
  */
 export const createUser = (fname, lname, email) => {
 
-    const currentUser = AuthenticationManager.getCurrentUser();
-
     const body = {
         firstName: fname,
         lastName: lname,
         email: email
     };
 
-    return ApiMethods.post(USER_ENDPOINTS.USER_ROUTE(currentUser.uid), body);
+    return ApiMethods.post(USER_ENDPOINTS.USER_ROUTE(), body);
 };
 
 /**
@@ -65,8 +63,6 @@ export const updateUser = (name = null, phone=null) => {
     return ApiMethods.put(USER_ENDPOINTS.USER_ROUTE(), body)
 }
 
-
-
 /**
  * Deletes the currently authenticated user.
  * 
@@ -76,12 +72,11 @@ export const updateUser = (name = null, phone=null) => {
  * @returns {Promise<Object>} The response from the API after deleting the user.
  * @throws {Error} If there is no authenticated user.
  */
-export const deleteUser = () => {
-    const currentUser = AuthenticationManager.getCurrentUser();
+// export const deleteUser = () => {
+//     const currentUser = AuthenticationManager.getCurrentUser();
 
-    return ApiMethods.delete(USER_ENDPOINTS.USER_ROUTE(currentUser.uid))
-
-}
+//     return ApiMethods.delete(USER_ENDPOINTS.USER_ROUTE(currentUser.uid))
+// }
 
 /**
  * Sets the currently authenticated user as an admin.
@@ -92,13 +87,7 @@ export const deleteUser = () => {
  * @returns {Promise<Object>} The response from the API after updating the user role.
  * @throws {Error} If there is no authenticated user.
  */
-export const setAdmin = () => {
+export const setAdmin = (uid) => {
 
-    const currentUser = AuthenticationManager.getCurrentUser();
-
-    if (!currentUser) {
-        throw new Error("No authenticated user found");
-    }
-
-    return ApiMethods.patch(USER_ENDPOINTS.ADMIN_USER_ROUTE(currentUser.uid), {})
+    return ApiMethods.patch(USER_ENDPOINTS.ADMIN_USER_ROUTE(uid), {})
 }

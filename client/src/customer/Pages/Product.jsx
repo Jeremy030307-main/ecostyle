@@ -3,9 +3,8 @@ import {useParams } from 'react-router-dom';
 import { useCart } from '../../CartContext'; // Import the Cart Context
 import { useWishlist } from '../../WishlistContext'; // Import Wishlist Context
 import './Product.css'; // CSS file for styling
-import { getProductReview } from '../../apiManager/methods/reviewMethods';
+import { createNewReview, getProductReview } from '../../apiManager/methods/reviewMethods';
 import { useProduct } from '../../apiManager/methods/productMethods';
-import { addCartProduct } from '../../apiManager/methods/cartMethods';
 import { RatingStar, SmallRatingStar } from './RatingStart';
 
 const ReviewCard = ({review}) => {
@@ -33,6 +32,7 @@ const ReviewCard = ({review}) => {
 
 const Product = () => {
 
+  const {addItemToCart} = useCart()
   const { productID } = useParams();
   const product = useProduct(productID);
   const { addItemToWishlist } = useWishlist(); // Access Wishlist functions
@@ -55,33 +55,24 @@ const Product = () => {
   }, [product])
 
   const [reviews, setReview] = useState([])
-
+  
+  const fetchReview = async() => {
+    try{
+      const data = await getProductReview(productID)
+      console.log(data)
+      setReview(data)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
   useEffect(() => {
-    const fetchReview = async() => {
-      try{
-        const data = await getProductReview(productID)
-        console.log(data)
-        setReview(data)
-      } catch (error) {
-        console.log(error.message)
-      }
-    }
-
     fetchReview()
   }, [productID])
 
   if (!product) {
     return <p>Product not found!</p>;
   }
-
-  const handleAddToCart = async() => {
-    try{
-      await addCartProduct(productID, selectedVariant, selectedSize, 1);
-    } catch (error) {
-      console.log(error.message)
-    }
-  };
 
   return (
     <div className="product-page-container">
@@ -165,7 +156,7 @@ const Product = () => {
             <button className="fav-btn" onClick={handleAddToWishlist}>
               <i class="fa-regular fa-heart"></i>            
             </button>
-            <button className="add-to-cart-btn" onClick={handleAddToCart}>
+            <button className="add-to-cart-btn" onClick={() => {addItemToCart(productID, selectedVariant, selectedSize)}}>
               Add to Cart
             </button>
             
