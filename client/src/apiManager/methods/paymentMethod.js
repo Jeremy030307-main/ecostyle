@@ -9,9 +9,19 @@ export const getClientPaymentMethod = () => {
     return ApiMethods.get(PAYMENT_ENDPOINTS.PAYMENT_METHOD);
 }
 
-export const createPaymentIntent = (total) => {
+export const createPaymentIntent = (total, paymentMethodID = null, shipping = null) => {
     total *= 100
-    return ApiMethods.post(PAYMENT_ENDPOINTS.PAYMENT_INTENT, {total})
+
+    const body = {
+        total
+    }
+
+    if (paymentMethodID && shipping){
+        body.paymentMethodID = paymentMethodID
+        body.shipping = shipping
+    }
+    
+    return ApiMethods.post(PAYMENT_ENDPOINTS.PAYMENT_INTENT, body)
 }
 
 export const deleteClientPaymentMethod = (paymentIDMethod) => {

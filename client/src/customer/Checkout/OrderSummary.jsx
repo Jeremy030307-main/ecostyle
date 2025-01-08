@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Checkout.css"
-import { checkoutCart, useUserCart } from "../../apiManager/methods/cartMethods";
-import { useProduct } from "../../apiManager/methods/productMethods";
+import { CheckoutContext } from "./CheckoutWrapper";
+import { useElements, useStripe } from "@stripe/react-stripe-js";
+import { createPaymentIntent } from "../../apiManager/methods/paymentMethod";
 
 // OrderSummaryLine component: Accepts productID and quantity as props
 const OrderSummaryLine = ({productData, quantity}) => {
@@ -58,13 +59,89 @@ const OrderSummaryTotal = ({subtotal, shippingFee}) => {
   )
 }
 
-const OrderSummary = ({userCart, total, isLoading, stripe, elements, message}) => {
+const OrderSummary = ({address, card}) => {
 
-  console.log(userCart)
+  const {userCart, total} = useContext(CheckoutContext)
+  const [message, setMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const stripe = useStripe();
+  const elements = useElements();
+
   // Check if userCart is null or undefined before rendering
   if (userCart === null || userCart === undefined) { 
     return <p>Loading...</p>; // Render loading state while the cart is fetching
   }
+
+  const handleSubmit = async () => {
+    if (!stripe || !elements) {
+      console.error("Stripe or Elements not properly initialized.");
+      return;
+    }
+  
+    // Prepare the shipping address data
+    const addressData = {
+      name: address.name,
+      address: {
+        line1: address.line1,
+        line2: address.line2 || null,
+        city: address.city,
+        state: address.state,
+        postal_code: address.postalCode,
+        country: address.country,
+      },
+      phone: address.phone || null,
+    };
+  
+    setIsLoading(true);
+  
+    try {
+      let clientSecret;
+  
+      if (card) {
+        // Use the saved payment method
+        try {
+          const response = await createPaymentIntent(total, card.id, addressData);
+          clientSecret = response.clientSecret;
+          const successUrl = new URL("http://localhost:3000/checkout/complete");
+          successUrl.searchParams.append("payment_intent_client_secret", clientSecret);
+          window.location.href = successUrl.toString();
+        } catch (error) {
+          console.error("Error creating PaymentIntent:", error.message);
+          setMessage("Error creating PaymentIntent: " + error.message);
+          setIsLoading(false);
+          return;
+        }
+      } else {
+        // Use the payment element (UI embedded flow)
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: "http://localhost:3000/checkout/complete",
+            shipping: addressData,
+          },
+        });
+  
+        if (error) {
+          console.error("Payment confirmation error:", error.message);
+          setMessage(error.message);
+          setIsLoading(false);
+          return;
+        } else {
+          // Stripe will handle the redirection automatically
+          console.log("Payment successful with PaymentElement!");
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Unexpected error in handleSubmit:", error.message);
+      setMessage("Unexpected error: " + error.message);
+    }
+  
+    setIsLoading(false);
+  };
+  
+  
 
   return (
     <div className="order-summary">
@@ -90,7 +167,7 @@ const OrderSummary = ({userCart, total, isLoading, stripe, elements, message}) =
         subtotal = {total}
         shippingFee={0}/>
 
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button className='checkout-place-order-btn' disabled={isLoading || !stripe || !elements || !address } id="submit" onClick={() => handleSubmit()}>
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
