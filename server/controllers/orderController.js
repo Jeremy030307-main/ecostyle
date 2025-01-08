@@ -72,53 +72,28 @@ export const createOrder = async (req, res) => {
 
 };
 
-export const getUserOrder = (req, res) => {
+export const getUserOrder = async (req, res) => {
     const userId = req.user;
   
-    // Set up SSE headers
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Content-Encoding', "none");
-    res.flushHeaders(); // Flush headers to establish SSE connection
-  
     try {
-        const userOrderRef = db.collection(COLLECTIONS.ORDER).where("customerID","==", userId) 
+      // Query Firestore to get orders for the given user
+      const userOrderRef = db.collection(COLLECTIONS.ORDER).where("customerID", "==", userId);
+      const snapshot = await userOrderRef.get();
   
-        // Set up a Firestore snapshot listener for real-time updates
-        const unsubscribe = userOrderRef.onSnapshot(
-        async (snapshot) => {
-            const cart = await Promise.all(
-            snapshot.docs.map(async (doc) => {
-                const orderData = {
-                id: doc.id, // Include document ID for reference
-                ...doc.data(),
-                };
-      
-                return orderData;
-            })
-            );
-    
-            // Send the updated cart data to the client
-            res.write(`data: ${JSON.stringify(cart)}\n\n`);
-        },
-        (error) => {
-            console.error("Error listening to user cart changes:", error);
-            res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
-        }
-        );
+      // Map the documents to extract order data
+      const cart = snapshot.docs.map(doc => ({
+        id: doc.id, // Include document ID for reference
+        ...doc.data(),
+      }));
   
-      // Handle connection close and clean up the listener
-      req.on('close', () => {
-        unsubscribe(); // Stop listening for changes
-        res.end();
-      });
+      // Send the cart data back to the client
+      res.status(200).json(cart);
     } catch (error) {
-      console.error("Error setting up cart listener:", error);
-      res.status(500).json({ error: 'Failed to retrieve cart' });
+      console.error("Error retrieving user orders:", error);
+      res.status(500).json({ error: 'Failed to retrieve orders' });
     }
   };
+  
 
 export const getAllOrder = (req, res) => {
     

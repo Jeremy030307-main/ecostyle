@@ -11,7 +11,7 @@ async function createStripeCustomer(uid) {
     const userDocRef = db.collection(COLLECTIONS.USER).doc(uid);
     const userDoc = await userDocRef.get();
 
-    if (!userDoc.exists) {
+    if (!userDoc.exists) { 
       throw new Error('User document does not exist.');
     }
 
