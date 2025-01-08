@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { assets } from "../../Components/Assets/assets";
 import { currency } from "../../admin";
 import "./Products.css";
@@ -17,8 +17,6 @@ const Products = () => {
     setSelectedProduct(product);
     setIsModalOpen(true);
   };
-
-  const navigate = useNavigate();
 
   // Handle product deletion
   const handleDelete = async (productId) => {

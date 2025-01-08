@@ -24,6 +24,7 @@ import NotFound from './customer/Pages/NotFound';
 
 import AddProducts from './admin/Pages/products/AddProducts';
 import Products from './admin/Pages/products/Products';
+import EditProduct from './admin/Pages/products/EditProduct';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
@@ -105,6 +106,7 @@ function App() {
               <Route path='' element={<Admin/>}>
                 <Route path='add' element={<AddProducts/>}></Route>
                 <Route path='products' element={<Products/>}></Route>
+                <Route path='products/:id/edit' element={<EditProduct/>}/>
                 <Route path='orders' element={<Orders/>}></Route>
                 <Route path='collections' element={<Collections/>}></Route>
                 <Route path='addCollections' element={<AddCollections/>}></Route>
