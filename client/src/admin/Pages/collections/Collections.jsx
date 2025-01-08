@@ -28,7 +28,7 @@ const Collections = () => {
 
   // Handle product deletion
   const handleConfirmDelete = async (collectionId) => {
-    if (isAlertOpen == true) {
+    if (isAlertOpen === true) {
       try {
         await deleteCollection(collectionId); // Call deleteProduct API
         setCollections((prevList) =>

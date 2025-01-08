@@ -24,6 +24,7 @@ import NotFound from './customer/Pages/NotFound';
 
 import AddProducts from './admin/Pages/products/AddProducts';
 import Products from './admin/Pages/products/Products';
+import EditProduct from './admin/Pages/products/EditProduct';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
