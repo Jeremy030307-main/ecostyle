@@ -3,7 +3,7 @@ import { ReactComponent as MasterCardLogo } from "../Components/Assets/mc_symbol
 import { ReactComponent as VisaLogo } from "../Components/Assets/Visa_2021.svg";  // Correct path and import statement
 import "./Account.css"
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteAddress, editAddress, useUserAddress } from '../../apiManager/methods/addressMethods';
+import { deleteAddress, getUserAddress } from '../../apiManager/methods/addressMethods';
 
 const AddressCard = ({addressData, onEdit, onDelete}) => {
 
@@ -32,16 +32,26 @@ const AddressCard = ({addressData, onEdit, onDelete}) => {
 
 const AccountAddressbook = () => {
 
-  const addressData = useUserAddress();
+  const [addressData, setAddressData] = useState([])
   const navigate = useNavigate();
 
+  const fetchUserAddres = async () => {
+    try{
+      const data = await getUserAddress();
+      setAddressData(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
-    console.log(addressData)
-  }, [addressData])
+    fetchUserAddres()
+  }, [])
 
   const handleDelete = async (addressName) => {
     try {
       await deleteAddress(addressName);
+      await fetchUserAddres();
       console.log("success")
 
     } catch (error ){
@@ -50,6 +60,7 @@ const AccountAddressbook = () => {
   }
 
   const handleEdit = async (address) => {
+    console.log("Moving")
     navigate('address-management/edit', {state: {address}})
   }
   
@@ -74,7 +85,7 @@ const AccountAddressbook = () => {
               /> 
             ))
           ) : (
-            <p>No address available.</p> // Show a message if no payment methods exist
+            <p>No address methods available.</p> // Show a message if no payment methods exist
           )}
         </div>
     </div>

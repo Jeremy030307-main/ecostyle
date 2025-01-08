@@ -75,15 +75,19 @@ export const updateUser = async (req, res) => {
 
 // create new user by its id
 export const newUser = async (req, res, next) => {
+  console.log("Try to create user")
+
   try {
     // Get the user id from the authenticated user
     const id = req.user;
 
     // Create a new document under the 'users' collection with no fields
     const userRef = db.collection(COLLECTIONS.USER).doc(id);
+    console.log("Creting ...")
     await userRef.set({}); // Set an empty document
+    console.log("User Doc Created. ")
 
-    res.status(200).send("User Sign Up successful, empty document created with subcollections");
+    res.status(200).send(message("User Sign Up successful, empty document created with subcollections"));
   } catch (error) {
     console.error(error);
     res.status(400).send(error.message);

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { createNewReview } from '../../../apiManager/methods/reviewMethods';
 import './ReviewModal.css';  // We'll create this CSS file next
 
 const ReviewModal = ({ isOpen, onClose, productID, onSubmitSuccess }) => {
@@ -40,8 +39,8 @@ const ReviewModal = ({ isOpen, onClose, productID, onSubmitSuccess }) => {
     setError('');
 
     try {
-      await createNewReview(productID, rating, comment);
-      onSubmitSuccess?.();
+      // await createNewReview(productID, rating, comment);
+      await onSubmitSuccess?.(productID, rating, comment);
       onClose();
       setRating(0);
       setComment('');

@@ -14,8 +14,8 @@ import useSEE from "../useSEE";
  * const userAddress = useUserAddress();
  * console.log(userAddress); // Logs the current user's address data in real-time
  */
-export const useUserAddress = () => {
-    return useSEE(ADDRESS_ENDPOINTS.ADDRESS_ROUTE())
+export const getUserAddress = () => {
+    return ApiMethods.get(ADDRESS_ENDPOINTS.ADDRESS_ROUTE());
 }
 
 /**
@@ -77,6 +77,7 @@ export const addNewAddress = (addressName, name, line1, line2, city, state, post
  */
 export const editAddress = (addressID, addressName, name, line1, line2, city, state, postalCode, country, phone) => {
     // Create an object with the required fields first
+    console.log("Editting")
     const data = {
         addressName,
         name,

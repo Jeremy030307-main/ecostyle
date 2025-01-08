@@ -16,8 +16,8 @@ import useSEE from "../useSEE";
  *   // handle cart data
  * }
  */
-export const useUserCart = () => {
-    return useSEE(CART_ENDPOINTS.CART_ROUTE());
+export const getUserCart = () => {
+    return ApiMethods.get(CART_ENDPOINTS.CART_ROUTE())
 };
 
 export const checkoutCart = () => {
