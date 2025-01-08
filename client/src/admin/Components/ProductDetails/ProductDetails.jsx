@@ -55,7 +55,7 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
                 <strong>Collection:</strong> {collection}
               </p>
               <p>
-                <strong>Rating:</strong> {rating.toFixed(1)} ({reviewCount}{" "}
+                <strong>Rating:</strong> {rating ? rating.toFixed(1) : "0.0"} ({reviewCount ? reviewCount : "0"}{" "}
                 reviews)
               </p>
             </div>
