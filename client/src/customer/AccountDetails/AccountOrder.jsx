@@ -2,9 +2,65 @@
 import React, { useEffect, useState } from "react";
 import { getUserOrder } from "../../apiManager/methods/orderMethod";
 import "./Account.css";
+import AccountOrderDetail from "./AccountOrderDetail";
+import { useNavigate } from "react-router-dom";
+
+const AccountOrderCard = ({ order, index }) => {
+  const getSubtotal = (product) => {
+    return product.price * product.quantity;
+  };
+
+  return (
+    <div className="account-order-items" id={index}>
+      <div
+        className="account-order-card-header"
+        style={{ display: "flex", gap: "10px", marginBottom: "10px" }}
+      >
+        <strong>
+          <span className="account-order-label">Order ID: </span>
+        </strong>
+        <strong>
+          <span className="account-order-value">{order.id}</span>
+        </strong>
+      </div>
+
+      {/* Display only the first product */}
+      {order.products.slice(0, 1).map((product, productIndex) => (
+        <div key={productIndex} className="account-order-item">
+          <div className="account-order-item-image">
+            <img src={product.image} alt={product.name} />
+          </div>
+          <div className="account-order-item-details">
+            <h3>{product.name}</h3>
+            <span className="account-order-price">${product.price}</span>
+            <div className="account-order-item-meta">
+              <span>Size: {product.size}</span>
+              <span>Variant: {product.variant}</span>
+              <span>Product ID: {product.product}</span>
+            </div>
+          </div>
+          <div className="account-order-item-quantity">x {product.quantity}</div>
+          <div className="account-order-item-subtotal">
+            <span>Subtotal: ${getSubtotal(product)}</span>
+          </div>
+        </div>
+      ))}
+
+      {/* Display "X more items" if there are additional products */}
+      {order.products.length > 1 && (
+        <div className="account-order-more-items">
+          <span>{order.products.length - 1} more items</span>
+        </div>
+      )}
+
+      <div className="account-order-total">Total: ${order.total}</div>
+    </div>
+  );
+};
 
 const AccountOrder = () => {
   const [orderData, setOrderData] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchUserOrder = async () => {
@@ -24,87 +80,25 @@ const AccountOrder = () => {
     return <p>Loading...</p>;
   }
 
-  // Calculate subtotal for each product
-  const getSubtotal = (product) => {
-    return product.price * product.quantity;
-  };
-
   return (
-    <div className="account-order-container">
+    <div className='payment-option-container'>
+
+      <div className='payment-option-header'>
+        < h1>My Orders</h1>
+        
+      </div>
+
+      <div className="account-order-container">
       {orderData.map((order, index) => (
-        <div key={index} className="account-order-wrapper">
-          {/* Order Header */}
-          <div className="account-order-header">
-            <div className="account-order-detail">
-              <strong>
-                <span className="account-order-label">Order ID</span>
-              </strong>
-              <strong>
-                <span className="account-order-value">{order.id}</span>
-              </strong>
-            </div>
-            <div className="account-order-detail">
-              <strong>
-                <span className="account-order-label">Paid by</span>
-              </strong>
-              <span className="account-order-value">
-                {order.paymentDetails.paymentMethod.join(", ")}
-              </span>
-            </div>
-            <div className="account-order-detail">
-              <span className="account-order-label">Customer ID</span>
-              <span className="account-order-value">{order.customerID}</span>
-            </div>
-          </div>
-
-          {/* Order Items */}
-          <div className="account-order-items">
-            {order.products.map((product, productIndex) => (
-              <div key={productIndex} className="account-order-item">
-                <div className="account-order-item-image">
-                  <img src={product.image} alt={product.name} />
-                </div>
-                <div className="account-order-item-details">
-                  <h3>{product.name}</h3>
-                  <span className="account-order-price">${product.price}</span>
-                  <div className="account-order-item-meta">
-                    <span>Size: {product.size}</span>
-                    <span>Variant: {product.variant}</span>
-                    <span>Product ID: {product.product}</span>
-                  </div>
-                </div>
-                <div className="account-order-item-quantity">
-                  x {product.quantity}
-                </div>
-                <div className="account-order-item-subtotal">
-                  <span>Subtotal: ${getSubtotal(product)}</span>
-                </div>
-              </div>
-            ))}
-            <div className="account-order-total">Total: ${order.total}</div>
-          </div>
-
-          {/* Shipping Information */}
-          <div className="account-order-shipping">
-            <h2>Shipping Information</h2>
-            <div className="account-order-shipping-status">
-              <div className="account-order-status-icon">📦</div>
-              <span className="account-order-status-text">
-                Your parcel has departed from sorting facility
-              </span>
-              <span className="account-order-status-arrow"></span>
-            </div>
-          </div>
-
-          {/* Delivery Information */}
-          <div className="account-order-delivery">
-            <h2>Delivery Information</h2>
-            <div className="account-order-delivery-details">
-              <p className="account-order-address">{order.shippingAddress}</p>
-            </div>
-          </div>
+        <>
+        {/* <AccountOrderDetail order={order} index={index}/> */}
+        <div onClick={() =>navigate(`./${order.id}`, { state: {order} })}>
+          <AccountOrderCard order={order} index={index}/>
         </div>
+        </>
       ))}
+    </div>
+
     </div>
   );
 };

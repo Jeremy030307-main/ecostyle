@@ -53,6 +53,24 @@ async function createSetupIntent(userId) {
   return setupIntent;
 }
 
+export async function getLast$Digit(clientSecret) {
+  try {
+    // Retrieve the PaymentIntent from Stripe
+    const paymentIntent = await stripe.paymentIntents.retrieve(clientSecret);
+
+    // Get the last 4 digits of the card from the payment method details
+    const paymentMethod = await stripe.paymentMethods.retrieve(
+      paymentIntent.payment_method
+    );
+
+    const haha = paymentMethod.card?.last4 || null;
+
+    return haha
+  } catch (error) {
+    console.error(`Error fetching payment details for PaymentIntent ${clientSecret}:`, error);
+  }
+}
+
 async function getClientID(uid) {
   try{
     // Retrieve the user document
