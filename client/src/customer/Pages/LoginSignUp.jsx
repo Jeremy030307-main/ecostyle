@@ -3,66 +3,83 @@ import './LoginSignUp.css';
 import formImage from '../Components/Assets/form-bg.png'
 import logo from '../Components/Assets/logo_image.png'
 import { Navigate } from "react-router-dom";
-import AuthenticationManager from '../../authentication/authenticationManager';
+import { validatePassword } from 'firebase/auth';
+import { useAuth } from '../../authentication/authenticationManager';
 
 const LoginSignUp = () => {
+
+  const {auth, signUp, signIn} = useAuth()
 
   const [isSignUp, setIsSignUp] = useState(false);
   const formRef = useRef(null);
   const [isAuthenticated, setAuthenticated] = useState(null)
+  const [enterfail, setEnterFail] = useState(false)
 
-  useEffect(() => {
-    const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("fdfdfdfdd")
-        if (!user.isAnonymous){
-          console.log("authentication is true")
-          setAuthenticated(true);
-        }
-      } else {
-        setAuthenticated(false);
-      }
-    });
+  const [containsLowerCase, setContainsLowerCase] = useState(false); // Fixed naming
+  const [containsUpperCase, setContainsUpperCase] = useState(false);
+  const [containsNumeric, setContainsNumeric] = useState(false);
+  const [contians6character, setContians6character] = useState(false)
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
+  const validPassword = async (password) => {
+    const status = await validatePassword( auth, password);
 
-  // Toggle between Login and Sign-Up views 
-  const toggleForm = () => {
-    setIsSignUp(!isSignUp);
+    if (!status.isValid) {
+      setContainsLowerCase(status.containsLowercaseLetter);
+      setContainsUpperCase(status.containsUppercaseLetter);
+      setContainsNumeric(status.containsNumericCharacter);
+      setContians6character(status.meetsMinPasswordLength)
+    } else {
+      setContainsLowerCase(true);
+      setContainsUpperCase(true);
+      setContainsNumeric(true);
+      setContians6character(true)
+    }
   };
 
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [fname, setfname] = useState("")
+  const [lname, setlname] = useState("")
+  const [conPass, setConPas] = useState("")
+
+  const [samePassword, setSamePassword] = useState(null)
   const checkPassword = (p1, p2) => {
-    return (p1 === p2);
+    if (p1 && p2 && p1 !== "" && p2 !=="" ){
+      setSamePassword(p1 === p2);
+    } else {
+      setSamePassword(null)
+    }
+  }
+
+  const clearForm = () =>{
+    setEmail("")
+    setPassword("")
+    setfname("")
+    setlname("")
+    setConPas("")
+    checkPassword("", "")
+    validPassword("")
+    setEnterFail(false)
   }
 
   const handleSubmit = async (event) => {
 
     event.preventDefault();
-    const formData = new FormData(event.target);
-
-    if (isSignUp){
-      if (!checkPassword(formData.get('password'), formData.get('confirm-password'))){
-        return false
-      }
-    }
-    const email = formData.get('email');
-    const password = formData.get('password');
 
     try {
       if (isSignUp){
-        const fname = formData.get('fname');
-        const lname = formData.get('lname');
-        await AuthenticationManager.signUp(fname, lname, email, password)
+        if (samePassword && containsLowerCase && containsNumeric && containsUpperCase && contians6character){
+        await signUp(fname, lname, email, password)
+        }
   
       } else {
-        await AuthenticationManager.signIn(email, password)
+        await signIn(email, password)
       }
 
       setAuthenticated(true)
     } catch (error) {
       console.log("Error", error.message)
+      setEnterFail(true)
   }
   };
 
@@ -91,7 +108,7 @@ const LoginSignUp = () => {
             <>
               {/* First Name Field */}
               <div className="form-field">
-                <input type="text" id="fname" name='fname' placeholder="My First Name" required />
+                <input type="text" id="fname" name='fname' placeholder="My First Name" value={fname} onChange={(e) => setfname(e.target.value)} required />
                 <div className='field-label'>
                   <label htmlFor="fname">First Name</label>
                 </div>
@@ -99,7 +116,7 @@ const LoginSignUp = () => {
 
               {/* Last Name Field */}
               <div className="form-field">
-                <input type="text" id="lname" name='lname' placeholder="My Last Name" required />
+                <input type="text" id="lname" name='lname' placeholder="My Last Name" value={lname} onChange={(e) => setlname(e.target.value)} required />
                 <div className='field-label'>
                   <label htmlFor="lname">Last Name</label>
                 </div>
@@ -109,7 +126,7 @@ const LoginSignUp = () => {
 
           {/* Email Field */}
           <div className="form-field">
-            <input type="email" id="email" name='email' placeholder="Enter your email" required />
+            <input type="email" id="email" name='email' placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <div className='field-label'>
               <label htmlFor="email">Email</label>
             </div>
@@ -117,10 +134,35 @@ const LoginSignUp = () => {
 
           {/* Password Field */}
           <div className="form-field">
-            <input type="password" id="password" name='password' placeholder="Enter your password" required />
+            <input type="password" id="password" name='password' placeholder="Enter your password" value={password} onChange={(e) => {validPassword(e.target.value); setPassword(e.target.value); ; checkPassword(e.target.value, conPass)}} required />
             <div className='field-label'>
               <label htmlFor="password">Password</label>
             </div>
+            {isSignUp && (
+            <>
+              <span className={`login-error-message ${contians6character ? 'ok' : 'error'}`}>
+                <i className={`fa-solid ${contians6character ? 'fa-check' : 'fa-xmark'}`}></i>Minimum 6 character
+              </span>
+
+              <span className={`login-error-message ${containsLowerCase ? 'ok' : 'error'}`}>
+                <i className={`fa-solid ${containsLowerCase ? 'fa-check' : 'fa-xmark'}`}></i>Contain Lower Case Character
+              </span>
+
+              <span className={`login-error-message ${containsUpperCase ? 'ok' : 'error'}`}>
+                <i className={`fa-solid ${containsUpperCase ? 'fa-check' : 'fa-xmark'}`}></i>Contain Upper Case Character
+              </span>
+
+              <span className={`login-error-message ${containsNumeric ? 'ok' : 'error'}`}>
+                <i className={`fa-solid ${containsNumeric ? 'fa-check' : 'fa-xmark'}`}></i>Contain Numeric Character
+              </span>
+            </>
+          )}
+
+          {enterfail && (
+            <span className={`login-error-message error`}>
+            Failed to {isSignUp ? "sign up": "sign in"}. Invalid email/ password
+      </span>
+          )}
           </div>
 
           {/* If SignUp is active, show additional fields */}
@@ -128,10 +170,19 @@ const LoginSignUp = () => {
             <>
               {/* Confirm Password Field */}
               <div className="form-field">
-                <input type="password" id="confirm-password" name='confirm-password' placeholder="Confirm your password" required />
-                <div className='field-label'>
+                <input type="password" id="confirm-password" name='confirm-password' placeholder="Confirm your password" value={conPass} onChange={(e) => {setConPas(e.target.value); checkPassword(e.target.value, password)}} required />
+                {/* <span>fjfjffj</span> */}
+                <div className='field-label comfirm-passsord'>
                   <label htmlFor="confirm-password">Confirm Password</label>
                 </div>
+                {samePassword!==null && (
+                    samePassword ? (
+                      <span className='login-error-message ok'><i class="fa-solid fa-check"></i>Password Match</span>
+                  ): 
+                  (
+                      <span className='login-error-message error'><i class="fa-solid fa-xmark"></i>Password Not Match</span>
+                  )
+                    )}
               </div>
             </>
           )}
@@ -145,7 +196,7 @@ const LoginSignUp = () => {
 
         <div className='form-footer'>
           <p>{isSignUp ? 'Already have an account?' : "Don't have an account? "} 
-            <span className='toggleSignIn' onClick={toggleForm}>{isSignUp ? 'Sign In' : 'Sign Up'}</span>
+            <span className='toggleSignIn' onClick={()=> {setIsSignUp(!isSignUp); clearForm()}}>{isSignUp ? 'Sign In' : 'Sign Up'}</span>
           </p>     
         </div>
       </form>

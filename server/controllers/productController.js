@@ -52,7 +52,7 @@ export const checkProduct = async (body) => {
 };
  
 
-const getVariantDetails = async (variantData) => {
+export const getVariantDetails = async (variantData) => {
   try{
 
     if (!variantData){
@@ -83,7 +83,7 @@ const getVariantDetails = async (variantData) => {
   } catch (error) {
     throw new Error(error.message)
   }
-}
+} 
 
 const checkStock = async (stockData) => {
 

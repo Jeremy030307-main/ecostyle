@@ -1,76 +1,56 @@
 import { db } from "../firebase.js";
 import { COLLECTIONS, message } from "./utility.js";
 
-export const getUserCart = (req, res) => {
+export const getUserCart = async (req, res) => {
   const userId = req.user;
-
-  // Set up SSE headers
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', "*");
-  res.setHeader('Content-Encoding', "none");
-  res.flushHeaders(); // Flush headers to establish SSE connection
 
   try {
     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
 
-  // Set up a Firestore snapshot listener for real-time updates
-  const unsubscribe = userCartRef.onSnapshot(
-    async (snapshot) => {
-      const cart = await Promise.all(
-        snapshot.docs.map(async (doc) => {
-          const cartData = {
-            id: doc.id, // Include document ID for reference
-            ...doc.data(),
-          };
-  
-          // Retrieve the product ID from the cart data and fetch the product details
-          const productId = cartData.product; // Assuming 'product' field contains the product ID
-          const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productId);
-  
-          try {
-            const productDoc = await productRef.get();
-            if (productDoc.exists) {
-              const productData = productDoc.data();
-              
-              // Extract only the required fields
-              const selectedVariant = productData.variant.find(
-                (v) => v.color === cartData.variant
-              );
-  
-              cartData.name = productData.name;
-              cartData.price =  productData.price;
-              cartData.image =  selectedVariant ? selectedVariant.image : null;
-            } else {
-              console.warn(`Product with ID ${productId} not found`);
-              cartData.productDetails = null;
-            }
-          } catch (productError) {
-            console.error(`Error fetching product data for productId ${productId}:`, productError);
+    // Fetch the user's cart data from Firestore
+    const snapshot = await userCartRef.get();
+
+    const cart = await Promise.all(
+      snapshot.docs.map(async (doc) => {
+        const cartData = {
+          id: doc.id, // Include document ID for reference
+          ...doc.data(),
+        };
+
+        // Retrieve the product ID from the cart data and fetch the product details
+        const productId = cartData.product; // Assuming 'product' field contains the product ID
+        const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productId);
+
+        try {
+          const productDoc = await productRef.get();
+          if (productDoc.exists) {
+            const productData = productDoc.data();
+
+            // Extract only the required fields
+            const selectedVariant = productData.variant.find(
+              (v) => v.color === cartData.variant
+            );
+
+            cartData.name = productData.name;
+            cartData.price = productData.price;
+            cartData.image = selectedVariant ? selectedVariant.image : null;
+          } else {
+            console.warn(`Product with ID ${productId} not found`);
             cartData.productDetails = null;
           }
-  
-          return cartData;
-        })
-      );
+        } catch (productError) {
+          console.error(`Error fetching product data for productId ${productId}:`, productError);
+          cartData.productDetails = null;
+        }
 
-      // Send the updated cart data to the client
-      res.write(`data: ${JSON.stringify(cart)}\n\n`);
-    },
-    (error) => {
-      console.error("Error listening to user cart changes:", error);
-      res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
-    }
-  );
+        return cartData;
+      })
+    );
 
-    // Handle connection close and clean up the listener
-    req.on('close', () => {
-      unsubscribe(); // Stop listening for changes
-      res.end();
-    });
+    // Send the cart data as a JSON response
+    res.status(200).json(cart);
   } catch (error) {
-    console.error("Error setting up cart listener:", error);
+    console.error("Error retrieving cart data:", error);
     res.status(500).json({ error: 'Failed to retrieve cart' });
   }
 };

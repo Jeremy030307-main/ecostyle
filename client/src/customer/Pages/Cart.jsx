@@ -1,52 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useCart } from '../../CartContext.js';
 import { useNavigate } from 'react-router-dom';
 import './Cart.css';
-import { deleteCartProduct, updateCartProduct, useUserCart } from '../../apiManager/methods/cartMethods.js';
 
 const Cart = () => {
 
-  const cartItems = useUserCart();
-  // const {cartItems} = useCart
+  // const cartItems = useUserCart();
+  const {cartItems, updateItemQuantity, deleteCartItem, subtotal, totalItem} = useCart()
   const navigate = useNavigate();
-
-  const [totalItem, setTotalItem] = useState(0)
-  const [totalAmount, setTotalAmount] = useState(0)
-
-  useEffect(() => {
-    if (cartItems && cartItems.length > 0) {
-      // Calculate total items and total amount
-      const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-      const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
-      setTotalItem(totalQuantity);
-      setTotalAmount(totalPrice);
-    } else {
-      setTotalItem(0);
-      setTotalAmount(0);
-    }
-    console.log(cartItems)
-  }, [cartItems]);
 
   const handleCheckout = () => {
     navigate('/checkout'); // Navigate to the Checkout page
   };
-
-  const updateItemQuantity = async(cartProductID, quantity) => {
-    try {
-      await updateCartProduct(cartProductID, quantity);
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
-
-  const deleteCartItem = async (cartProductID) => {
-    try {
-      await deleteCartProduct(cartProductID);
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 
   return (
     <div className="cart-container">
@@ -110,7 +75,7 @@ const Cart = () => {
             <p>{totalItem} items subtotal</p>
             <div className="cart-order-total">
               <h3>Order Total</h3>
-              <p>${totalAmount}</p>
+              <p>${subtotal}</p>
             </div>
             <button className="checkout-btn" onClick={handleCheckout}>
               Checkout

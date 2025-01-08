@@ -2,48 +2,35 @@ import admin from 'firebase-admin';
 import { db } from "../firebase.js";
 import { COLLECTIONS, message } from './utility.js'; 
 
-export const getUserAddress = (req, res, next) => {
+export const getUserAddress = async (req, res, next) => {
   try {
     const userID = req.user;
 
-    // Set up SSE headers
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Content-Encoding', "none");
-    res.flushHeaders(); // Flush headers to establish SSE connection
-
     // Firestore reference to the user's address collection
     const addressRef = db.collection(COLLECTIONS.USER).doc(userID).collection(COLLECTIONS.ADDRESS);
-    
-    // Listen to real-time updates on the address collection
-    const unsubscribe = addressRef.onSnapshot((addressSnapshot) => {
-      if (addressSnapshot.empty) {
-        // If there are no addresses, send an empty array
-        res.write(`data: ${JSON.stringify([])}\n\n`);
-        return;
-      }
 
-      // Extract addresses from the snapshot
-      const addresses = addressSnapshot.docs.map((doc) => ({
-        id: doc.id,  // Include the document ID in case the client needs it
-        ...doc.data(), // Address data
-      }));
+    // Fetch the addresses once
+    const addressSnapshot = await addressRef.get();
 
-      // Send the addresses as an SSE message
-      res.write(`data: ${JSON.stringify(addresses)}\n\n`);
-    });
+    if (addressSnapshot.empty) {
+      // If there are no addresses, send an empty array
+      return res.status(200).json([]);
+    }
 
-    // Clean up when the connection is closed
-    req.on('close', () => {
-      unsubscribe();  // Unsubscribe from the Firestore snapshot listener
-      res.end();       // End the response when the client disconnects
-    });
+    // Extract addresses from the snapshot
+    const addresses = addressSnapshot.docs.map((doc) => ({
+      id: doc.id,  // Include the document ID in case the client needs it
+      ...doc.data(), // Address data
+    }));
+
+    // Return the addresses as a JSON response
+    res.status(200).json(addresses);
   } catch (error) {
-    res.status(400).send(message(error.message));
+    // Handle errors and send an appropriate response
+    res.status(400).json({ error: error.message });
   }
 };
+
   
   // let user to add an address
   export const addNewAddress = async (req, res, next) => {

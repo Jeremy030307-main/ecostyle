@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 import { db } from "../firebase.js";
-import { COLLECTIONS } from './utility.js';
+import { COLLECTIONS, message } from './utility.js';
 
 // set user cookie
 export const setCookie = async (req, res) => {
@@ -27,15 +27,17 @@ export const setCookie = async (req, res) => {
 // get the display name of a user
 export const getUser = async (req, res, next) => {
   try {
-    const id = req.params.id;
+    const uid = req.user;
 
     // Fetch the user information from Firebase Authentication
-    const userRecord = await admin.auth().getUser(id); // `id` is the Firebase UID
+    const userRecord = await admin.auth().getUser(uid); // `id` is the Firebase UID
     
     // If user exists, return the user details
     const userData = {
       id: userRecord.uid, // UID (the Firebase Authentication user ID)
       displayName: userRecord.displayName, // Display Name
+      email: userRecord.email,
+      phone: userRecord.phoneNumber || null
     };
     
     res.status(200).send(userData); // Send the user data as the response
@@ -45,17 +47,47 @@ export const getUser = async (req, res, next) => {
   }
 };
 
+export const updateUser = async (req, res) => {
+  const uid = req.user;
+  const { name, phone } = req.body;
+
+  try {
+    // Construct update object dynamically
+    const updateData = {};
+    if (phone){
+      updateData.phoneNumber = phone;
+    } else {
+      updateData.phoneNumber = null
+    }
+    if (name) updateData.displayName = name;
+
+    // Update the user only if there are fields to update
+    if (Object.keys(updateData).length > 0) {
+      const userRecord = await admin.auth().updateUser(uid, updateData);
+      res.status(200).send({ message: "User updated successfully", user: userRecord });
+    } else {
+      res.status(400).send({ message: "No valid fields to update" });
+    }
+  } catch (error) {
+    res.status(400).send({ message: error.message });
+  }
+};
+
 // create new user by its id
 export const newUser = async (req, res, next) => {
+  console.log("Try to create user")
+
   try {
     // Get the user id from the authenticated user
     const id = req.user;
 
     // Create a new document under the 'users' collection with no fields
     const userRef = db.collection(COLLECTIONS.USER).doc(id);
+    console.log("Creting ...")
     await userRef.set({}); // Set an empty document
+    console.log("User Doc Created. ")
 
-    res.status(200).send("User Sign Up successful, empty document created with subcollections");
+    res.status(200).send(message("User Sign Up successful, empty document created with subcollections"));
   } catch (error) {
     console.error(error);
     res.status(400).send(error.message);
