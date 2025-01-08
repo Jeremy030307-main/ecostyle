@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import "./Checkout.css"
-import { useLocation, useNavigate } from 'react-router-dom'; // Import useLocation from react-router-dom
-import { useUserAddress } from '../../apiManager/methods/addressMethods';
 import { AddressElement, useElements,PaymentElement, useStripe, } from '@stripe/react-stripe-js';
 import { getClientPaymentMethod } from '../../apiManager/methods/paymentMethod';
 import { ReactComponent as MasterCardLogo } from "../Components/Assets/mc_symbol.svg";  // If using ReactComponent export
 import { ReactComponent as VisaLogo } from "../Components/Assets/Visa_2021.svg";  // Correct path and import statement
+import { getUserAddress } from '../../apiManager/methods/addressMethods';
 
 
 const AddressCard = ({addressData, bgColor}) => {
@@ -298,7 +297,20 @@ const CheckoutForm = () => {
   const [onAddress, setOnAddress] = useState(true)
   const [onPayment, setOnPayment] = useState(false)
 
-  const addressData = useUserAddress();
+  const [addressData, setAddressData] = useState([])
+  useEffect(() => {
+      const fetchUserAddres = async () => {
+        try{
+          const data = await getUserAddress();
+          setAddressData(data)
+        } catch (error) {
+          console.log(error)
+        }
+      }
+  
+      fetchUserAddres()
+    }, [])
+
   const [cardsData, setCardsData] = useState([])
 
   const [savedAddress, setSavedAddress] = useState(true)

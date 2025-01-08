@@ -10,7 +10,8 @@ export const COLLECTIONS = {
     REVIEW: "review",
     CART: "cart",
     ADDRESS: "address",
-    ORDER: "order"
+    ORDER: "order",
+    WISHLIST: "wishlist"
 };
   
  

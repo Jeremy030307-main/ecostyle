@@ -312,6 +312,7 @@
 /* Color Swatches */
 .shop-color-swatches {
   display: flex;
+  position: absolute;
   gap: 5px;
   margin: 10px 0;
   justify-content: start; /* Align swatches horizontally */
@@ -388,6 +389,7 @@
   justify-content: center; /* Centers the image horizontally */
   align-items: center; /* Centers the image vertically */
   height: 282px;
+  position: relative;
 }
 
 .product-card-image-container img {
@@ -405,6 +407,9 @@
 }
 
 .shop-productCard{
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
   text-align: center;
   width: 280px; /* Example width, adjust as needed */
   height: 470px; /* Example height, adjust as needed */
@@ -412,6 +417,10 @@
   /* display: flex; */
   flex-direction: column;
   justify-content: space-between;
+}
+
+.shop-productCard:hover {
+  transform: scale(1.03); /* Optional hover effect for card */
 }
 
 .product-card-info-container{
@@ -427,6 +436,25 @@
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
-  
 }
 
+.product-card-top-right-button {
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+  color: #17A375;
+  border: none;
+  padding: 6px 12px;
+  scale: 1.2;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: none; /* Default hidden */
+  z-index: 10;
+  background: none;
+}
+
+.shop-productCard:hover .product-card-top-right-button {
+  display: block; /* Show button on hover */
+}

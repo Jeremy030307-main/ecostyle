@@ -6,7 +6,7 @@ import {
   useProduct,
 } from "../../apiManager/methods/productMethods";
 import { getCategory } from "../../apiManager/methods/categoryMethods";
-import {SmallRatingStar} from "./RatingStart";
+import ProductCard from "../Components/ProductCard";
 
 
 // Recursive component to render categories and subcategories
@@ -105,58 +105,6 @@ const Dropdown = ({ title, children }) => {
     </div>
   );
 };
-
-const ProductCard = ({productData}) => {
-
-  const [selectImage, setSelectImage] = useState(productData.thumbnail)
-  const navigate = useNavigate()
-  
-  return (
-    <div className="shop-productCard" onClick={() => navigate(`/product/${productData.id}`)}>
-      <div className="product-card-image-container">
-        <img
-          src={selectImage || "/placeholder.png"}
-          alt={productData.name}
-          className="shop-product-image"
-        />
-      </div>
-
-    <div className="product-card-info-container">
-
-      <div className="shop-color-swatches">
-        {productData.variant.map((variant) => (
-          <div
-            key={variant.id}
-            className="shop-color-swatch"
-            style={{ backgroundColor: variant.colorCode }}
-            title={variant.name}
-            onClick={(e) => {
-              setSelectImage(variant.image)
-            }}
-          />
-        ))}
-      </div>
-
-      <h4>{productData.name}</h4>
-
-      <p>RM {productData.price}</p>
-
-      <div className="product-card-review-container">
-      {productData.reviewCount && productData.reviewCount>0 ? (
-        <>
-          <SmallRatingStar rating={productData.rating}/>
-          <p>({productData.reviewCount})</p>
-        </>
-        
-      ): (
-        <p>This product has no reviews.</p>
-      )}
-      </div>
-    </div>
-    </div>
-
-  )
-}
 
 const Shop = () => {
   const location = useLocation();

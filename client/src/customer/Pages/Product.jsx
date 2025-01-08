@@ -4,31 +4,36 @@ import { useCart } from "../../CartContext"; // Import the Cart Context
 import { useWishlist } from "../../WishlistContext"; // Import Wishlist Context
 import "./Product.css"; // CSS file for styling
 import {
+  createNewReview,
   getProductReview,
 } from "../../apiManager/methods/reviewMethods";
 import { useProduct } from "../../apiManager/methods/productMethods";
-import { addCartProduct } from "../../apiManager/methods/cartMethods";
 import { RatingStar, SmallRatingStar } from "./RatingStart";
 import ReviewModal from "../Components/Review Modal/ReviewModal";
 
 const ReviewCard = ({ review }) => {
   return (
-    <div className="product-review-card" id={review.id}>
-      <div className="product-review-user-circle">
-        <h3>{
-          review.user ? (review.user[0]) : (<></>)
-        }</h3>
-      </div>
-
-      <div className="product-review-card-main-content">
-        <div className="product-review-user-rating-container">
-          <p>{review.user}</p>
-          <SmallRatingStar rating={review.rating} />
+    <>
+      <div className="product-review-card" id={review.id}>
+        <div className="product-review-user-circle">
+          <h3>{
+            review.user ? (review.user[0]) : (<></>)
+          }</h3>
         </div>
 
-        <p>{review.comment}</p>
+        <div className="product-review-card-main-content">
+          <div className="product-review-user-rating-container">
+            <p>{review.user}</p>
+            <SmallRatingStar rating={review.rating} />
+          </div>
+
+          <p>{review.comment}</p>
+        </div>
+
       </div>
-    </div>
+
+      <hr style={{opacity:"0.5"}}/>
+    </>
   );
 };
 
@@ -56,44 +61,30 @@ const Product = () => {
   }, [product]);
 
   const [reviews, setReview] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleReviewSubmitted =async () =>{
+  const fetchReview = async () => {
     try {
       const data = await getProductReview(productID);
       console.log(data);
       setReview(data);
-      window.location.reload();
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
-  useEffect(() => {
-    const fetchReview = async () => {
-      try {
-        const data = await getProductReview(productID);
-        console.log(data);
-        setReview(data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
-    fetchReview();
-  }, [productID]);
-
-  if (!product) {
-    return <p>Product not found!</p>;
-  }
-
-  const handleAddToCart = async () => {
-    try {
-      await addCartProduct(productID, selectedVariant, selectedSize, 1);
     } catch (error) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchReview();
+  }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const handleReviewSubmitted =async (productID, rating, comment) =>{
+    await createNewReview(productID, rating, comment);
+    await fetchReview()
+  }
+
+  if (!product) {
+    return <p>Product not found!</p>;
+  }
 
   return (
     <div className="product-page-container">

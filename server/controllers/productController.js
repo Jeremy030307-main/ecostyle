@@ -52,7 +52,7 @@ export const checkProduct = async (body) => {
 };
  
 
-const getVariantDetails = async (variantData) => {
+export const getVariantDetails = async (variantData) => {
   try{
 
     if (!variantData){

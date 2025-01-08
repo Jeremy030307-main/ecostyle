@@ -10,6 +10,7 @@ import cartRouter from './cartRoute.js';
 import addressRouter from './addressRoute.js';
 import paymentRoute from './paymentRoute.js';
 import {orderRouter} from './orderRoute.js';
+import wishlistRouter from './wishlistRoute.js';
 
 const publicRouter = express.Router()
 
@@ -23,5 +24,6 @@ publicRouter.use("/cart", userInfo, cartRouter);
 publicRouter.use("/address", authenticate, addressRouter);
 publicRouter.use("/payment", authenticate, paymentRoute);
 publicRouter.use("/order",authenticate, orderRouter)
+publicRouter.use("/wishlist", userInfo, wishlistRouter)
 
 export default publicRouter;

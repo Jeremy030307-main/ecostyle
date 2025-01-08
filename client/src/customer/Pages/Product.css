@@ -134,6 +134,8 @@
   display: flex;
   justify-content: left;
   gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 30px;
 }
 
 .product-review-user-circle {
