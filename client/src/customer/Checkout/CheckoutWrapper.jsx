@@ -4,6 +4,7 @@ import { createPaymentIntent } from "../../apiManager/methods/paymentMethod";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Outlet } from "react-router-dom";
+import CheckoutHeader from "./CheckoutHeader";
 
 const stripePromise = loadStripe('pk_test_51PnWiiGrBUkxkf9EfMve8DW3an5XYGU1KGENbAdVsfeJHDmVz7ARJmwOQ40uRe0qqkiak6MxzxXhC40hcnaKL9zG00CQSMphuS');
 
@@ -15,6 +16,7 @@ const CheckoutWrapper = () => {
     const [clientSecret, setClientSecret] = useState("");
     const [message, setMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [total, setTotal] = useState(0)
   
     useEffect(() => {
       const fetchCart = async () => {
@@ -23,14 +25,20 @@ const CheckoutWrapper = () => {
       };
       fetchCart();
     }, []);
-  
-    const total = userCart.reduce((accumulatedTotal, cartLine) => {
-      return accumulatedTotal + (cartLine.price * cartLine.quantity);
-    }, 0);
+
+    useEffect(() => {
+      const cartTotal = userCart.reduce((accumulatedTotal, cartLine) => {
+        return accumulatedTotal + (cartLine.price * cartLine.quantity);
+      }, 0);
+
+      setTotal(cartTotal ? cartTotal : 0)
+    }, [userCart])
+
   
     useEffect(() => {
       const fetchClientSecret = async () => {
         try {
+          console.log(total)
           const data = await createPaymentIntent(total);
           setClientSecret(data.clientSecret);
         } catch (error) {
@@ -40,7 +48,11 @@ const CheckoutWrapper = () => {
           setIsLoading(false);
         }
       };
+
+      if (total > 0){
       fetchClientSecret();
+      }
+      
     }, [total]);
   
     const appearance = {
@@ -59,8 +71,15 @@ const CheckoutWrapper = () => {
       <div>
       {clientSecret ? (
         <Elements options={{ clientSecret, appearance }} stripe={stripePromise}>
-          <CheckoutContext.Provider value={{ userCart, clientSecret }}>
-            <Outlet /> 
+          <CheckoutContext.Provider value={{ userCart, total, clientSecret }}>
+            <div className="checkout-container">
+              <div id="payment-form">
+                <CheckoutHeader />
+                <div className="checkout-body">
+                  <Outlet /> 
+                </div>
+              </div>
+            </div>
           </CheckoutContext.Provider>
         </Elements>
       ) : (

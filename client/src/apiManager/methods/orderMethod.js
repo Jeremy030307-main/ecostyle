@@ -9,3 +9,9 @@ export const getUserOrder = () => {
 export const useOrder = () => {
     return useSEE(ORDER_ENDPOINTS.ADMIN_ORDER_ROUTE);
 }
+
+export const createNewOrder = (cartsData, total, shippingAddress, paymentDetails) => {
+    return ApiMethods.post(ORDER_ENDPOINTS.ORDER_ROUTE, {
+        cartsData, total, shippingAddress, paymentDetails
+    } )
+}

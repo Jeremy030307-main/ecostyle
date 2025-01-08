@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./Checkout.css"
-import { AddressElement, useElements,PaymentElement, useStripe, } from '@stripe/react-stripe-js';
+import { AddressElement, useElements,PaymentElement } from '@stripe/react-stripe-js';
 import { getClientPaymentMethod } from '../../apiManager/methods/paymentMethod';
 import { ReactComponent as MasterCardLogo } from "../Components/Assets/mc_symbol.svg";  // If using ReactComponent export
 import { ReactComponent as VisaLogo } from "../Components/Assets/Visa_2021.svg";  // Correct path and import statement
@@ -29,8 +29,7 @@ const AddressCard = ({addressData, bgColor}) => {
   )
 }
 
-const BankCard = ({ bankData, onDelete, bgColor }) => {
-  console.log(bankData);
+const BankCard = ({ bankData, bgColor }) => {
   return (
     <div
       className="bank-card-container"
@@ -57,54 +56,64 @@ const AddressForm = ({addressData, savedAddress, setSavedAddress, address, setAd
   const [selectAddress, setSelectAddress] = useState(false);
 
   useEffect(() => {
-    if (!addressData){
-      console.log(2)
+    if (!addressData || addressData.length <= 0){
+      console.log(1)
       setSavedAddress(false)
+      setAddress(null)
     } else {
+      setSavedAddress(true)
       setAddress(addressData[0])
     }
   }, [addressData, setAddress, setSavedAddress])
 
+  useEffect(() => {
+    if (savedAddress){
+      setAddress(addressData[0])
+    }
+  }, [addressData, savedAddress, setAddress])
+
   const handleSelectAddress = (address) => {
+
     setAddress(address)
     setSelectAddress(false)
   }
 
-  const handleNextStep = async (event) => {
-          event.preventDefault(); // Prevent default form submission
-  
-          const addressElement = elements?.getElement('address');
-          if (!addressElement) {
-              console.error('Address Element not found!');
-              return;
-          }
-  
-          const { complete, value } = await addressElement.getValue();
-  
-          if (complete) {
-  
-              console.log('Address:', value.address);
-              console.log('Phone:', value);
-              
-              try {
-                const addressData = {
-                  name: value.name,   // Correctly include the name
-                  ...value.address,   // Spread the address object
-                  phone: value.phone, // Include the phone number
-                    postalCode: value.address.postal_code
-                };
+  const handleNextStep = async () => {
+      console.log("ffdfd")
 
-                delete addressData.postal_code
-                setAddress(addressData)
-                // toPayment()
+      const addressElement = elements?.getElement('address');
+      if (!addressElement) {
+          console.error('Address Element not found!');
+          return;
+      }
 
-              } catch (error) {
-                  console.log(error.message)
-              }
-          } else {
-              console.error('Address form is incomplete.');
+      const { complete, value } = await addressElement.getValue();
+
+      if (complete) {
+
+          console.log('Address:', value.address);
+          console.log('Phone:', value);
+          
+          try {
+            const addressData = {
+              name: value.name,   // Correctly include the name
+              ...value.address,   // Spread the address object
+              phone: value.phone, // Include the phone number
+              // postalCode: value.address.postal_code
+            };
+
+            delete addressData.postal_code
+            setAddress(addressData)
+            console.log("hahaha")
+            toPayment()
+
+          } catch (error) {
+              console.log(error.message)
           }
-      };
+      } else {
+          console.error('Address form is incomplete.');
+      }
+  };
 
   return (
     <div>
@@ -170,12 +179,12 @@ const AddressForm = ({addressData, savedAddress, setSavedAddress, address, setAd
           ): (
             <></>
           )}
-          <p onClick={()=>toPayment()}>To Payment</p>
+          <p className='checkout-form-shipping-btn' onClick={()=>toPayment()}>To Payment</p>
           
         </div>
 
       ) : (
-        <form onSubmit={handleNextStep}>
+        <>
           <AddressElement
             options={{
                 mode: 'shipping',
@@ -185,8 +194,8 @@ const AddressForm = ({addressData, savedAddress, setSavedAddress, address, setAd
             }}
           />
 
-          <button type="submit">Continue to Shipping Option</button>
-        </form>
+          <p className='checkout-form-shipping-btn' onClick={() => handleNextStep()}>Continue to Shipping Option</p>
+        </>
         
       )}
     </div>
@@ -199,17 +208,23 @@ const CardForm = ({cardsData, savedCard, setSavedCard, card, setCard}) => {
 
   useEffect(() => {
     if (!cardsData || cardsData.length <= 0){
-      console.log(2)
       setSelectCard(false)
+      setSavedCard(false)
     } else {
       setCard(cardsData[0])
     }
-  }, [cardsData, setSelectCard, setCard])
+  }, [cardsData, setSelectCard, setCard, setSavedCard])
 
   const handleCardSelection = (card) => {
     setCard(card)
     setSelectCard(false)
   }
+
+  useEffect(() => {
+    if (savedCard){
+      setCard(cardsData[0])
+    }
+  }, [cardsData, savedCard, setCard])
 
   const paymentElementOptions = {
     layout: "accordion"
@@ -229,7 +244,7 @@ const CardForm = ({cardsData, savedCard, setSavedCard, card, setCard}) => {
           ):(
             <></>
           )}
-          <li onClick={() => { setSavedCard(false); }}> 
+          <li onClick={() => { setSavedCard(false); setCard(null) }}> 
             <p>New Card</p>
             {!savedCard ? <hr/>: <></>}
           </li>
@@ -284,19 +299,30 @@ const CardForm = ({cardsData, savedCard, setSavedCard, card, setCard}) => {
 
       ) : (
         <PaymentElement id="payment-element" options={paymentElementOptions} />
-        
       )}
     </div>
   )
-
 }
 
-const CheckoutForm = () => {
+const CheckoutForm = ({address, setAddress, card, setCard}) => {
 
-
+  // state varialbe to determince weather whcih window user is currently at (filling shipping address ot payment method)
   const [onAddress, setOnAddress] = useState(true)
   const [onPayment, setOnPayment] = useState(false)
+  const toAddress = () => {
+    if (!onAddress && onPayment){
+      setOnAddress(true);
+      setOnPayment(false)
+    }
+  }
+  const toPayment = () => {
+    if (onAddress && !onPayment){
+      setOnAddress(false);
+      setOnPayment(true)
+    }
+  }
 
+  // fetch all the user address book information (if any)
   const [addressData, setAddressData] = useState([])
   useEffect(() => {
       const fetchUserAddres = async () => {
@@ -310,61 +336,25 @@ const CheckoutForm = () => {
   
       fetchUserAddres()
     }, [])
-
-  const [cardsData, setCardsData] = useState([])
-
   const [savedAddress, setSavedAddress] = useState(true)
-  const [address, setAddress] = useState(() => {
-    // Retrieve address from localStorage on initial render
-    const savedAddress = localStorage.getItem('address');
-    return savedAddress ? JSON.parse(savedAddress) : null;
-  });
 
-  const [savedCard, setSavedCard] = useState(true)
-  const [card, setCard] = useState(() => {
-    // Retrieve address from localStorage on initial render
-    const savedCard = localStorage.getItem('card');
-    return savedCard ? JSON.parse(savedCard) : null;
-  });
-
-  const fetchPaymentMethod = async() => {
-    
-    try {
-      const paymentMethods = await getClientPaymentMethod()
-      console.log(paymentMethods.paymentMethods)
-      setCardsData(paymentMethods.paymentMethods)
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  
+  // fetch all the user saved card payment method
+  const [cardsData, setCardsData] = useState([])
   useEffect(() => {
+    const fetchPaymentMethod = async() => {
+    
+      try {
+        const paymentMethods = await getClientPaymentMethod()
+        console.log(paymentMethods.paymentMethods)
+        setCardsData(paymentMethods.paymentMethods)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
     fetchPaymentMethod();
   }, [])
-
-  useEffect(() => {
-    if (address) {
-      localStorage.setItem('address', JSON.stringify(address));
-    }
-  }, [address]);
-
-  const toAddress = () => {
-    if (!onAddress && onPayment){
-      setOnAddress(true);
-      setOnPayment(false)
-    }
-  }
-
-  const toPayment = () => {
-    if (onAddress && !onPayment){
-      setOnAddress(false);
-      setOnPayment(true)
-    }
-  }
-
-  useEffect(() => {
-    console.log(onAddress, onPayment)
-  }, [onAddress, onPayment])
+  const [savedCard, setSavedCard] = useState(true)
 
   return (
 
