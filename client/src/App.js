@@ -105,6 +105,7 @@ function App() {
                 <Route path='' element={<Admin/>}>
                   <Route path='add' element={<AddProducts/>}></Route>
                   <Route path='products' element={<Products/>}></Route>
+                  <Route path='products/:id/edit' element={<EditProduct/>}></Route>
                   <Route path='orders' element={<Orders/>}></Route>
                   <Route path='collections' element={<Collections/>}></Route>
                   <Route path='addCollections' element={<AddCollections/>}></Route>
