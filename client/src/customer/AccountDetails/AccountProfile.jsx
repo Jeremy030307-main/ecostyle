@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { Navigate, useNavigate } from "react-router-dom";
-import AuthenticationManager from '../../authentication/authenticationManager';
+import AuthenticationManager, { useAuth } from '../../authentication/authenticationManager';
 import "./Account.css"
 import { getUser } from '../../apiManager/methods/userMethods';
 
 const AccountProfile = () => {
 
-  const [isAuthenticated,setAuthentication] = useState(true);
+
   const [userData, setUserData] = useState(null)
+  const { isAuthenticated, userSignOut } = useAuth();
   const navigate = useNavigate()
+
 
   useEffect(() => {
     const fetchUserData = async() => {
@@ -20,22 +22,6 @@ const AccountProfile = () => {
 
     fetchUserData()
   }, [])
-
-  const handleLogOut = async () => {
-    await AuthenticationManager.signOut()
-
-    AuthenticationManager.auth.onAuthStateChanged((user) => {
-      if (user) {
-        if (!user.isAnonymous){
-          setAuthentication(true);
-        } else {
-          setAuthentication(false);
-        }
-      } else {
-        setAuthentication(false);
-      }
-    });
-  };
 
   if (isAuthenticated === false) {
     return <Navigate to="/" />; // Redirect to home page
@@ -73,7 +59,7 @@ const AccountProfile = () => {
 
         <div className='account-detail-button-container'>
           <button className='account-detail-button edit' onClick={() => {navigate("./update-profile")}}>Edit</button>
-          <button className='account-detail-button delete' onClick={() => handleLogOut()}>Log Out</button>
+          <button className='account-detail-button delete' onClick={() => userSignOut()}>Log Out</button>
         </div>
         </>
       ): (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { AddressElement, useElements } from '@stripe/react-stripe-js';
 import "./Account.css"
-import { addNewAddress, editAddress, useUserAddress } from '../../apiManager/methods/addressMethods';
+import { addNewAddress, editAddress } from '../../apiManager/methods/addressMethods';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 

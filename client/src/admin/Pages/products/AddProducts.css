@@ -144,15 +144,8 @@ button:hover > svg {
   border: 1px solid #cbd5e0; /* Slate gray border */
 }
 
-/* Bestseller checkbox */
-.bestseller-section {
-  display: flex;
-  gap: 0.5rem; /* gap-2 */
-  margin-top: 0.5rem; /* mt-2 */
-}
-
-.bestseller-section label {
-  cursor: pointer;
+.add-variant-button {
+  padding: 5px;
 }
 
 /* Submit button */
