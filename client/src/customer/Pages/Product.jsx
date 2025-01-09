@@ -42,11 +42,14 @@ const Product = () => {
   const {addItemToCart} = useCart()
   const { productID } = useParams();
   const product = useProduct(productID);
-  const { addItemToWishlist } = useWishlist(); // Access Wishlist functions
+  const {addItemToWishlist,removeItemFromWishlist, preesntInWishlist, wishlistItems} = useWishlist();
+  const [addedToWishlist, setAddedToWishlist] = useState(false);
 
-  const handleAddToWishlist = () => {
-    addItemToWishlist({ ...product, quantity: 1 });
-  };
+  useEffect(() => {
+    if (product){
+        setAddedToWishlist(preesntInWishlist(product.id))
+    }
+}, [preesntInWishlist, product, wishlistItems])
 
   const [selectedVariant, setVariant] = useState(null);
   const [selectedSize, setSize] = useState("S");
@@ -166,8 +169,25 @@ const Product = () => {
 
           {/* Add to Cart and Favorite Buttons */}
           <div className="action-buttons">
-            <button className="fav-btn" onClick={handleAddToWishlist}>
-              <i class="fa-regular fa-heart"></i>
+            <button className="fav-btn" 
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent navigate from triggering
+
+                if (product){
+                  if (addedToWishlist) {
+                    // If the item is already added, remove it from the wishlist
+                    removeItemFromWishlist(product.id);
+                    } else {
+                    // If the item is not added, add it to the wishlist
+                    addItemToWishlist(product.id);
+                    }
+                }
+
+                console.log("Button clicked!"); // Handle button action
+                }}
+                >
+              {addedToWishlist ? (<i class="fa-solid fa-heart"></i>): (<i class="fa-regular fa-heart"></i>)}
+              
             </button>
             <button className="add-to-cart-btn" onClick={() => {addItemToCart(productID, selectedVariant, selectedSize)}}>
               Add to Cart
