@@ -16,12 +16,13 @@ import { FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 
 const teamMembers = [
-  { id: 1, name: "Tom Cruise", role: "Founder & Chairman", image: team1 },
-  { id: 2, name: "Emma Watson", role: "Managing Director", image: team2 },
-  { id: 3, name: "Will Smith", role: "Product Designer", image: team3 },
-  { id: 4, name: "Robert Downey", role: "Marketing Head", image: team4 },
-  { id: 5, name: "Scarlett Johansson", role: "HR Manager", image: team5 },
-  { id: 6, name: "Chris Evans", role: "Sales Lead", image: team6 },
+  { id: 1, name: "Hanshika", role: "RTE", image: team5 },
+  { id: 2, name: "Nallya", role: "RTE", image: team2 },
+  { id: 3, name: "Benjamin Tan En Zhe", role: "Product", image: team3 },
+  { id: 4, name: "Bryan Hii Neng Yuan", role: "Marketing Head", image: team4 },
+  { id: 5, name: "Foo Jia Wei", role: "HR Manager", image: team3 },
+  { id: 6, name: "Benjamin Tan En Zhe", role: "Sales Lead", image: team1 },
+  { id: 7, name: "Shivansh", role: "Sales Lead", image: team6 }
 ];
 
 const About = () => {
