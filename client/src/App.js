@@ -46,6 +46,7 @@ import CheckoutComplete from './customer/Checkout/CheckoutComplete.jsx';
 import AccountProfile from './customer/AccountDetails/AccountProfile.jsx';
 import UpdateProfile from './customer/AccountDetails/UpdateProfile.jsx';
 import { AuthProvider } from './authentication/authenticationManager.js';
+import AccountOrderDetail from './customer/AccountDetails/AccountOrderDetail.jsx';
 
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
@@ -89,6 +90,7 @@ function App() {
                   </Route>
 
                   <Route path='order' element={<AccountOrder/>}></Route>
+                  <Route path='order/:orderID' element={<AccountOrderDetail/>}></Route>
 
                   <Route path='cancellation' element={<Cancellation/>}></Route>
 
@@ -104,6 +106,7 @@ function App() {
                 <Route path='' element={<Admin/>}>
                   <Route path='add' element={<AddProducts/>}></Route>
                   <Route path='products' element={<Products/>}></Route>
+                  {/* <Route path='products/:id/edit' element={<EditProduct/>}></Route> */}
                   <Route path='orders' element={<Orders/>}></Route>
                   <Route path='collections' element={<Collections/>}></Route>
                   <Route path='addCollections' element={<AddCollections/>}></Route>

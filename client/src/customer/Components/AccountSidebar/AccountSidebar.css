@@ -14,7 +14,7 @@
 
 /* Margin between each category */
 .account-sidebar nav ul li {
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 /* Button styles to mimic <a> */
@@ -33,11 +33,15 @@
     font-size: 25px;
 }
 
+.account-sub-options li {
+    border-radius: 2px;
+}
+
 /* Target the buttons inside the sub-options on hover */
-.account-sub-options li button:hover {
-    font-size: 10px; /* Adjust size if needed */
+.account-sub-options li:hover {
     cursor: pointer; /* Ensure pointer cursor */
-    transition: 0.3s, font-size 0.3s; /* Smooth transition */
+    background-color: #2fbd8e9d;
+    transition: 0.3s, background-color 0.3s; /* Smooth transition */
 }
 
 /* Ensure the main content takes up the full height of the page */
@@ -47,3 +51,14 @@
     flex-direction: column; 
     padding: 20px;
   }
+
+.sub-options li {
+    border-radius: 2px;
+}
+
+/* Target the buttons inside the sub-options on hover */
+.sub-options li:hover {
+    cursor: pointer; /* Ensure pointer cursor */
+    background-color: #2fbd8e9d;
+    transition: 0.3s, background-color 0.3s; /* Smooth transition */
+}

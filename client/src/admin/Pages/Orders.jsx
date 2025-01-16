@@ -57,7 +57,37 @@ const Orders = () => {
 
               <p>{order.address.phone}</p> */}
 
-              <p className="order-address">Address: {order.shippingAddress}</p>
+            {order.shippingAddress && (
+                <>
+                <p>
+                    <strong>Name:</strong> {order.shippingAddress.name}
+                </p>
+                <p>
+                    <strong>Phone:</strong> {order.shippingAddress.phone}
+                </p>
+                <p>
+                    <strong>Address:</strong>{" "}
+                    {`${order.shippingAddress.address.line1}, ${
+                    order.shippingAddress.address.line2 || ""
+                    }, ${order.shippingAddress.address.city}, ${
+                    order.shippingAddress.address.state
+                    } ${order.shippingAddress.address.postal_code}, ${
+                    order.shippingAddress.address.country
+                    }`}
+                </p>
+                {order.shippingAddress.carrier && (
+                    <p>
+                    <strong>Carrier:</strong> {order.shippingAddress.carrier}
+                    </p>
+                )}
+                {order.shippingAddress.tracking_number && (
+                    <p>
+                    <strong>Tracking Number:</strong>{" "}
+                    {order.shippingAddress.tracking_number}
+                    </p>
+                )}
+                </>
+            )}
             </div>
             <div className="order-info">
               <p className="sm">Items : {order.products.length}</p>

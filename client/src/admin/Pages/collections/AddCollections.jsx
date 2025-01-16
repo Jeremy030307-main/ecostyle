@@ -141,7 +141,7 @@ const AddCollections = () => {
         ></textarea>
       </div>
 
-      <button type="submit" className="submit-button">
+      <button type="submit" className="add-collection-submit-button">
         Submit
       </button>
     </form>
