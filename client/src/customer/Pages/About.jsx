@@ -16,13 +16,45 @@ import { FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
 
 const teamMembers = [
-  { id: 1, name: "Hanshika", role: "RTE", image: team5 },
-  { id: 2, name: "Nallya", role: "RTE", image: team2 },
-  { id: 3, name: "Benjamin Tan En Zhe", role: "Product", image: team3 },
-  { id: 4, name: "Bryan Hii Neng Yuan", role: "Marketing Head", image: team4 },
-  { id: 5, name: "Foo Jia Wei", role: "HR Manager", image: team3 },
-  { id: 6, name: "Benjamin Tan En Zhe", role: "Sales Lead", image: team1 },
-  { id: 7, name: "Shivansh", role: "Sales Lead", image: team6 }
+  { 
+    id: 1, 
+    name: "Hanshika", 
+    role: "RTE", 
+    image: team5, 
+    twitter: "https://twitter.com", 
+    instagram: "https://instagram.com", 
+    linkedin: "https://linkedin.com" 
+  },
+  { 
+    id: 2, 
+    name: "Nallya", 
+    role: "RTE", 
+    image: team2, 
+    twitter: "https://twitter.com", 
+    instagram: "https://instagram.com", 
+    linkedin: "https://linkedin.com"  
+  },
+  { 
+    id: 3, 
+    name: "Benjamin Tan En Zhe", 
+    role: "Product", 
+    image: team3, 
+    twitter: "https://twitter.com", 
+    instagram: "https://instagram.com", 
+    linkedin: "https://linkedin.com"  
+  },
+  { 
+    id: 4, 
+    name: "Bryan Hii Neng Yuan", 
+    role: "Marketing Head", 
+    image: team4, 
+    twitter: "https://twitter.com", 
+    instagram: "https://instagram.com", 
+    linkedin: "https://linkedin.com"  
+  },
+  { id: 5, name: "Foo Jia Wei", role: "HR Manager", image: team3 , twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com"},
+  { id: 6, name: "Benjamin Tan En Zhe", role: "Sales Lead", image: team1 , twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
+  { id: 7, name: "Shivansh", role: "Sales Lead", image: team6 , twitter: "https://twitter.com/shivansh", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
 ];
 
 const About = () => {
@@ -95,9 +127,21 @@ const About = () => {
               <h4>{member.name}</h4>
               <p>{member.role}</p>
               <div className="team-socials">
-                <a href="#!"><FaTwitter /></a>
-                <a href="#!"><FaInstagram /></a>
-                <a href="#!"><FaLinkedin /></a>
+                {member.twitter && (
+                  <a href={member.twitter} target="_blank" rel="noopener noreferrer">
+                    <FaTwitter />
+                  </a>
+                )}
+                {member.instagram && (
+                  <a href={member.instagram} target="_blank" rel="noopener noreferrer">
+                    <FaInstagram />
+                  </a>
+                )}
+                {member.linkedin && (
+                  <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
+                    <FaLinkedin />
+                  </a>
+                )}
               </div>
             </div>
           ))}
