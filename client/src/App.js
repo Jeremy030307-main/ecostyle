@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { CartProvider } from './CartContext.js'; // Import CartProvider
 import { WishlistProvider } from './WishlistContext'; // Import WishlistProvider
 
+import PrivacyPolicy from "./customer/Pages/PrivacyPolicy";
+import FAQ from "./customer/Pages/faq.jsx";
 import Customer from './customer/customer';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -88,6 +90,10 @@ function MainApp() {
           <Route path='cart' element={<Cart />} /> {/* Cart page */}
           <Route path='product/:productID' element={<Product/>}></Route>
           <Route path='login' element={<LoginSignUp/>}></Route>
+          <Route path='contact' element={<Contact/>}></Route>
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="faq" element={<FAQ />} />
+          
       
           <Route path='account' element={<Account/>}>
 
@@ -118,7 +124,8 @@ function MainApp() {
           <Route index element={<Checkout/>}/>
           <Route path='complete' element={<CheckoutComplete/>}></Route>
         </Route>
-        
+              
+
         <Route path='/admin' element={<AdminRoutes/>}>
           <Route path='' element={<Admin/>}>
             <Route path='add' element={<AddProducts/>}></Route>
@@ -129,7 +136,9 @@ function MainApp() {
             <Route path='addCollections' element={<AddCollections/>}></Route>
           </Route>
         </Route>
-        
+
+        {/* Catch-all route for 404 */}
+        <Route path='*' element={<NotFound />} />
       </Routes>
 
       {/* Conditional Footer */}

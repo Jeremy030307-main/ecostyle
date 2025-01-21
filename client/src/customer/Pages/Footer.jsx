@@ -24,7 +24,7 @@ const Footer = () => {
         <div>
           <h4>Quick Links</h4>
           <p><a href="/privacy-policy" className="footer-link">Privacy Policy</a></p>
-          <p><a href="/terms-of-use" className="footer-link">Terms of Use</a></p>
+          <p><a href="https://docs.google.com/document/d/1JHABGkJ12Ybw4hDYA93x-BB_MNTgrrh4/edit?usp=share_link&ouid=104363821167339905367&rtpof=true&sd=true" className="footer-link" target="_blank" rel="noopener noreferrer">Terms of Use</a></p>
           <p><a href="/faq" className="footer-link">FAQ</a></p>
           <p><a href="/contact" className="footer-link">Contact</a></p> {/* Add Contact Link */}
         </div>
