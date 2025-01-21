@@ -83,6 +83,7 @@ function MainApp() {
       <Routes>
         <Route path='/' element={<Customer/>}>
           <Route path='' element={<HomePage/>}></Route>
+          <Route path='home' element={<Home/>}></Route>
           <Route path='shop' element={<Shop/>}></Route>
           <Route path='eco-point' element={<EcoPoint/>}></Route>
           <Route path='about' element={<About/>}></Route>
