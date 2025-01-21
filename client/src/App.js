@@ -4,6 +4,7 @@ import { CartProvider } from './CartContext.js'; // Import CartProvider
 import { WishlistProvider } from './WishlistContext'; // Import WishlistProvider
 
 import PrivacyPolicy from "./customer/Pages/PrivacyPolicy";
+import TermsOfUse from "./customer/Pages/TermsOfUse";
 import FAQ from "./customer/Pages/faq.jsx";
 import Customer from './customer/customer';
 import "slick-carousel/slick/slick.css";
@@ -83,7 +84,6 @@ function MainApp() {
       <Routes>
         <Route path='/' element={<Customer/>}>
           <Route path='' element={<HomePage/>}></Route>
-          <Route path='home' element={<Home/>}></Route>
           <Route path='shop' element={<Shop/>}></Route>
           <Route path='eco-point' element={<EcoPoint/>}></Route>
           <Route path='about' element={<About/>}></Route>
@@ -94,6 +94,7 @@ function MainApp() {
           <Route path='contact' element={<Contact/>}></Route>
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="faq" element={<FAQ />} />
+          <Route path="terms-of-use" element={<TermsOfUse />} />
           
       
           <Route path='account' element={<Account/>}>

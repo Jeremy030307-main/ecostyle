@@ -4,6 +4,7 @@ import "./Footer.css";
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [emailSubmitted, setEmailSubmitted] = useState(false); // Track if email has been submitted
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
@@ -20,6 +21,7 @@ const Footer = () => {
       emailList.push(email);
       localStorage.setItem("discountedEmails", JSON.stringify(emailList));
       setMessage("Discount code sent to your email!");
+      setEmailSubmitted(true); // Hide input box after submission
       // Simulate sending an email (Replace this with a real API call)
       console.log(`Discount email sent to ${email}`);
     }
@@ -34,18 +36,22 @@ const Footer = () => {
         <div>
           <h3>Exclusive</h3>
           <p>Get 10% off your first order</p>
-          <form onSubmit={handleEmailSubmit}>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <button type="submit" className="email-submit-btn">
-              Submit
-            </button>
-          </form>
+          {!emailSubmitted ? (
+            <form onSubmit={handleEmailSubmit}>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <button type="submit" className="email-submit-btn">
+                Submit
+              </button>
+            </form>
+          ) : (
+            <p className="thank-you-message">Thank you! Enjoy your discount.</p>
+          )}
           {message && <p className="message">{message}</p>}
         </div>
 
@@ -61,7 +67,7 @@ const Footer = () => {
         <div>
           <h4>Quick Links</h4>
           <p><a href="/privacy-policy" className="footer-link">Privacy Policy</a></p>
-          <p><a href="https://docs.google.com/document/d/1JHABGkJ12Ybw4hDYA93x-BB_MNTgrrh4/edit?usp=share_link&ouid=104363821167339905367&rtpof=true&sd=true" className="footer-link" target="_blank" rel="noopener noreferrer">Terms of Use</a></p>
+          <p><a href="/terms-of-use" className="footer-link">Terms of Use</a></p>
           <p><a href="/faq" className="footer-link">FAQ</a></p>
           <p><a href="/contact" className="footer-link">Contact</a></p>
         </div>
