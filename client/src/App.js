@@ -62,59 +62,7 @@ function App() {
           <BrowserRouter>
             {/* <MainApp /> */}
             <ScrollToTop/>
-            <Routes>
-              <Route path='/' element={<Customer/>}>
-                <Route path='' element={<HomePage/>}></Route>
-                <Route path='shop' element={<Shop/>}></Route>
-                <Route path='eco-point' element={<EcoPoint/>}></Route>
-                <Route path='about' element={<About/>}></Route>
-                <Route path='wishlist' element={<Wishlist/>}></Route>
-                <Route path='cart' element={<Cart />} /> {/* Cart page */}
-                <Route path='product/:productID' element={<Product/>}></Route>
-                <Route path='login' element={<LoginSignUp/>}></Route>
-            
-                <Route path='account' element={<Account/>}>
-
-                  <Route index element={<AccountProfile/>}></Route>
-                  <Route path='update-profile' element={<UpdateProfile/>}></Route>
-
-                  <Route path='address-book' element={<AccountAddressbook/>}></Route>
-                  <Route path="address-book/address-management" element={<AccountCardManagement includeClientSecret={false}/>}>
-                    <Route path='add' element={<AddAcountAddress/>}></Route>
-                    <Route path='edit' element={<AddAcountAddress/>}></Route>
-                  </Route>
-
-                  <Route path="payment-options" element={<AccountPaymentOptions />} /> {/* Default: List cards */}
-                  <Route path="payment-options/card-management" element={<AccountCardManagement includeClientSecret={true}/>}>
-                    <Route path="add" element={<AddPaymentMethod />} />
-                    <Route path="success" element={<AddPaymentStatus />} />
-                  </Route>
-
-                  <Route path='order' element={<AccountOrder/>}></Route>
-                  <Route path='order/:orderID' element={<AccountOrderDetail/>}></Route>
-
-                  <Route path='cancellation' element={<Cancellation/>}></Route>
-
-                </Route>
-              </Route>
-    
-              <Route path="/checkout" element={<CheckoutWrapper/>}>
-                <Route index element={<Checkout/>}/>
-                <Route path='complete' element={<CheckoutComplete/>}></Route>
-              </Route>
-              
-              <Route path='/admin' element={<AdminRoutes/>}>
-                <Route path='' element={<Admin/>}>
-                  <Route path='add' element={<AddProducts/>}></Route>
-                  <Route path='products' element={<Products/>}></Route>
-                  <Route path='products/:id/edit' element={<EditProduct/>}></Route>
-                  <Route path='orders' element={<Orders/>}></Route>
-                  <Route path='collections' element={<Collections/>}></Route>
-                  <Route path='addCollections' element={<AddCollections/>}></Route>
-                </Route>
-              </Route>
-              
-            </Routes>
+            <MainApp />
           </BrowserRouter>
         </WishlistProvider>
       </CartProvider>
@@ -131,36 +79,57 @@ function MainApp() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Customer />}>
-          <Route path='' element={<Home />} />
-          <Route path='shop' element={<Shop />} />
-          <Route path='eco-point' element={<EcoPoint />} />
-          <Route path='about' element={<About />} />
-          <Route path='wishlist' element={<Wishlist />} />
-          <Route path='cart' element={<Cart />} />
-          <Route path='account' element={<Account />} />
-          <Route path='product' element={<Product />} />
-          <Route path='login' element={<LoginSignUp />} />
-          <Route path='myaccount' element={<MyAccount />} />
-          <Route path='cancellation' element={<Cancellation />} />
-          <Route path='AccountOrder' element={<AccountOrder />} />
-          <Route path='contact' element={<Contact />} />
-        </Route>
+        <Route path='/' element={<Customer/>}>
+          <Route path='' element={<HomePage/>}></Route>
+          <Route path='shop' element={<Shop/>}></Route>
+          <Route path='eco-point' element={<EcoPoint/>}></Route>
+          <Route path='about' element={<About/>}></Route>
+          <Route path='wishlist' element={<Wishlist/>}></Route>
+          <Route path='cart' element={<Cart />} /> {/* Cart page */}
+          <Route path='product/:productID' element={<Product/>}></Route>
+          <Route path='login' element={<LoginSignUp/>}></Route>
+      
+          <Route path='account' element={<Account/>}>
 
-        <Route path='/checkout' element={<Checkout />} />
+            <Route index element={<AccountProfile/>}></Route>
+            <Route path='update-profile' element={<UpdateProfile/>}></Route>
 
-        <Route path='/admin' element={<AdminRoutes />}>
-          <Route path='' element={<Admin />}>
-            <Route path='add' element={<AddProducts />} />
-            <Route path='products' element={<Products />} />
-            <Route path='orders' element={<Orders />} />
-            <Route path='collections' element={<Collections />} />
-            <Route path='addCollections' element={<AddCollections />} />
+            <Route path='address-book' element={<AccountAddressbook/>}></Route>
+            <Route path="address-book/address-management" element={<AccountCardManagement includeClientSecret={false}/>}>
+              <Route path='add' element={<AddAcountAddress/>}></Route>
+              <Route path='edit' element={<AddAcountAddress/>}></Route>
+            </Route>
+
+            <Route path="payment-options" element={<AccountPaymentOptions />} /> {/* Default: List cards */}
+            <Route path="payment-options/card-management" element={<AccountCardManagement includeClientSecret={true}/>}>
+              <Route path="add" element={<AddPaymentMethod />} />
+              <Route path="success" element={<AddPaymentStatus />} />
+            </Route>
+
+            <Route path='order' element={<AccountOrder/>}></Route>
+            <Route path='order/:orderID' element={<AccountOrderDetail/>}></Route>
+
+            <Route path='cancellation' element={<Cancellation/>}></Route>
+
           </Route>
         </Route>
 
-        {/* Catch-all route for 404 */}
-        <Route path='*' element={<NotFound />} />
+        <Route path="/checkout" element={<CheckoutWrapper/>}>
+          <Route index element={<Checkout/>}/>
+          <Route path='complete' element={<CheckoutComplete/>}></Route>
+        </Route>
+        
+        <Route path='/admin' element={<AdminRoutes/>}>
+          <Route path='' element={<Admin/>}>
+            <Route path='add' element={<AddProducts/>}></Route>
+            <Route path='products' element={<Products/>}></Route>
+            <Route path='products/:id/edit' element={<EditProduct/>}></Route>
+            <Route path='orders' element={<Orders/>}></Route>
+            <Route path='collections' element={<Collections/>}></Route>
+            <Route path='addCollections' element={<AddCollections/>}></Route>
+          </Route>
+        </Route>
+        
       </Routes>
 
       {/* Conditional Footer */}
