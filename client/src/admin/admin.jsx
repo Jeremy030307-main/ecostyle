@@ -1,25 +1,23 @@
-import Sidebar from "./Components/Sidebar/Sidebar"
-import Navbar from "./Components/Navbar/Navbar"
-import { Outlet } from "react-router-dom"
-import "./admin.css"
+import AdminSidebar from "./Components/Sidebar/AdminSidebar";
+import Navbar from "./Components/Navbar/Navbar";
+import { Outlet } from "react-router-dom";
+import "./admin.css";
 
-export const currency = '$'
+export const currency = "$";
 
 const Admin = () => {
   return (
     <div>
-      <Navbar/>
-      <hr/>
+      <Navbar />
+      <hr />
       <div className="content-wrapper">
-        <Sidebar/>
+        <AdminSidebar />
         <div className="main-content">
-          <Outlet/>
+          <Outlet />
         </div>
       </div>
-
     </div>
-    
   );
-}
- 
+};
+
 export default Admin;

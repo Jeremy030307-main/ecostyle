@@ -254,9 +254,9 @@ const AddProducts = () => {
       />
 
       {/* Add new variant */}
-      <button onClick={addVariant}>Add Variant</button>
+      <button onClick={addVariant} className='add-variant-button'>Add Variant</button>
   
-      <button type="submit" className="submit-button">ADD</button>
+      <button type="submit" className="add-products-submit-button">ADD</button>
     </form>
 
   );

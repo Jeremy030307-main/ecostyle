@@ -1,180 +1,258 @@
 /* Main Container */
 .product-page-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding: 2rem;
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7; /* Subtle background color for better contrast */
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 80px 100px;
+  font-family: Arial, sans-serif;
 }
 
 /* Main Content Layout */
 .product-main-content {
-    display: flex;
-    gap: 2rem;
-    flex-wrap: wrap; /* Ensures responsiveness for smaller screens */
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap; /* Ensures responsiveness for smaller screens */
 }
 
 /* Left Section: Main Product Image */
 .product-image-section {
-    flex: 1;
-    max-width: 500px; /* Limits the image size for large screens */
+  flex: 2;
+  max-width: 500px; /* Limits the image size for large screens */
 }
+
+.product-rating-reviewCount {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.product-image-section img {
+  max-height: 400px;
+  max-width: 400px;
+}
+
 .main-product-image {
-    width: 100%;
-    border-radius: 8px;
-    object-fit: cover;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds subtle shadow for depth */
+  width: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  */
 }
 
 /* Right Section: Product Details */
 .product-details-section {
-    flex: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.product-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .product-name {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem; /* Add space between name and price */
-    color: #333; /* Darker color for better readability */
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333; /* Darker color for better readability */
+  padding: 0;
+  margin: 0;
 }
 
 .product-price {
-    font-size: 1.5rem;
-    color: #555;
-    margin-top: 0; /* Remove extra space above price */
+  font-size: 1.5rem;
+  color: #555;
 }
 
 .product-sizes,
 .product-colors {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap; /* Allows wrapping for smaller screens */
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap; /* Allows wrapping for smaller screens */
 }
 
 .size-button {
-    padding: 0.5rem 1rem;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+  padding: 0.5rem 1rem;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
 }
+
+.size-button.selected {
+  border: 2px solid #000 !important; /* Thick border for the selected color */
+}
+
 .size-button:hover {
-    background-color: #e0e0e0;
-    transform: scale(1.05); /* Subtle scaling effect */
+  background-color: #e0e0e0;
+  transform: scale(1.05); /* Subtle scaling effect */
 }
 
 .color-swatch {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    transition: border-color 0.3s;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: border-color 0.3s;
 }
+
+.color-swatch.selected {
+  border: 2px solid #000; /* Thick border for the selected color */
+}
+
 .color-swatch:hover {
-    border-color: #000;
+  border-color: #000;
+  transform: scale(1.1);
 }
 
 /* Variants Section */
 .product-variants {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap; /* Allows wrapping for smaller screens */
-    cursor: pointer;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap; /* Allows wrapping for smaller screens */
+  cursor: pointer;
 }
 .variant-item {
-    text-align: center;
+  text-align: center;
 }
 .variant-image {
-    width: 100px;
-    height: 100px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    object-fit: cover;
-    transition: transform 0.3s; /* Hover effect */
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s; /* Hover effect */
 }
 .variant-image:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
-/* Reviews Section */
-.reviews-section {
-    margin-top: 2rem;
+.product-review-card {
+  display: flex;
+  justify-content: left;
+  gap: 20px;
+  padding-top: 20px;
+  padding-bottom: 30px;
 }
-.review-item {
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+.product-review-user-circle {
+  background-color: #8cbcac;
+  height: 40px;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border-radius: 50%;
 }
-.review-header {
-    font-weight: bold;
+
+.product-review-section-header {
+  display: flex;
+  justify-content: flex-start;
+  gap: 50px;
+  align-items: center;
+  padding: 20px 0px;
 }
-.review-details {
-    font-size: 0.9rem;
-    color: #555;
+
+.product-review-card-main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
-.review-text {
-    margin-top: 0.5rem;
-    font-size: 1rem;
+
+.product-review-user-rating-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rating-star-container {
+  display: flex;
+  gap: 10px;
 }
 
 /* Add to Cart and Favorite Buttons */
 /* Action Buttons: Container for Add to Cart and Favorite buttons */
 .action-buttons {
-    display: flex;
-    justify-content: flex-start; /* Align items to the left */
-    align-items: center; /* Vertically align items */
-    gap: 1rem; /* Add spacing between buttons */
-    margin-top: 1rem; /* Space above the button container */
-  }
-  
-  /* Add to Cart Button */
-  .add-to-cart-btn {
-    background-color: #4caf50;
-    color: white;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center; /* Center content inside */
-    justify-content: center;
-  }
-  
-  .add-to-cart-btn:hover {
-    background-color: #45a049;
-  }
-  
-  /* Favorite Button */
-  .fav-btn {
-    background-color: white;
-  color: #ff4081; 
-  padding: 0.8rem; 
-  font-size: 1.5rem; 
+  display: flex;
+  justify-content: flex-start; /* Align items to the left */
+  align-items: center; /* Vertically align items */
+  gap: 2rem; /* Add spacing between buttons */
+  margin-top: 1rem; /* Space above the button container */
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+  background-color: #17a375;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   border: none;
-  border-radius: 50%; 
-  border: 2px solid red;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
-  align-items: center; 
+  align-items: center; /* Center content inside */
+  justify-content: center;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #0e6a4b;
+}
+
+/* Favorite Button */
+.fav-btn {
+  background-color: white;
+  padding: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 50%;
+  /* border: 2px solid red; */
+  background-color: #000;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   justify-content: center;
   width: 3rem;
-  height: 3rem; 
-  }
-  
-  .fav-btn:hover {
-    background-color: #e0e0e0;
-    transform: scale(1.05);
-  }
-  
+  height: 3rem;
+}
+
+.fav-btn i {
+  color: white;
+}
+
+.fav-btn:hover {
+  background-color: #e0e0e0;
+  transform: scale(1.05);
+}
+
+.add-review-container {
+  display: flex;
+}
+
+.add-review-button {
+  background-color: #17a375;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center; /* Center content inside */
+  justify-content: center;
+}
+
+.add-review-button:hover {
+  background-color: #0e6a4b;
+}
+
+.add-review-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

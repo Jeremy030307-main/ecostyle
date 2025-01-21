@@ -1,35 +1,147 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Checkout.css"
-import { useCart } from "../../apiManager/methods/cartMethods";
-import { useProduct } from "../../apiManager/methods/productMethods";
+import { CheckoutContext } from "./CheckoutWrapper";
+import { useElements, useStripe } from "@stripe/react-stripe-js";
+import { createPaymentIntent } from "../../apiManager/methods/paymentMethod";
 
 // OrderSummaryLine component: Accepts productID and quantity as props
 const OrderSummaryLine = ({productData, quantity}) => {
 
   return (
     <div className="order-summary-line">
-      <h4>{productData.name}</h4>
-      <p>Quantity: {quantity}</p>
-      <p>Price: ${productData.price}</p>
-      <p>Total: ${productData.price * quantity}</p>
+      
+      <img 
+        src={productData.image} 
+        alt={productData.name} 
+        className="summary-product-image" 
+      />
+
+      <div className="summary-line-detail">
+        <div>
+          <h4 style={{ margin: "0", padding: "0" }}>{productData.name}</h4>
+          <p style={{ margin: "0", padding: "0" }}  className="summary-product-code">Item: #{productData.product}/ {productData.variant}/ {productData.size}</p>
+        </div>
+
+        <div className="summary-price-quantity ">
+          <p>RM{productData.price}</p>
+          <p>× {quantity}</p>
+        </div>
+      </div>
+
+      <div className="summary-line-total">
+        <p>RM{productData.price * quantity}</p>
+      </div>
     </div>
   );
 };
 
-const OrderSummary = () => {
-  const userCart = useCart();
+const OrderSummaryTotal = ({subtotal, shippingFee}) => {
 
-  console.log(userCart)
+  return (
+    <div className="summary-total-container">
+      <div className="summary-total">
+        <p>Subtotal</p>
+        <p>RM{subtotal}</p>
+      </div>
+
+      <div className="summary-total">
+        <p>Shipping</p>
+        <p>RM{shippingFee}</p>
+      </div>
+
+      <hr />
+
+      <div className="summary-total summary-final_amount" style={{fontSize: "larger"}}>
+        <p>Total</p>
+        <p>RM{subtotal + shippingFee}</p>
+      </div>
+    </div>
+  )
+}
+
+const OrderSummary = ({address, card}) => {
+
+  const {userCart, total} = useContext(CheckoutContext)
+  const [message, setMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const stripe = useStripe();
+  const elements = useElements();
+
   // Check if userCart is null or undefined before rendering
   if (userCart === null || userCart === undefined) { 
     return <p>Loading...</p>; // Render loading state while the cart is fetching
   }
 
-  // Calculate the total price
-  const total = userCart.reduce((accumulatedTotal, cartLine) => {
-    // Multiply price of product with quantity and add to the accumulated total
-    return accumulatedTotal + (cartLine.productDetails.price * cartLine.quantity);
-  }, 0);
+  const handleSubmit = async () => {
+    if (!stripe || !elements) {
+      console.error("Stripe or Elements not properly initialized.");
+      return;
+    }
+  
+    // Prepare the shipping address data
+    const addressData = {
+      name: address.name,
+      address: {
+        line1: address.line1,
+        line2: address.line2 || null,
+        city: address.city,
+        state: address.state,
+        postal_code: address.postalCode,
+        country: address.country,
+      },
+      phone: address.phone || null,
+    };
+  
+    setIsLoading(true);
+  
+    try {
+      let clientSecret;
+  
+      if (card) {
+        // Use the saved payment method
+        try {
+          const response = await createPaymentIntent(total, card.id, addressData);
+          clientSecret = response.clientSecret;
+          const successUrl = new URL("http://localhost:3000/checkout/complete");
+          successUrl.searchParams.append("payment_intent_client_secret", clientSecret);
+          window.location.href = successUrl.toString();
+        } catch (error) {
+          console.error("Error creating PaymentIntent:", error.message);
+          setMessage("Error creating PaymentIntent: " + error.message);
+          setIsLoading(false);
+          return;
+        }
+      } else {
+        // Use the payment element (UI embedded flow)
+        const { error } = await stripe.confirmPayment({
+          elements,
+          confirmParams: {
+            return_url: "http://localhost:3000/checkout/complete",
+            shipping: addressData,
+          },
+        });
+  
+        if (error) {
+          console.error("Payment confirmation error:", error.message);
+          setMessage(error.message);
+          setIsLoading(false);
+          return;
+        } else {
+          // Stripe will handle the redirection automatically
+          console.log("Payment successful with PaymentElement!");
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Unexpected error in handleSubmit:", error.message);
+      setMessage("Unexpected error: " + error.message);
+    }
+  
+    setIsLoading(false);
+  };
+  
+  
 
   return (
     <div className="order-summary">
@@ -44,17 +156,24 @@ const OrderSummary = () => {
           userCart.map((cartLine, index) => (
             <OrderSummaryLine
               key={index}
-              productData={cartLine.productDetails} // Assuming cartLine has product details
+              productData={cartLine} // Assuming cartLine has product details
               quantity={cartLine.quantity} // Assuming cartLine has quantity
             />
           ))
         )}
       </div>
 
-      {/* Display the total */}
-      <div className="order-total">
-        <h3>Total: ${total.toFixed(2)}</h3>
-      </div>
+      <OrderSummaryTotal 
+        subtotal = {total}
+        shippingFee={0}/>
+
+      <button className='checkout-place-order-btn' disabled={isLoading || !stripe || !elements || !address } id="submit" onClick={() => handleSubmit()}>
+        <span id="button-text">
+          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+        </span>
+      </button>
+      {/* Show any error or success messages */}
+      {message && <div id="payment-message">{message}</div>}
     </div>
   );
 };

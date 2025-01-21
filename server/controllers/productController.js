@@ -4,6 +4,7 @@ import { COLLECTIONS, message } from "./utility.js";
 
 export const checkProduct = async (body) => {
   try {
+    console.log("fdfdfdsfsd")
     // Ensure the body and product are provided
     if (!body || !body.product) {
       return { isValid: true, errorMessage: null };
@@ -51,7 +52,7 @@ export const checkProduct = async (body) => {
 };
  
 
-const getVariantDetails = async (variantData) => {
+export const getVariantDetails = async (variantData) => {
   try{
 
     if (!variantData){
@@ -82,7 +83,7 @@ const getVariantDetails = async (variantData) => {
   } catch (error) {
     throw new Error(error.message)
   }
-}
+} 
 
 const checkStock = async (stockData) => {
 
@@ -110,20 +111,24 @@ export const getProducts = async (req, res) => {
 
   try {
     let query = db.collection(COLLECTIONS.PRODUCT);
+    console.log(req.query)
 
-    if (category) {
+    if (category && category !== 'null') {
+      console.log(1)
       query = query.where('category', '>=', category).where('category', '<=', category + '\uf8ff');
     }
 
-    if (collection) {
+    if (collection && collection !== 'null') {
+      console.log(2)
       query = query.where('collection', '==', collection);
     }
 
-    if (color) {
+    if (color && color !== 'null') {
+      console.log(3)
       query = query.where('color', 'array-contains-any', color.split(','));
     }
 
-    if (sortBy) {
+    if (sortBy && sortBy !== 'null') {
       if (orderBy === 'asc' || orderBy === 'desc') {
         query = query.orderBy(sortBy, orderBy); // Apply sorting with specified order
       } else {
@@ -167,6 +172,9 @@ export const getProducts = async (req, res) => {
                 size: productData.size,
                 rating: productData.rating || null,
                 reviewCount: productData.reviewCount || null,
+                category: productData.category,
+                collection: productData.collection,
+                color: productData.color
               };
             })
         );
@@ -231,6 +239,8 @@ export const getProduct = (req, res, next) => {
           size: productData.size,
           rating: productData.rating || null,
           reviewCount: productData.reviewCount || null,
+          category: productData.category,
+          collection: productData.collection
         };
 
         // Send the updated product data to the client
@@ -251,7 +261,6 @@ export const getProduct = (req, res, next) => {
     res.status(500).send({ message: error.message });
   }
 };
-
 
 // ---------- Admin action ------------------
 

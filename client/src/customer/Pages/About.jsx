@@ -58,13 +58,12 @@ const About = () => {
         <div className="about-text">
           <h1>Our Story</h1>
           <p>
-            Launched in 2015, EcoStyle is South Asia's premier online shopping
-            marketplace with an active presence in Bangladesh. Supported by
-            wide-ranging solutions, we serve millions of customers.
+          Founded in 2024, EcoStyle is Malaysia's leading sustainable fashion marketplace. 
+          Our mission is to inspire conscious living by offering eco-friendly clothing and promoting sustainable practices.
           </p>
           <p>
-            EcoStyle offers over 1 million products, tailored marketing, and
-            diverse categories to meet your needs.
+          EcoStyle is committed to providing high-quality, stylish, and recyclable fashion products, 
+          empowering customers to make choices that benefit both people and the planet.
           </p>
         </div>
         <div className="about-image">

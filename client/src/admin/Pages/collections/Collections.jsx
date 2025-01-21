@@ -28,7 +28,7 @@ const Collections = () => {
 
   // Handle product deletion
   const handleConfirmDelete = async (collectionId) => {
-    if (isAlertOpen == true) {
+    if (isAlertOpen === true) {
       try {
         await deleteCollection(collectionId); // Call deleteProduct API
         setCollections((prevList) =>
@@ -64,16 +64,16 @@ const Collections = () => {
         {/* List Table Title */}
         <div className="product-list-header">
           <b>Name</b>
-          <b className="action-header">Action</b>
+          <b className="collection-action-header">Action</b>
         </div>
 
         {/* Product List */}
         {collections.map((item, index) => (
-          <div className="product-item" key={index}>
+          <div className="collection-item" key={index}>
             <p>{item.name}</p>
             <img
               onClick={() => handleDelete()}
-              className="product-action"
+              className="collection-delete-icon"
               src={assets.delete_icon}
               alt=""
             />

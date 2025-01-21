@@ -1,55 +1,93 @@
-import React, { useEffect,useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useCart } from '../../CartContext'; // Import the Cart Context
-import { useWishlist } from '../../WishlistContext'; // Import Wishlist Context
-import './Product.css'; // CSS file for styling
-import { useProductReview } from '../../apiManager/methods/reviewMethods';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useCart } from "../../CartContext"; // Import the Cart Context
+import { useWishlist } from "../../WishlistContext"; // Import Wishlist Context
+import "./Product.css"; // CSS file for styling
+import {
+  createNewReview,
+  getProductReview,
+} from "../../apiManager/methods/reviewMethods";
+import { useProduct } from "../../apiManager/methods/productMethods";
+import { RatingStar, SmallRatingStar } from "./RatingStart";
+import ReviewModal from "../Components/Review Modal/ReviewModal";
 
+const ReviewCard = ({ review }) => {
+  return (
+    <>
+      <div className="product-review-card" id={review.id}>
+        <div className="product-review-user-circle">
+          <h3>{
+            review.user ? (review.user[0]) : (<></>)
+          }</h3>
+        </div>
+
+        <div className="product-review-card-main-content">
+          <div className="product-review-user-rating-container">
+            <p>{review.user}</p>
+            <SmallRatingStar rating={review.rating} />
+          </div>
+
+          <p>{review.comment}</p>
+        </div>
+
+      </div>
+
+      <hr style={{opacity:"0.5"}}/>
+    </>
+  );
+};
 
 const Product = () => {
-  const location = useLocation();
-  const { addItemToWishlist } = useWishlist(); // Access Wishlist functions
-  const { addItemToCart } = useCart(); // Import the addItemToCart function from CartContext
-  const product = location.state?.product;
-  const [reviews, setReviews] = useState([]); // State to store reviews
-  const [loadingReviews, setLoadingReviews] = useState(true); // State to track loading
 
-  const handleAddToWishlist = () => {
-    addItemToWishlist({ ...product, quantity: 1 });
+  const {addItemToCart} = useCart()
+  const { productID } = useParams();
+  const product = useProduct(productID);
+  const {addItemToWishlist,removeItemFromWishlist, preesntInWishlist, wishlistItems} = useWishlist();
+  const [addedToWishlist, setAddedToWishlist] = useState(false);
+
+  useEffect(() => {
+    if (product){
+        setAddedToWishlist(preesntInWishlist(product.id))
+    }
+}, [preesntInWishlist, product, wishlistItems])
+
+  const [selectedVariant, setVariant] = useState(null);
+  const [selectedSize, setSize] = useState("S");
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    if (product) {
+      setVariant(product.variant[0].id);
+      setSize(product.size[0]);
+      setSelectedImage(product.thumbnail);
+    }
+  }, [product]);
+
+  const [reviews, setReview] = useState([]);
+  const fetchReview = async () => {
+    try {
+      const data = await getProductReview(productID);
+      console.log(data);
+      setReview(data);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
-  // State to track the selected variant's image
-  const [selectedImage, setSelectedImage] = useState(
-    product?.variant[0]?.image || '/placeholder.png'
-  );
+  useEffect(() => {
+    fetchReview();
+  }, []);
 
-  const fetchedReviews = useProductReview(product?.id)
-
-  // useEffect(() => {
-  //   if (product?.id) {
-  //     const fetchReviews = async () => {
-  //       try {
-  //         const fetchedReviews = await getProductReview(product.id);
-  //         setReviews(fetchedReviews);
-  //       } catch (error) {
-  //         console.error('Error fetching product reviews:', error);
-  //       } finally {
-  //         setLoadingReviews(false);
-  //       }
-  //     };
-
-  //     fetchReviews();
-  //   }
-  // }, [product?.id]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const handleReviewSubmitted =async (productID, rating, comment) =>{
+    await createNewReview(productID, rating, comment);
+    await fetchReview()
+  }
 
   if (!product) {
     return <p>Product not found!</p>;
   }
-
-  const handleAddToCart = () => {
-    // Add the product to the cart with a default quantity of 1
-    addItemToCart({ ...product, quantity: 1 });
-  };
 
   return (
     <div className="product-page-container">
@@ -66,69 +104,93 @@ const Product = () => {
         {/* Right Section: Product Details */}
         <div className="product-details-section">
           {/* Product Name */}
-          <h1 className="product-name">{product.name}</h1>
+          <div>
+            <h1 className="product-name">{product.name}</h1>
 
-          {/* Product Price */}
-          <p className="product-price">${product.price.toFixed(2)}</p>
-
-          {/* Available Sizes */}
-          <h2>Available Sizes</h2>
-          <div className="product-sizes">
-            {product.size && product.size.length > 0 ? (
-              product.size.map((size, index) => (
-                <button key={index} className="size-button">
-                  {size}
-                </button>
-              ))
-            ) : (
-              <p>No sizes available</p>
-            )}
-          </div>
-
-          {/* Available Colors */}
-          <h2>Available Colors</h2>
-          <div className="product-colors">
-            {product.variant && product.variant.length > 0 ? (
-              product.variant.map((variant) => (
-                <div
-                  key={variant.id}
-                  className="color-swatch"
-                  style={{ backgroundColor: variant.colorCode }}
-                  title={variant.name}
-                  onClick={() => setSelectedImage(variant.image)} // Update selected image on color click
-                ></div>
-              ))
-            ) : (
-              <p>No colors available</p>
-            )}
-          </div>
-
-          {/* Variants Section */}
-          <h2>Variants</h2>
-          <div className="product-variants">
-            {product.variant.map((variant) => (
-              <div
-                key={variant.id}
-                className="variant-item"
-                onClick={() => setSelectedImage(variant.image)} // Update selected image on variant click
-              >
-                <img
-                  src={variant.image}
-                  alt={variant.name}
-                  className="variant-image"
-                />
-                <p>{variant.name}</p>
+            {product && product.rating && product.reviewCount ? (
+              <div className="product-rating-reviewCount">
+                <RatingStar rating={product.rating} />
+                <p>({product.reviewCount})</p>
               </div>
-            ))}
+            ) : (
+              <p>This product has no reviews yet.</p>
+            )}
+
+            {/* Product Price */}
+            <p className="product-price">${product.price.toFixed(2)}</p>
+          </div>
+
+          <div className="product-selection">
+            {/* Available Colors */}
+            <h2>Available Colors</h2>
+            <div className="product-colors">
+              {product.variant && product.variant.length > 0 ? (
+                product.variant.map((variant) => (
+                  <div
+                    key={variant.id}
+                    className={`color-swatch ${
+                      selectedVariant === variant.id ? "selected" : ""
+                    }`}
+                    style={{ backgroundColor: variant.colorCode }}
+                    title={variant.name}
+                    onClick={() => {
+                      setSelectedImage(variant.image);
+                      setVariant(variant.id);
+                    }} // Update selected image on color click
+                  ></div>
+                ))
+              ) : (
+                <p>No colors available</p>
+              )}
+            </div>
+          </div>
+
+          <div className="product-selection">
+            {/* Available Sizes */}
+            <h2>Available Sizes</h2>
+            <div className="product-sizes">
+              {product.size && product.size.length > 0 ? (
+                product.size.map((size, index) => (
+                  <button
+                    key={index}
+                    className={`size-button ${
+                      selectedSize === size ? "selected" : ""
+                    }`}
+                    onClick={() => setSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))
+              ) : (
+                <p>No sizes available</p>
+              )}
+            </div>
           </div>
 
           {/* Add to Cart and Favorite Buttons */}
           <div className="action-buttons">
-            <button className="add-to-cart-btn" onClick={handleAddToCart}>
-              Add to Cart
+            <button className="fav-btn" 
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent navigate from triggering
+
+                if (product){
+                  if (addedToWishlist) {
+                    // If the item is already added, remove it from the wishlist
+                    removeItemFromWishlist(product.id);
+                    } else {
+                    // If the item is not added, add it to the wishlist
+                    addItemToWishlist(product.id);
+                    }
+                }
+
+                console.log("Button clicked!"); // Handle button action
+                }}
+                >
+              {addedToWishlist ? (<i class="fa-solid fa-heart"></i>): (<i class="fa-regular fa-heart"></i>)}
+              
             </button>
-            <button className="fav-btn" onClick={handleAddToWishlist}>
-            ❤️
+            <button className="add-to-cart-btn" onClick={() => {addItemToCart(productID, selectedVariant, selectedSize)}}>
+              Add to Cart
             </button>
           </div>
         </div>
@@ -136,21 +198,42 @@ const Product = () => {
 
       {/* Reviews Section */}
       <div className="reviews-section">
-        <h2>Customer Reviews</h2>
-        {loadingReviews ? (
-          <p>Loading reviews...</p>
-        ) : reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <div key={index} className="review-item">
-              <p className="review-header">{review.user || 'Anonymous'}</p>
-              <p className="review-details">
-                Height: {review.height || 'N/A'} | Weight: {review.weight || 'N/A'}
-              </p>
-              <p className="review-text">{review.text || 'No review text'}</p>
+        <div className="product-review-section-header">
+          <h1>Reviews</h1>
+          {product && product.rating && product.reviewCount ? (
+            <div className="product-rating-reviewCount">
+              <RatingStar rating={product.rating} />
+              <p>({product.reviewCount})</p>
             </div>
-          ))
+          ) : (
+            <p>This product has no reviews yet.</p>
+          )}
+
+          <div className="add-review-container">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="add-review-button"
+            >
+              Add a review
+            </button>
+          </div>
+
+          <ReviewModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            productID={product?.id}
+            onSubmitSuccess={handleReviewSubmitted}
+          />
+        </div>
+
+        {reviews ? (
+          reviews.length > 0 ? (
+            reviews.map((review, index) => <ReviewCard review={review} />)
+          ) : (
+            <p>No reviews available</p>
+          )
         ) : (
-          <p>No reviews available</p>
+          <p>Loading reviews...</p>
         )}
       </div>
     </div>

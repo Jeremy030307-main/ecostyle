@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useState} from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../../Components/Assets/assets";
 import { currency } from "../../admin";
@@ -7,8 +7,16 @@ import {
   useProduct,
   deleteProduct,
 } from "../../../apiManager/methods/productMethods";
+import ProductDetails from '../../Components/ProductDetails/ProductDetails';
 
 const Products = () => {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleProductClick = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+  };
 
   // Handle product deletion
   const handleDelete = async (productId) => {
@@ -22,14 +30,14 @@ const Products = () => {
       }
     }
   };
-  
+
   const list = useProduct();
-  console.log(list)
+  console.log(list);
 
   if (!list) {
     return <p>Loading...</p>;
   }
-  
+
   return (
     <>
       <div className="title-container">
@@ -55,9 +63,12 @@ const Products = () => {
         {/* Product List */}
         {/* fix image to url link, and add category into getProduct() */}
         {list.map((item, index) => (
-          <div className="product-item" key={index}>
+          <div className="product-item" key={index} onClick={() => handleProductClick(item)}
+          style={{ cursor: 'pointer' }}>
             {/* <img className="product-image" src={item.image[8]} alt="" /> */}
-            <p>{item.thumbnail}</p>
+            <p>
+              <img className="product-item-img" src={item.thumbnail} alt=""/>
+            </p>
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>
@@ -65,12 +76,28 @@ const Products = () => {
               {item.price}
             </p>
             <p className="product-action">
-              <img onClick={() => handleDelete(item.id)} className="product-action-button" src={assets.delete_icon} alt="" />
+              <img
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(item.id);
+                }}
+                className="product-action-button"
+                src={assets.delete_icon}
+                alt=""
+              />
             </p>
-            
           </div>
         ))}
       </div>
+
+      <ProductDetails 
+        product={selectedProduct}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedProduct(null);
+        }}
+      />
     </>
   );
 };

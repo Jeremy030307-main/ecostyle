@@ -1,3 +1,21 @@
+/* Main Checkout Page */
+.checkout-container {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.checkout-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 10px 60px;
+}
+
+/* Checkout Header */
 .checkout-header {
     display: flex;                 
     justify-content: space-between;  
@@ -16,86 +34,443 @@
     transform: translateX(-50%);    /* Adjust to make sure it's perfectly centered */
   }
 
+.checkout-form-shipping-btn{
+  border-radius: 10px;
+  background-color: black;
+  color: white;
+  width: fit-content;
+  padding: 5px 10px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
 .checkout-header-back-btn{
     display: flex;
     justify-content:baseline;
     padding: 20px;
 }
 
-  /* Align back button elements horizontally */
-  .checkout-header-back-btn {
-    display: flex;
-    align-items: center; /* Vertically center icon and text */
-    gap: 8px; /* Add space between the icon and text */
-  }
+/* Align back button elements horizontally */
+.checkout-header-back-btn {
+  display: flex;
+  align-items: center; /* Vertically center icon and text */
+  gap: 8px; /* Add space between the icon and text */
+}
+
+/* Style for the Material Symbol icon */
+.material-symbols-outlined {
+  font-size: 20px; /* Adjust icon size */
+  cursor: pointer; /* Make the icon clickable */
+}
+
+/* Style for the "Back to Cart" text */
+.checkout-header-back-btn p {
+  margin: 0; /* Remove default margin */
+  font-size: 16px; /* Adjust text size */
+}
+
+/* Flex portion for checkout form and order summary */
+.checkout-form {
+  flex: 4; /* Takes more space on the left */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
   
-  /* Style for the Material Symbol icon */
-  .material-symbols-outlined {
-    font-size: 20px; /* Adjust icon size */
-    cursor: pointer; /* Make the icon clickable */
-  }
+.order-summary {
+  flex: 2; /* Takes less space on the right */
+}
+
+/* Checkout Form */
+.checkout-form-section{
+  background-color: #F5F5F5;
+  border-radius: 10px;
+  padding: 10px 30px;
+}
+
+.checkout-form-section h2{
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.checkout-form-sectiob-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.checkout-selected-address-container{
+  display: flex;
+  justify-content: space-around;
+}
+
+.checkout-form-navbar{
+  padding-top: 10px;
+}
+
+.checkout-form-navbar-item{
+  display: flex;
+  justify-content: space-around;
+  list-style: none;
+}
+
+.checkout-form-navbar-item li{
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.checkout-form-navbar-item hr{
+  border: none;
+  height: 3px;
+  transform: translateY(2px);
+  width: 100%;
+  border-radius: 10px;
+  background: #17A375;
+}
+
+.checkout-saved-address{
+  padding: 20px 50px 20px 50px;
+}
+
+.checkout-saved-address-selection-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.checkout-saved-address-selection-header h3{
+  font-size: 23px;
+}
+
+.checkout-saved-address-selection-header i{
+  padding: 10px;
+  color: #17A375;
+  height: 50px;
+}
+
+.checkout-selected-address-info{
+  padding-left: 20px;
+  padding-top: 10px;
+  font-size: large;
+}
+
+.checkout-selected-card-info{
+  padding-left: 20px;
+  padding-top: 10px;
+  font-size: large;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.checkout-saved-address-selection-container {
+  overflow-x: auto;       /* Enable horizontal scrolling */
+  white-space: nowrap;    /* Prevent wrapping of child elements */
+  display: flex;          /* Use flexbox to lay items in a row */
+  background-color: white;
+  padding: 20px;
+  gap: 10px;
+  max-width: 650px;
+  border-radius: 25px;
+}
+
+.checkout-address-card-container {
+  width: 280px;
+  height: 210px;
+  background: #17A375;
+  border-radius: 25px;
+  padding: 10px 20px 10px 20px;
+  transition: all 0.3s ease; /* Smooth transition */
+}
+
+.checkout-address-card-box {
+  display: inline-block; /* Ensure the box scales as a whole */
+  transition: transform 0.3s ease; /* Smooth scaling effect */
+}
+
+.checkout-address-card-box:hover {
+  transform: scale(1.05); /* Scale the entire box as a whole */
+}
+
+.checkout-place-order-btn{
+  border-radius: 10px;
+  background-color: #17A375;
+  color: black;
+  font-weight: bold;
+  font-size: large;
+  padding: 5px 10px;
+  margin-top: 20px;
+  cursor: pointer;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border: none;
+}
+
+.checkout-address-card-container p{
+  font-size: smaller;
+}
   
-  /* Style for the "Back to Cart" text */
-  .checkout-header-back-btn p {
-    margin: 0; /* Remove default margin */
-    font-size: 16px; /* Adjust text size */
+.order-summary {
+  background-color: #F5F5F5;
+  border-radius: 25px;
+  padding: 30px 40px;
+}
+
+.summary-header {
+  cursor: pointer;
+  font-weight:bolder;
+  font-size: 24px;
+  line-height: 24px;
+}
+
+.summary-details {
+  margin-top: 10px;
+}
+
+.summary-details p {
+  margin: 5px 0;
+}
+
+.summary-product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.order-summary-line {
+  display: flex;
+  align-items: stretch;
+  padding: 20px 10px;
+}
+
+.summary-line-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+}
+
+.summary-line-detail h4{
+  margin: "0";
+    padding: "0" 
+}
+
+.summary-line-total {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  font-weight: bold;
+  padding-left: 20px;
+}
+
+.summary-price-quantity {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 50px;
+}
+
+.summary-product-code{
+  opacity: 70%;
+}
+
+.summary-total{
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 10px 10px 20px;
+}
+
+.summary-total p{
+  padding: 0;
+  margin: 0;
+}
+
+.summary-final_amount p{
+  font-weight:bold;
+  font-size: large;
+}
+
+
+
+#payment-message {
+  color: rgb(105, 115, 134);
+  font-size: 16px;
+  line-height: 20px;
+  padding-top: 12px;
+  text-align: center;
+}
+
+#payment-element {
+  margin-bottom: 24px;
+}
+
+
+
+button:hover {
+  filter: contrast(115%);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* spinner/processing state, errors */
+.spinner,
+.spinner:before,
+.spinner:after {
+  border-radius: 50%;
+}
+
+.spinner {
+  color: #ffffff;
+  font-size: 22px;
+  text-indent: -99999px;
+  margin: 0px auto;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  box-shadow: inset 0 0 0 2px;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.spinner:before,
+.spinner:after {
+  position: absolute;
+  content: '';
+}
+
+.spinner:before {
+  width: 10.4px;
+  height: 20.4px;
+  background: #0055DE;
+  border-radius: 20.4px 0 0 20.4px;
+  top: -0.2px;
+  left: -0.2px;
+  -webkit-transform-origin: 10.4px 10.2px;
+  transform-origin: 10.4px 10.2px;
+  -webkit-animation: loading 2s infinite ease 1.5s;
+  animation: loading 2s infinite ease 1.5s;
+}
+
+.spinner:after {
+  width: 10.4px;
+  height: 10.2px;
+  background: #0055DE;
+  border-radius: 0 10.2px 10.2px 0;
+  top: -0.1px;
+  left: 10.2px;
+  -webkit-transform-origin: 0px 10.2px;
+  transform-origin: 0px 10.2px;
+  -webkit-animation: loading 2s infinite ease;
+  animation: loading 2s infinite ease;
+}
+
+/* Payment status page */
+#payment-status {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  row-gap: 30px;
+  width: 30vw;
+  width: 100%;
+  min-height: 380px;
+  align-self: center;
+  box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
+    0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
+  border-radius: 7px;
+  padding: 40px;
+  opacity: 0;
+  animation: fadeInAnimation 1s ease forwards;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+#status-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+
+#details-table {
+  overflow-x: auto;
+  width: 100%;
+}
+
+table {
+  width: 100%;
+  font-size: 14px;
+  border-collapse: collapse;
+}
+table tbody tr:first-child td {
+  border-top: 1px solid #E6E6E6; /* Top border */
+  padding-top: 10px;
+}
+table tbody tr:last-child td {
+  border-bottom: 1px solid #E6E6E6; /* Bottom border */
+}
+td {
+  padding-bottom: 10px;
+}
+
+.TableContent {
+  text-align: right;
+  color: #6D6E78;
+}
+
+.TableLabel {
+  font-weight: 600;
+  color: #30313D;
+}
+
+#view-details {
+  color: #0055DE;
+}
+
+#retry-button {
+  text-align: center;
+  background: #0055DE;
+  color: #ffffff;
+  border-radius: 4px;
+  border: 0;
+  padding: 12px 16px;
+  transition: all 0.2s ease;
+  box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+  width: 100%;
+}
+
+@keyframes loading {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
-  .checkout-container {
-    display: flex;
-    flex-direction: column;
-    width: 80%;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
-  
-  .checkout-body {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
+}
+@keyframes fadeInAnimation {
+  to {
+      opacity: 1;
   }
-  
-  .checkout-form {
-    flex: 2; /* Takes more space on the left */
+}
+
+@media only screen and (max-width: 600px) {
+  form, #payment-status {
+    width: 80vw;
+    min-width: initial;
   }
-  
-  .order-summary {
-    flex: 1; /* Takes less space on the right */
-  }
-  
-  .checkout-form form {
-    display: grid;
-    gap: 10px;
-  }
-  
-  .checkout-form div {
-    margin-bottom: 10px;
-  }
-  
-  .checkout-form input {
-    padding: 8px;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .order-summary {
-    background-color: #f9f9f9;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .summary-header {
-    cursor: pointer;
-    font-weight: bold;
-    color: #007bff;
-  }
-  
-  .summary-details {
-    margin-top: 10px;
-  }
-  
-  .summary-details p {
-    margin: 5px 0;
-  }
-  
+}
