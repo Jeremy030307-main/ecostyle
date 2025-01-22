@@ -10,7 +10,6 @@ import {
 import { useProduct } from "../../apiManager/methods/productMethods";
 import { RatingStar, SmallRatingStar } from "./RatingStart";
 import ReviewModal from "../Components/Review Modal/ReviewModal";
-import { decreaseStock, increaseStock } from "../../apiManager/methods/stockMethods";
 
 const ReviewCard = ({ review }) => {
   return (
@@ -45,18 +44,6 @@ const Product = () => {
   const product = useProduct(productID);
   const {addItemToWishlist,removeItemFromWishlist, preesntInWishlist, wishlistItems} = useWishlist();
   const [addedToWishlist, setAddedToWishlist] = useState(false);
-
-  useEffect(() => {
-    const test = async() => {
-      try {
-        decreaseStock("ES00000", "L", "BG", 5)
-      } catch (error) {
-        console.log(error.message)
-      }
-    }
-
-    test()
-  })
 
   useEffect(() => {
     if (product){
