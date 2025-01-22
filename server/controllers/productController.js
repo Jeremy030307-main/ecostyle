@@ -1,6 +1,7 @@
 import { db } from "../firebase.js";
 import admin from 'firebase-admin'
 import { COLLECTIONS, message } from "./utility.js"; 
+import { getProductStock } from "./stockController.js";
 
 export const checkProduct = async (body) => {
   try {
@@ -51,11 +52,12 @@ export const checkProduct = async (body) => {
   }
 };
  
-
-export const getVariantDetails = async (variantData) => {
+export const getVariantDetails = async (id, variantData) => {
   try{
 
-    if (!variantData){
+    const inventory = await getProductStock(id);
+
+    if (!variantData && !inventory){
       throw new Error("No Color IDs")
     }
 
@@ -64,11 +66,13 @@ export const getVariantDetails = async (variantData) => {
         const colorDoc = await db.collection('color').doc(variantDoc.color).get();
 
         if (colorDoc.exists){
-          const {color, ...data} = variantDoc
+          const {color, ...data} = variantDoc;
+          const stock = inventory[color]
           return {
             id: color,
             ...colorDoc.data(),
-            ...data
+            ...data,
+            stock: {...stock}
           }
         }
 
@@ -161,7 +165,7 @@ export const getProducts = async (req, res) => {
               const productData = doc.data();
 
               // Fetch colors: list of document IDs
-              const variant = await getVariantDetails(productData.variant);
+              const variant = await getVariantDetails(doc.id, productData.variant);
 
               return {
                 id: doc.id,
@@ -226,7 +230,8 @@ export const getProduct = (req, res, next) => {
         }
 
         const productData = snapshot.data();
-        const variant = await getVariantDetails(productData.variant);
+        const inventory = await getProductStock(id);
+        const variant = await getVariantDetails(id, productData.variant);
 
         // Clean and format the product data
         const cleanedData = {
@@ -243,6 +248,7 @@ export const getProduct = (req, res, next) => {
           collection: productData.collection
         };
 
+        console.log(cleanedData)
         // Send the updated product data to the client
         res.write(`data: ${JSON.stringify(cleanedData)}\n\n`);
       },

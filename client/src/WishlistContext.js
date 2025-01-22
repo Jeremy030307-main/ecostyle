@@ -13,9 +13,13 @@ export const WishlistProvider = ({ children }) => {
   const [wishlistTotalItems, setWishlistTotalItems] = useState(0)
 
   const fetchWishlst = async() => {
-     const data = await getUserWishlist();
-     console.log(data)
-     setWishlistItems(data)
+     try {
+      const data = await getUserWishlist();
+      console.log(data)
+      setWishlistItems(data)
+    } catch (error) {
+      console.log(error.message)
+    }
    }
 
    useEffect(() => {

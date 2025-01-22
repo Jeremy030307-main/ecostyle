@@ -15,9 +15,13 @@ export const CartProvider = ({ children }) => {
   const [totalItem, setTotalItem] = useState(0)
 
   const fetchCart = async() => {
-    const data = await getUserCart();
-    console.log(data)
-    setCartItems(data)
+    try {
+      const data = await getUserCart();
+      console.log(data)
+      setCartItems(data)
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   useEffect(() => {
