@@ -29,7 +29,7 @@ export const getUserWishlist = async (req, res) => {
               const productData = productDoc.data();
   
               // Fetch variant details (e.g., colors)
-              const variant = await getVariantDetails(productData.variant);
+              const variant = await getVariantDetails(productId, productData.variant);
   
               return {
                 id: productId, // Include the product ID

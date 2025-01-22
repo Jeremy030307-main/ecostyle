@@ -11,7 +11,7 @@ export const COLLECTIONS = {
     CART: "cart",
     ADDRESS: "address",
     ORDER: "order",
-    WISHLIST: "wishlist"
+    WISHLIST: "wishlist",
 };
   
  
