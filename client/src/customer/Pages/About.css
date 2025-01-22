@@ -1,4 +1,4 @@
-/* Global Reset */
+/* Global Styles */
 * {
     margin: 0;
     padding: 0;
@@ -10,135 +10,141 @@ body {
     color: #333;
     line-height: 1.6;
     background-color: #f9f9f9;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
 }
 
+/* Section Titles */
 .section-title {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     text-align: center;
     margin-bottom: 40px;
-    font-weight: 600;
+    font-weight: bold;
     color: #2c3e50;
+    text-transform: capitalize;
+    letter-spacing: 1px;
+    border-bottom: 3px solid #3498db;
+    display: inline-block;
+    padding-bottom: 10px;
 }
 
-/* Header Section */
-.about-header {
+/* Hero Section */
+.about-hero {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
-    padding: 40px 10%;
+    padding: 50px 10%;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    margin-bottom: 40px;
 }
 
-.about-text {
+.hero-text {
     flex: 1 1 500px;
     max-width: 600px;
 }
 
-.about-text h1 {
-    font-size: 2.8rem;
+.hero-text h1 {
+    font-size: 3.5rem;
     margin-bottom: 20px;
     color: #2c3e50;
+    font-weight: bold;
 }
 
-.about-text p {
-    font-size: 1.1rem;
+.hero-text p {
+    font-size: 1.2rem;
     margin-bottom: 15px;
     color: #555;
+    line-height: 1.8;
 }
 
-.about-image {
-    flex: 1 1 300px;
+.cta-button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #2c80b4;
+}
+
+.hero-image {
+    flex: 1 1 400px;
     display: flex;
     justify-content: center;
 }
 
-.about-image img {
+.hero-image img {
     width: 100%;
-    max-width: 400px;
+    max-width: 500px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* Stats Section */
 .about-stats {
+    padding: 60px 10%;
+    background-color: #f4f8fb;
+}
+
+.stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 40px 10%;
+    gap: 30px;
     text-align: center;
 }
 
 .stat-card {
     background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
 }
 
 .stat-card h3 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     margin-bottom: 10px;
-    color: #333;
-    transition: color 0.3s ease;
+    color: #3498db;
+    font-weight: bold;
 }
 
 .stat-card p {
-    color: #555;
     font-size: 1rem;
-    transition: color 0.3s ease;
+    color: #555;
 }
 
-/* Hover Effect */
 .stat-card:hover {
     transform: translateY(-10px);
-    background-color: #e74c3c;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #eaf6fe;
 }
 
-.stat-card:hover h3,
-.stat-card:hover p {
-    color: #ffffff;
-}
-
-/* Active (Clicked) State */
-.stat-card.active {
-    background-color: #e74c3c;
-    transform: translateY(-10px);
-}
-
-.stat-card.active h3,
-.stat-card.active p {
-    color: #ffffff;
-}
-
-
-/* Team Section */
 /* Team Section */
 .about-team {
-    padding: 60px 5%; /* Spacing around the section */
-    background-color: #f8f9fa; /* Light grey background for clean look */
+    padding: 60px 5%;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
 }
 
-.about-team .section-title {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #2c3e50; /* Dark grey for title */
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-/* Team Member Cards */
 .team-member {
-    background-color: #ffffff; /* Clean white background */
+    background-color: #f9f9f9;
     text-align: center;
-    border-radius: 16px; /* Smooth rounded corners */
-    padding: 30px 20px; /* Adequate space inside */
-    margin: 15px; /* Spacing between cards */
+    border-radius: 16px;
+    padding: 40px 20px;
+    margin: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 .team-member img {
@@ -147,132 +153,122 @@ body {
     object-fit: cover;
     border-radius: 50%;
     margin-bottom: 15px;
-    border: 4px solid #e0e0e0; /* Light border around the image */
+    border: 4px solid #e0e0e0;
 }
 
 .team-member h4 {
-    font-size: 1.5rem; /* Slightly larger for prominence */
-    color: #2c3e50; /* Dark grey for name */
+    font-size: 1.6rem;
+    color: #2c3e50;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .team-member p {
     font-size: 1rem;
-    color: #7f8c8d; /* Neutral grey for role description */
-    margin-bottom: 10px;
+    color: #7f8c8d;
 }
 
 .team-member:hover {
-    transform: translateY(-10px); /* Smooth hover effect */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Slightly stronger shadow */
-    background-color: #f4f9ff; /* Subtle light blue hover background */
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #f0f8ff;
 }
 
-/* Social Icons */
 .team-socials {
     display: flex;
     justify-content: center;
-    gap: 12px; /* Space between icons */
-    margin-top: 10px;
+    gap: 15px;
+    margin-top: 15px;
 }
 
 .team-socials a {
-    cursor: pointer;
-    font-size: 1.5rem; /* Slightly larger icons */
-    color: #95a5a6; /* Neutral grey for default */
+    font-size: 1.5rem;
+    color: #777;
     transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .team-socials a:hover {
-    color: #3498db; /* Highlight blue on hover */
-    transform: scale(1.2); /* Slight zoom effect */
+    color: #3498db;
+    transform: scale(1.1);
 }
 
-/* Slick Dots */
-.slick-dots {
-    bottom: -20px; /* Adjust position below slides */
-}
-
-.slick-dots li button:before {
-    font-size: 14px; /* Larger dots */
-    color: #ccc; /* Inactive dots */
-}
-
-.slick-dots li.slick-active button:before {
-    color: #3498db; /* Blue for active dot */
-}
-  
 /* Services Section */
 .about-services {
+    padding: 60px 10%;
+    background-color: #f9f9f9;
+}
+
+.services-grid {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
-    padding: 40px 10%;
-    background-color: #f9f9f9;
+    gap: 30px;
 }
 
 .service {
     flex: 1 1 300px;
     background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    padding: 25px;
+    border-radius: 12px;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .service img {
-    width: 50px;
-    margin-bottom: 10px;
+    width: 60px;
+    margin-bottom: 15px;
 }
 
 .service h4 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: #2c3e50;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .service p {
+    font-size: 1rem;
     color: #555;
 }
 
 .service:hover {
-    transform: scale(1.05);
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    background-color: #eaf6fe;
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .about-header {
+    .about-hero {
         flex-direction: column;
         text-align: center;
-        gap: 30px;
     }
 
-    .about-text {
-        padding: 0;
+    .hero-image img {
+        max-width: 300px;
     }
 
-    .about-stats {
+    .stats-grid {
         grid-template-columns: 1fr 1fr;
-    }
-
-    .team-grid,
-    .footer-content {
-        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
-    .about-text h1 {
+    .section-title {
         font-size: 2.2rem;
     }
 
-    .about-stats {
+    .stats-grid {
         grid-template-columns: 1fr;
     }
 
     .service {
         flex: 1 1 100%;
+    }
+
+    .team-member img {
+        width: 100px;
+        height: 100px;
     }
 }
