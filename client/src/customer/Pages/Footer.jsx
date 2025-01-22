@@ -65,12 +65,20 @@ const Footer = () => {
 
         {/* Quick Links Section */}
         <div>
+          <h4>Account</h4>
+          <p><a href="/update-profile" className="footer-link">My Account</a></p>
+          <p><a href="/login" className="footer-link">Login/Register</a></p>
+          <p><a href="/cart" className="footer-link">Cart</a></p>
+          <p><a href="/wishlist" className="footer-link">Wishlist</a></p>
+          <p><a href="/shop" className="footer-link">Shop</a></p>
+        </div>
+        <div>
           <h4>Quick Links</h4>
           <p><a href="/privacy-policy" className="footer-link">Privacy Policy</a></p>
           <p><a href="/terms-of-use" className="footer-link">Terms of Use</a></p>
           <p><a href="/faq" className="footer-link">FAQ</a></p>
           <p><a href="/contact" className="footer-link">Contact</a></p>
-        </div>
+        </div>    
       </div>
     </footer>
   );

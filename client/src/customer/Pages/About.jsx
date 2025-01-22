@@ -1,27 +1,34 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "./About.css";
 import bannerImage from "../Components/Assets/figma_image_1.jpeg";
 import team1 from "../Components/Assets/old_ceo.jpeg";
 import team2 from "../Components/Assets/female_ceo.jpeg";
 import team3 from "../Components/Assets/new_ceo.jpeg";
-import team4 from "../Components/Assets/ceo1.png";
-import team5 from "../Components/Assets/ceo2.png";
-import team6 from "../Components/Assets/ceo3.png";
 import deliveryIcon from "../Components/Assets/cart.svg";
 import serviceIcon from "../Components/Assets/account.svg";
 import guaranteeIcon from "../Components/Assets/wishlist.svg";
-import { FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 
-const teamMembers = [
-  { id: 1, name: "Hanshika", role: "RTE", image: team5, twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
-  { id: 2, name: "Nallya", role: "RTE", image: team2, twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
-  { id: 3, name: "Benjamin Tan En Zhe", role: "Product", image: team3, twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
-  { id: 4, name: "Bryan Hii Neng Yuan", role: "Marketing Head", image: team4, twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
-  { id: 5, name: "Foo Jia Wei", role: "HR Manager", image: team3, twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
-  { id: 6, name: "Benjamin Tan En Zhe", role: "Sales Lead", image: team1, twitter: "https://twitter.com", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
-  { id: 7, name: "Shivansh", role: "Sales Lead", image: team6, twitter: "https://twitter.com/shivansh", instagram: "https://instagram.com", linkedin: "https://linkedin.com" },
+const testimonials = [
+  {
+    id: 1,
+    name: "Sarah Jones",
+    review: "EcoStyle has completely transformed my shopping habits. Their products are eco-friendly, and I love the quality!",
+    image: team1,
+  },
+  {
+    id: 2,
+    name: "John Smith",
+    review: "I’m impressed with their fast delivery and commitment to sustainability. Highly recommended!",
+    image: team2,
+  },
+  {
+    id: 3,
+    name: "Aisha Khan",
+    review: "The clothes are stylish and sustainable. It feels great to shop without harming the environment.",
+    image: team3,
+  },
 ];
 
 const stats = [
@@ -64,7 +71,11 @@ const About = () => {
             Join us in revolutionizing fashion by making choices that are both
             stylish and sustainable for the planet.
           </p>
-          <button className="cta-button"><Link to="/shop" style={{ textDecoration: 'none', color: 'white' }}>Checkout Here</Link></button>
+          <button className="cta-button">
+            <Link to="/shop" style={{ textDecoration: "none", color: "white" }}>
+              Checkout Here
+            </Link>
+          </button>
         </div>
         <div className="hero-image">
           <img src={bannerImage} alt="Our Journey" />
@@ -88,32 +99,15 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team Section */}
-      <section className="about-team">
-        <h2 className="section-title">Meet the Team</h2>
+      {/* Testimonials Section */}
+      <section className="about-testimonials">
+        <h2 className="section-title">What Our Customers Say</h2>
         <Slider {...settings}>
-          {teamMembers.map((member) => (
-            <div key={member.id} className="team-member">
-              <img src={member.image} alt={member.name} />
-              <h4>{member.name}</h4>
-              <p>{member.role}</p>
-              <div className="team-socials">
-                {member.twitter && (
-                  <a href={member.twitter} target="_blank" rel="noopener noreferrer">
-                    <FaTwitter />
-                  </a>
-                )}
-                {member.instagram && (
-                  <a href={member.instagram} target="_blank" rel="noopener noreferrer">
-                    <FaInstagram />
-                  </a>
-                )}
-                {member.linkedin && (
-                  <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
-                    <FaLinkedin />
-                  </a>
-                )}
-              </div>
+          {testimonials.map((testimonial) => (
+            <div key={testimonial.id} className="testimonial-card">
+              <img src={testimonial.image} alt={testimonial.name} />
+              <p className="testimonial-review">"{testimonial.review}"</p>
+              <h4>{testimonial.name}</h4>
             </div>
           ))}
         </Slider>
