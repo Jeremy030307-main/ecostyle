@@ -2,8 +2,8 @@
 .product-page-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 80px 100px;
+  gap: 5rem;
+  padding: 80px 200px;
   font-family: Arial, sans-serif;
 }
 
@@ -16,8 +16,11 @@
 
 /* Left Section: Main Product Image */
 .product-image-section {
-  flex: 2;
-  max-width: 500px; /* Limits the image size for large screens */
+  flex: 5;
+  max-width: 800px; /* Limits the image size for large screens */
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .product-rating-reviewCount {
@@ -40,7 +43,7 @@
 
 /* Right Section: Product Details */
 .product-details-section {
-  flex: 3;
+  flex: 5;
   display: flex;
   flex-direction: column;
   gap: 30px;

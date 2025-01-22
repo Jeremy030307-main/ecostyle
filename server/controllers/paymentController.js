@@ -11,7 +11,7 @@ async function createStripeCustomer(uid) {
     const userDocRef = db.collection(COLLECTIONS.USER).doc(uid);
     const userDoc = await userDocRef.get();
 
-    if (!userDoc.exists) {
+    if (!userDoc.exists) { 
       throw new Error('User document does not exist.');
     }
 
@@ -51,6 +51,24 @@ async function createSetupIntent(userId) {
 
   console.log(setupIntent)
   return setupIntent;
+}
+
+export async function getLast$Digit(clientSecret) {
+  try {
+    // Retrieve the PaymentIntent from Stripe
+    const paymentIntent = await stripe.paymentIntents.retrieve(clientSecret);
+
+    // Get the last 4 digits of the card from the payment method details
+    const paymentMethod = await stripe.paymentMethods.retrieve(
+      paymentIntent.payment_method
+    );
+
+    const haha = paymentMethod.card?.last4 || null;
+
+    return haha
+  } catch (error) {
+    console.error(`Error fetching payment details for PaymentIntent ${clientSecret}:`, error);
+  }
 }
 
 async function getClientID(uid) {
@@ -141,48 +159,45 @@ export const deleteClientPaymentMethod = async (req, res) => {
 }
 
 export const createPayment = async (req, res) => {
+  const { total, paymentMethodID, shipping } = req.body;
+  const userID = req.user;
 
-    const {total} = req.body;
+  try {
+    let paymentIntent;
 
-    console.log(total)
-    try{
-    // Create a PaymentIntent with the order amount and currency
-    const paymentIntent = await stripe.paymentIntents.create({
+    if (paymentMethodID) {
+      // Use existing customer and payment method to confirm the payment
+      const clientID = await getClientID(userID); // Fetch the customer ID for the logged-in user
+      
+      paymentIntent = await stripe.paymentIntents.create({
         amount: total,
         currency: "myr",
-        // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+        customer: clientID,
+        payment_method: paymentMethodID,
+        confirm: true,
+        return_url: "http://localhost:3000/checkout/complete", // Optional return URL
+        off_session: true, // Indicates this is an off-session payment
+        shipping: shipping
+      });
+    } else {
+      // Create a new PaymentIntent for a new payment
+      paymentIntent = await stripe.paymentIntents.create({
+        amount: total,
+        currency: "myr",
         automatic_payment_methods: {
-          enabled: true,
+          enabled: true, // Let Stripe automatically handle payment methods
         },
-    });
-    
+      });
+    }
+
+    // Respond with the PaymentIntent's client secret
     res.send({
-        clientSecret: paymentIntent.client_secret,
+      clientSecret: paymentIntent.client_secret,
     });
   } catch (error) {
-    res.status(400).send(message(error.message))
+    console.error("Error creating PaymentIntent:", error.message);
+    res.status(400).send(message(error.message));
   }
 };
 
-export const createCheckoutSession = async (req,res) => {
-  const sesion = await stripe.checkout.sessions.create({
-    currency: 'usd',
-    mode: 'setup',
-    ui_mode: 'embedded',
-    customer: '',
-    return_url: 'https://example.com/return?session_id={CHECKOUT_SESSION_ID}'
-  });
-
-  res.send({clientSecret: session.client_secret});
-}
-
-const calculateOrderAmount = (items) => {
-  // Calculate the order total on the server to prevent
-  // people from directly manipulating the amount on the client
-  let total = 0;
-  items.forEach((item) => {
-    total += item.amount;
-  });
-  return total;
-};
 

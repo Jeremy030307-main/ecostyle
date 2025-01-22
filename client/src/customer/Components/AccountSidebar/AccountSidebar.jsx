@@ -40,11 +40,11 @@ const AccountSidebar = () => {
                   Order
                 </button>
               </li>
-              <li>
+              {/* <li>
                 <button onClick={() => handleNavigation("./cancellation")}>
                   Cancellations
                 </button>
-              </li>
+              </li> */}
             </ul>
           </li>
         </ul>

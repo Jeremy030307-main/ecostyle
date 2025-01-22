@@ -392,3 +392,146 @@
   color: red;
   font-size: 12px;
 }
+
+.account-order-container {
+  /* max-width: 800px; */
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.account-order-wrapper {
+  margin-bottom: 40px;
+}
+
+.account-order-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+.account-order-header {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.account-order-detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.account-order-detail:last-child {
+  margin-bottom: 0;
+}
+
+.account-order-label {
+  color: #666;
+}
+
+.account-order-value {
+  font-weight: 500;
+}
+
+.account-order-items {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.account-order-item {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.account-order-item:last-child {
+  border-bottom: none;
+}
+
+.account-order-item-image img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.account-order-item-details {
+  flex-grow: 1;
+  margin-left: 20px;
+}
+
+.account-order-item-details h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.account-order-price {
+  display: block;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.account-order-item-meta {
+  display: flex;
+  gap: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.account-order-item-quantity {
+  margin: 0 20px;
+  color: #666;
+}
+
+.account-order-item-subtotal {
+  font-weight: 500;
+  min-width: 120px;
+  text-align: right;
+}
+
+.account-order-total {
+  text-align: right;
+  padding-top: 20px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.account-order-shipping,
+.account-order-delivery {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.account-order-shipping h2,
+.account-order-delivery h2 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+.account-order-shipping-status {
+  display: flex;
+  align-items: center;
+  color: #ff4d4f;
+}
+
+.account-order-status-icon {
+  margin-right: 10px;
+}
+
+.account-order-status-arrow {
+  margin-left: auto;
+}
+
+.account-order-delivery-details {
+  color: #333;
+}
+
+.account-order-address {
+  margin: 5px 0;
+  line-height: 1.4;
+}
