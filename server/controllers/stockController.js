@@ -19,31 +19,30 @@ export const getSkuStock = async (sku) => {
     }
 }
 
-export const getProductStock = async (productID) => {
+export const getProductStock = async (productID, transaction) => {
     try {
-        const stockQuery = db.collection(COLLECTIONS.STOCK)
-            .orderBy(admin.firestore.FieldPath.documentId())
-            .startAt(productID)
-            .endAt(productID + '\uf8ff')
-        
-        const inventory = {}
-
-        const stockSnapshot = await stockQuery.get();
-        stockSnapshot.forEach((stock) => {
-            const [prodID, variant, size] = stock.id.split('_'); // Split the document ID
-            if (!inventory[variant]) {
-                inventory[variant] = {};
-            }
-            inventory[variant][size] = stock.data().stock;
-        });
-
-        return inventory;
-        
+      const stockQuery = db.collection(COLLECTIONS.STOCK)
+        .orderBy(admin.firestore.FieldPath.documentId())
+        .startAt(productID)
+        .endAt(productID + '\uf8ff');
+  
+      const inventory = {};
+  
+      const stockSnapshot = await transaction.get(stockQuery);
+      stockSnapshot.forEach((stock) => {
+        const [prodID, variant, size] = stock.id.split('_'); // Split the document ID
+        if (!inventory[variant]) {
+          inventory[variant] = {};
+        }
+        inventory[variant][size] = stock.data().stock;
+      });
+  
+      return inventory;
     } catch (error) {
-        // throw new Error(error.message); // Throw the error to handle it at the calling site
-        console.log(error.message);
+      console.error(error.message);
+      throw new Error("Error fetching product stock");
     }
-}
+  };
 
 export const addStock = async (req, res) => {
     try {
