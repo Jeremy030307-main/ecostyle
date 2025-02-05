@@ -13,11 +13,11 @@ EcoStyle is a modern e-commerce platform that promotes sustainability and recycl
 7. [Roadmap](#roadmap)
 8. [Contributing](#contributing)
 9. [Versioning Strategy](#versioning-strategy)
-10.[Pull Request Strategy](#pull-request-strategy)
-11.[Authors and Acknowledgment](#authors-and-acknowledgment)
-12.[License](#license)
-13.[Project Status](#project-status)
-14.[Generative AI Statement](#generative-ai)
+10. [Pull Request Strategy](#pull-request-strategy)
+11. [Authors and Acknowledgment](#authors-and-acknowledgment)
+12. [License](#license)
+13. [Project Status](#project-status)
+14. [Generative AI Statement](#generative-ai)
 
 ## Features
 
