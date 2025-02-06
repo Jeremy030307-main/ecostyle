@@ -7,7 +7,7 @@
 /* shop-Sidebar styles */
 .shop-sidebar {
   width: 300px; /* Adjust the width to make it smaller */
-  background-color: #fff;
+  background-color: #eceee3;
   padding: 20px;
   border-right: 1px solid black;
 }
@@ -141,7 +141,7 @@
   top: 100%;
   left: 0;
   width: 100%;
-  background-color: #fff;
+  background-color: #eceee3;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -198,7 +198,7 @@
   margin-top: 10px;
   list-style: none;
   padding: 0;
-  background-color: #fff;
+  background-color: #eceee3;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
@@ -421,7 +421,7 @@
 
 .shop-productCard:hover {
   transform: scale(1.03); /* Optional hover effect for card */
-  background-color: #d1d4c7 /* Slightly darker on hover */
+  background-color: #d1d4c7 /* Slightly lighter color on hover */
 }
 
 .product-card-info-container{
