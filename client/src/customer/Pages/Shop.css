@@ -287,7 +287,7 @@
   width: calc(
     33.333% - 20px
   ); /* Adjust card width for three columns with gaps */
-  background-color: #FFDAB9;
+  background-color: rgba(211, 211, 211, 0.767);
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -299,7 +299,6 @@
 
 .shop-product-card:hover {
   cursor: pointer;
-  background-color: #FFCBA4; /* Slightly darker pastel peach on hover */
 }
 
 .shop-product-card img {
@@ -384,7 +383,7 @@
 }
 
 .product-card-image-container {
-  background-color: #f5f5f5;
+  background-color: #FFDAB9; /* Pastel Peach */
   border-radius: 10px;
   display: flex;
   justify-content: center; /* Centers the image horizontally */
@@ -422,6 +421,7 @@
 
 .shop-productCard:hover {
   transform: scale(1.03); /* Optional hover effect for card */
+  background-color: #FFCBA4 /* Slightly darker pastel peach on hover */
 }
 
 .product-card-info-container{
