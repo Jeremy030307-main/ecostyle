@@ -383,7 +383,7 @@
 }
 
 .product-card-image-container {
-  background-color: #FFDAB9; /* Pastel Peach */
+  background-color: #ebede1; 
   border-radius: 10px;
   display: flex;
   justify-content: center; /* Centers the image horizontally */
@@ -421,7 +421,7 @@
 
 .shop-productCard:hover {
   transform: scale(1.03); /* Optional hover effect for card */
-  background-color: #FFCBA4 /* Slightly darker pastel peach on hover */
+  background-color: #c3c6b5 /* Slightly darker pastel peach on hover */
 }
 
 .product-card-info-container{
