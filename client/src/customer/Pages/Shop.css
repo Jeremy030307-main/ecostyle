@@ -287,7 +287,7 @@
   width: calc(
     33.333% - 20px
   ); /* Adjust card width for three columns with gaps */
-  background-color: rgba(211, 211, 211, 0.767);
+  background-color: #FFDAB9;
   border-radius: 10px;
   overflow: hidden;
   display: flex;
@@ -299,6 +299,7 @@
 
 .shop-product-card:hover {
   cursor: pointer;
+  background-color: #FFCBA4; /* Slightly darker pastel peach on hover */
 }
 
 .shop-product-card img {
