@@ -421,7 +421,7 @@
 
 .shop-productCard:hover {
   transform: scale(1.03); /* Optional hover effect for card */
-  background-color: #c3c6b5 /* Slightly darker on hover */
+  background-color: #d1d4c7 /* Slightly darker on hover */
 }
 
 .product-card-info-container{
