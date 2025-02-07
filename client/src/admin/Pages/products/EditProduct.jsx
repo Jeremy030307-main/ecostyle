@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useProduct } from "../../../apiManager/methods/productMethods";
+import { getProduct, useProduct } from "../../../apiManager/methods/productMethods";
 import {
   updateProduct,
   updateVariant,
@@ -8,15 +8,33 @@ import {
   addSize,
   deleteSize,
 } from "../../../apiManager/methods/productMethods";
+import {
+  increaseStock,
+  decreaseStock,
+} from "../../../apiManager/methods/stockMethods";
 import "./EditProduct.css";
 import { Link } from "react-router-dom";
 
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = useProduct(id); // Using your custom hook
+  const [product, setProduct] = useState(null)
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
+
+    useEffect(() => {
+      const fetchProducts = async () => {
+        try {
+          const data = await getProduct(id)
+          setProduct(data)
+  
+        } catch (error) {
+          console.log(error)
+        }
+      }
+  
+      fetchProducts()
+    })
 
   // Update formData whenever product data changes
   useEffect(() => {
@@ -56,6 +74,78 @@ const EditProduct = () => {
       }));
     } catch (error) {
       console.error("Error deleting variant:", error);
+    }
+  };
+
+  const handleStockUpdate = async (variantId, size, newQuantity, oldQuantity) => {
+    try {
+  
+      // Calculate the difference to determine whether to increase or decrease
+      const difference = newQuantity - oldQuantity;
+      
+      if (difference === 0) return; // No change needed
+  
+      let apiResponse;
+      if (difference > 0) {
+        // Increase stock
+        apiResponse = await increaseStock(
+          id,
+          size,
+          variantId, // Using variant.id (e.g., "NVBL") instead of variant.name
+          Math.abs(difference)
+        );
+      } else {
+        // Decrease stock
+        apiResponse = await decreaseStock(
+          id,
+          size,
+          variantId, // Using variant.id (e.g., "NVBL") instead of variant.name
+          Math.abs(difference)
+        );
+      }
+  
+      // if (!apiResponse.ok) {
+      //   throw new Error(`Failed to update stock: ${apiResponse.statusText}`);
+      // }
+  
+      // Update local state after successful API call
+      setFormData(prevData => ({
+        ...prevData,
+        variant: prevData.variant.map(v => {
+          if (v.id === variantId) {
+            return {
+              ...v,
+              stock: {
+                ...v.stock,
+                [size]: newQuantity
+              }
+            };
+          }
+          return v;
+        })
+      }));
+  
+    } catch (error) {
+      console.error('Error updating stock:', error);
+      // Revert the input to the old value
+      setFormData(prevData => ({
+        ...prevData,
+        variant: prevData.variant.map(v => {
+          if (v.id === variantId) {
+            return {
+              ...v,
+              stock: {
+                ...v.stock,
+                [size]: oldQuantity
+              }
+            };
+          }
+          return v;
+        })
+      }));
+      
+      // Show error to user
+      alert(`Failed to update stock: ${error.message}`);
     }
   };
 
@@ -108,7 +198,7 @@ const EditProduct = () => {
       </div>
 
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="edit-product-form-group">
           <label>Name:</label>
           <input
             type="text"
@@ -119,7 +209,7 @@ const EditProduct = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="edit-product-form-group">
           <label>Price:</label>
           <input
             type="number"
@@ -130,7 +220,7 @@ const EditProduct = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="edit-product-form-group">
           <label>Category:</label>
           <input
             type="text"
@@ -141,7 +231,7 @@ const EditProduct = () => {
           />
         </div>
 
-        <div className="form-group">
+        <div className="edit-product-form-group">
           <label>Collection:</label>
           <input
             type="text"
@@ -153,7 +243,7 @@ const EditProduct = () => {
         </div>
 
         {/* Sizes Section */}
-        <div className="info-section">
+        {/* <div className="info-section">
           <h3>Sizes</h3>
           <div className="sizes-container">
             {formData.size.map((s, index) => (
@@ -171,20 +261,38 @@ const EditProduct = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* Variants Section */}
+        <h4>Variants:</h4>
         <div className="info-section">
-          <h3>Color Variants</h3>
           <div className="variants-container">
             {formData.variant.map((v, index) => (
               <div key={index} className="variant-item">
-                <div
-                  className="color-preview"
-                  style={{ backgroundColor: v.colorCode }}
-                />
                 <img src={v.image} alt={v.name} />
                 <p>{v.name}</p>
+                <div className="stock-management">
+                  {Object.entries(v.stock).map(([size, qty]) => (
+                    <div key={size} className="stock-item">
+                      <span>{size}: </span>
+                      {isEditing ? (
+                        <input
+                        type="number"
+                        min="0"
+                        value={qty}
+                        onChange={(e) => {
+                          const newValue = parseInt(e.target.value) || 0;
+                          handleStockUpdate(v.id, size, newValue, qty);
+                        }}
+                        className="stock-input"
+                      />
+                      ) : (
+                        <span>{qty}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
                 {isEditing && (
                   <button
                     type="button"

@@ -29,6 +29,7 @@ import Orders from './admin/Pages/Orders';
 import AdminRoutes from './authentication/protectedRoute';
 import Collections from './admin/Pages/collections/Collections';
 import AddCollections from './admin/Pages/collections/AddCollections';
+import EditProduct from './admin/Pages/products/EditProduct.jsx'
 import Checkout from './customer/Checkout/Checkout.jsx'
 
 import HomePage from './customer/Pages/HomePage.jsx';
@@ -106,7 +107,7 @@ function App() {
                 <Route path='' element={<Admin/>}>
                   <Route path='add' element={<AddProducts/>}></Route>
                   <Route path='products' element={<Products/>}></Route>
-                  {/* <Route path='products/:id/edit' element={<EditProduct/>}></Route> */}
+                  <Route path='products/:id/edit' element={<EditProduct/>}></Route>
                   <Route path='orders' element={<Orders/>}></Route>
                   <Route path='collections' element={<Collections/>}></Route>
                   <Route path='addCollections' element={<AddCollections/>}></Route>
