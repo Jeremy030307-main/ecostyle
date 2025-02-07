@@ -54,6 +54,36 @@ export const createCategory = (categoryData, parentCategoryID = "") => {
 };
 
 /**
+ * Updates the category size guide.
+ * 
+ * @param {string} categoryID - The unique identifier for the category.
+ * @param {object} sizeGuide - The size guide object, which must follow the `sizeGuideSchema` format.
+ * Each entry in the `sizeGuide` array should contain a required `Size` field and at least one additional field
+ * such as `Chest`, `Waist`, `Hip`, or `Arm Length`.
+ * 
+ * @returns {Promise} API response promise.
+ * 
+ * @example 
+ * {"size_guide": [
+    {
+      "Size": "XXS",
+      "Chest": 31.5,
+      "Waist": 24.5,
+      "Hip": 34
+    },
+    {
+      "Size": "XS",
+      "Chest": 33.5,
+      "Waist": 26.5,
+      "Hip": 36
+    }
+    ]}
+ */
+export const updateCategorySizeGuide = (categoryID, sizeGuide) => {
+    return ApiMethods.put(CATEGORY_ENDPOINTS.ADMIN_CATEGORY_ROUTE(categoryID), sizeGuide)
+}
+
+/**
  * Deletes a category by its ID.
  * 
  * @param {string} categoryID - The unique identifier of the category to delete.
@@ -62,4 +92,3 @@ export const createCategory = (categoryData, parentCategoryID = "") => {
 export const deleteCategory = (categoryID) => {
     return ApiMethods.delete(CATEGORY_ENDPOINTS.ADMIN_CATEGORY_ROUTE(categoryID))
 };
-

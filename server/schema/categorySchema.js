@@ -23,3 +23,19 @@ export const categorySchema = Joi.object({
     id: Joi.string().required(),
     subcategories: subcategorySchema
 });
+
+export const sizeGuideSchema = Joi.object({
+    size_guide: Joi.array().items(
+      Joi.object({
+        Size: Joi.string()
+          .valid('XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL') // Restrict valid sizes if appropriate
+          .required(),
+        // Allow any combination of the following fields
+        Chest: Joi.number().positive(),
+        Waist: Joi.number().positive(),
+        Hip: Joi.number().positive(),
+        "Arm Length": Joi.number().positive()
+      }).or('Chest', 'Waist', 'Hip', 'Arm Length') // Ensure at least one field besides Size is present
+    ).required()
+  });
+  

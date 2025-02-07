@@ -7,7 +7,7 @@ import {
   createNewReview,
   getProductReview,
 } from "../../apiManager/methods/reviewMethods";
-import { useProduct } from "../../apiManager/methods/productMethods";
+import { getProduct, useProduct } from "../../apiManager/methods/productMethods";
 import { RatingStar, SmallRatingStar } from "./RatingStart";
 import ReviewModal from "../Components/Review Modal/ReviewModal";
 
@@ -41,9 +41,34 @@ const Product = () => {
 
   const {addItemToCart} = useCart()
   const { productID } = useParams();
-  const product = useProduct(productID);
   const {addItemToWishlist,removeItemFromWishlist, preesntInWishlist, wishlistItems} = useWishlist();
   const [addedToWishlist, setAddedToWishlist] = useState(false);
+
+  const[product, setProduct] = useState(null)
+  const [reviews, setReview] = useState([]);
+
+  const fetchReview = async () => {
+    try {
+      const data = await getProductReview(productID);
+      setReview(data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const data = await getProduct(productID);
+        setProduct(data)
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    
+    fetchProduct()
+    fetchReview()
+  }, [fetchReview, productID]);
 
   useEffect(() => {
     if (product){
@@ -62,20 +87,6 @@ const Product = () => {
       setSelectedImage(product.thumbnail);
     }
   }, [product]);
-
-  const [reviews, setReview] = useState([]);
-  const fetchReview = async () => {
-    try {
-      const data = await getProductReview(productID);
-      setReview(data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchReview();
-  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   
