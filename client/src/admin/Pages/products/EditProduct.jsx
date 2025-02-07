@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useProduct } from "../../../apiManager/methods/productMethods";
+import { getProduct, useProduct } from "../../../apiManager/methods/productMethods";
 import {
   updateProduct,
   updateVariant,
@@ -18,9 +18,23 @@ import { Link } from "react-router-dom";
 const EditProduct = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = useProduct(id); // Using your custom hook
+  const [product, setProduct] = useState(null)
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
+
+    useEffect(() => {
+      const fetchProducts = async () => {
+        try {
+          const data = await getProduct(id)
+          setProduct(data)
+  
+        } catch (error) {
+          console.log(error)
+        }
+      }
+  
+      fetchProducts()
+    })
 
   // Update formData whenever product data changes
   useEffect(() => {
