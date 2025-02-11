@@ -4,7 +4,6 @@
   flex-direction: column;
   width: 80%;
   margin: 0 auto;
-  font-family: Arial, sans-serif;
 }
 
 .checkout-body {
@@ -17,32 +16,33 @@
 
 /* Checkout Header */
 .checkout-header {
-    display: flex;                 
-    justify-content: space-between;  
-    padding: 50px 40px 20px 40px;
-
-  }
+  display: flex;                 
+  justify-content: space-between;  
+  padding: 50px 40px 20px 40px;
+}
 
 .checkout-header p{
     font-weight: bolder;
 }
   
 .checkout-header-logo-text {
-
     position: absolute;             /* Absolutely position the logo */
     left: 50%;                      /* Move the image to the horizontal center of the parent container */
     transform: translateX(-50%);    /* Adjust to make sure it's perfectly centered */
   }
 
-.checkout-form-shipping-btn{
-  border-radius: 10px;
-  background-color: black;
-  color: white;
-  width: fit-content;
-  padding: 5px 10px;
-  margin-top: 20px;
-  cursor: pointer;
-}
+  .checkout-form-shipping-btn {
+    display: block; /* Ensures it behaves as a block element */
+    width: 100%; /* Full width of the parent container */
+    border-radius: 10px;
+    background-color: black;
+    color: white;
+    padding: 10px 0; /* Adjust padding for better button aesthetics */
+    margin-top: 20px;
+    cursor: pointer;
+    text-align: center; /* Ensures text remains centered */
+    box-sizing: border-box; /* Ensures padding doesn't overflow */
+  }
 
 .checkout-header-back-btn{
     display: flex;
@@ -71,14 +71,24 @@
 
 /* Flex portion for checkout form and order summary */
 .checkout-form {
-  flex: 4; /* Takes more space on the left */
+  flex: 7; /* Takes more space on the left */
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-width:600px;
 }
   
 .order-summary {
   flex: 2; /* Takes less space on the right */
+}
+
+.address-element-wrapper {
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-sizing: border-box;
+  width: 100%; /* Ensure it fills parent consistently */
 }
 
 /* Checkout Form */
@@ -86,6 +96,7 @@
   background-color: #F5F5F5;
   border-radius: 10px;
   padding: 10px 30px;
+  transition: 1s ease; /* Smooth transition for width and border */
 }
 
 .checkout-form-section h2{
@@ -95,13 +106,19 @@
 
 .checkout-form-sectiob-header{
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  justify-content:first baseline;
+  gap: 30px;
+  align-items: baseline;  
+}
+
+.edit-btn{
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .checkout-selected-address-container{
   display: flex;
-  justify-content: space-around;
+  justify-content:space-between;
 }
 
 .checkout-form-navbar{
@@ -112,29 +129,29 @@
   display: flex;
   justify-content: space-around;
   list-style: none;
+  gap: 15px;
+  padding-bottom: 20px;
 }
 
-.checkout-form-navbar-item li{
-  flex: 5;
+.checkout-form-navbar-item li {
+  flex: 4;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
   cursor: pointer;
+  border: 1px solid rgb(87, 87, 87); /* Adds black border */
+  padding: 7px; /* Adds inner spacing for the box */
+  box-sizing: border-box; /* Ensures padding doesn't overflow the box */
+  background-color: white; /* Optional for box visibility */
+  border-radius: 5px;
+  color: rgb(85, 85, 85);
+  transition: all 0.3s ease; /* Smooth transition for width and border */
 }
 
-.checkout-form-navbar-item hr{
-  border: none;
-  height: 3px;
-  transform: translateY(2px);
-  width: 100%;
-  border-radius: 10px;
-  background: #17A375;
-}
-
-.checkout-saved-address{
-  padding: 20px 50px 20px 50px;
+.checkout-form-navbar-item li.active {
+  border-color: #17A375;
+  border-width: 2px;
 }
 
 .checkout-saved-address-selection-header{
@@ -156,7 +173,7 @@
 .checkout-selected-address-info{
   padding-left: 20px;
   padding-top: 10px;
-  font-size: large;
+
 }
 
 .checkout-selected-card-info{
@@ -211,6 +228,7 @@
   justify-content: center;
   width: 100%;
   border: none;
+  height: 40px;
 }
 
 .checkout-address-card-container p{

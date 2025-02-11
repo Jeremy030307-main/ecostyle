@@ -59,7 +59,7 @@ const OrderSummaryTotal = ({subtotal, shippingFee}) => {
   )
 }
 
-const OrderSummary = ({address, card}) => {
+const OrderSummary = ({address}) => {
 
   const {userCart, total} = useContext(CheckoutContext)
   const [message, setMessage] = useState(null);
@@ -95,53 +95,26 @@ const OrderSummary = ({address, card}) => {
   
     setIsLoading(true);
   
-    try {
-      let clientSecret;
-  
-      if (card) {
-        // Use the saved payment method
-        try {
-          const response = await createPaymentIntent(total, card.id, addressData);
-          clientSecret = response.clientSecret;
-          const successUrl = new URL("http://localhost:3000/checkout/complete");
-          successUrl.searchParams.append("payment_intent_client_secret", clientSecret);
-          window.location.href = successUrl.toString();
-        } catch (error) {
-          console.error("Error creating PaymentIntent:", error.message);
-          setMessage("Error creating PaymentIntent: " + error.message);
-          setIsLoading(false);
-          return;
-        }
-      } else {
-        // Use the payment element (UI embedded flow)
-        const { error } = await stripe.confirmPayment({
-          elements,
-          confirmParams: {
-            return_url: "http://localhost:3000/checkout/complete",
-            shipping: addressData,
-          },
-        });
-  
-        if (error) {
-          console.error("Payment confirmation error:", error.message);
-          setMessage(error.message);
-          setIsLoading(false);
-          return;
-        } else {
-          // Stripe will handle the redirection automatically
-          console.log("Payment successful with PaymentElement!");
-          return;
-        }
-      }
-    } catch (error) {
-      console.error("Unexpected error in handleSubmit:", error.message);
-      setMessage("Unexpected error: " + error.message);
+    // Use the payment element (UI embedded flow)
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: "http://localhost:3000/checkout/complete",
+        shipping: addressData,
+      },
+    });
+
+    if (error) {
+      console.error("Payment confirmation error:", error.message);
+      setMessage(error.message);
+      setIsLoading(false);
+    } else {
+      // Stripe will handle the redirection automatically
+      console.log("Payment successful with PaymentElement!");
     }
   
     setIsLoading(false);
   };
-  
-  
 
   return (
     <div className="order-summary">
