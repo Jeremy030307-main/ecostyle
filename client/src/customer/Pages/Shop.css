@@ -383,7 +383,7 @@
 }
 
 .product-card-image-container {
-  background-color: #f5f5f5;
+  background-color: #b8bda6; 
   border-radius: 10px;
   display: flex;
   justify-content: center; /* Centers the image horizontally */
