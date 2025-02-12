@@ -1,6 +1,5 @@
-import { json } from "express";
+import admin from 'firebase-admin';
 import { db } from "../firebase.js";
-import admin from 'firebase-admin'
 import { COLLECTIONS, message } from "./utility.js";
 
 const convertIdToRef = (categoryID) => {
@@ -14,9 +13,37 @@ const convertIdToRef = (categoryID) => {
         path = path.collection(COLLECTIONS.SUBCATEGORY).doc(tmp)
     });
 
-    console.log(path.path)
     return path
 }
+
+export const getSizeGuide = async (categoryID, transaction) => {
+    try {
+      const pathSegments = categoryID.split('_');
+      let tmp = pathSegments[0];
+      let pathRef = db.collection(COLLECTIONS.CATEGORY).doc(tmp);
+  
+      for (let i = 0; i < pathSegments.length; i++) {
+        const docSnapshot = await transaction.get(pathRef);
+  
+        if (docSnapshot.exists) {
+          const data = docSnapshot.data();
+          if (data && data.size_guide) {
+            return data.size_guide ;
+          }
+        }
+  
+        if (i < pathSegments.length - 1) {
+          tmp += `_${pathSegments[i + 1]}`;
+          pathRef = pathRef.collection(COLLECTIONS.SUBCATEGORY).doc(tmp);
+        }
+      }
+  
+      return null; // No size guide found
+    } catch (error) {
+      console.error("Error fetching size guide:", error);
+      throw new Error("Failed to retrieve size guide");
+    }
+  };
 
 export const checkCategory = async (body) => {
     try {
@@ -65,7 +92,6 @@ export const getCategories = async (req, res) => {
     }
 
     try {
-        console.log("Masuk")
         const categoryID = req.params.id;
         let categories = null;
 
@@ -73,7 +99,6 @@ export const getCategories = async (req, res) => {
             // Fetch top-level categories
             const categorySnapshot = await db.collection(COLLECTIONS.CATEGORY).get();
 
-            console.log("ffdfdfd")
             if (categorySnapshot.empty) {
                 return res.status(404).send(message('No categories found.'));
             }
@@ -170,7 +195,32 @@ export const addCategory = async (req, res, next) => {
 }
 
 export const updateCategory = async (req, res) => {
-}
+    try {
+        const categoryId = req.params.id;
+        const { size_guide } = req.body;
+
+        if (!categoryId) {
+            return res.status(400).send(message("Missing category ID"));
+        }
+
+        const categoryRef = convertIdToRef(categoryId);
+
+        // Check if the document exists
+        const docSnapshot = await categoryRef.get();
+        if (!docSnapshot.exists) {
+            return res.status(404).send(message(`Category with ID ${categoryId} not found`));
+        }
+
+        // Use spread operator to pass individual objects to arrayUnion
+        await categoryRef.update({
+            size_guide: admin.firestore.FieldValue.arrayUnion(...size_guide)
+        });
+
+        res.status(200).send(message("Category Information Updated"));
+    } catch (error) {
+        res.status(400).send(message(`Category Information Failed to Update: ${error.message}`));
+    }
+};
 
 export const deleteCategory = async(req, res, next) => {
 
@@ -226,3 +276,4 @@ export const deleteCategory = async(req, res, next) => {
         res.status(500).send(message(error.message));
       }
 };
+ 

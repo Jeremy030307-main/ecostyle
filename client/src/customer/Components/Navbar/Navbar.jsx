@@ -8,9 +8,9 @@ import admin_icon from '../Assets/admin_icon.svg';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
-import AuthenticationManager from '../../../authentication/authenticationManager';
 import { useCart } from '../../../CartContext';
 import { useWishlist } from '../../../WishlistContext';  // Import WishlistContext
+import { useAuth } from '../../../authentication/authenticationManager';
 
 const NoDecorationLink = styled(Link)`
   text-decoration: none;
@@ -18,47 +18,19 @@ const NoDecorationLink = styled(Link)`
 `;
 
 const Navbar = () => {
+
+  const {totalItem} = useCart()
+  const {isAuthenticated, isAdmin} = useAuth()
+
   const [menu, setMenu] = useState('');
-  const [admin, setAdmin] = useState(false);
-  const [isAuthenticated, setAuthenticated] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false); // State to track dropdown visibility
   const location = useLocation(); // Get the current location
-
-  // Get cart items from context
-  const { cartItems } = useCart();
-
-  // Calculate the total number of items in the cart
-  const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   // Get wishlist items from context
   const { wishlistItems } = useWishlist(); // Access wishlist items
 
   // Calculate the total number of items in the wishlist
   const totalWishlistItems = wishlistItems.length;
-
-  // Monitor authentication state
-  useEffect(() => {
-    const unsubscribe = AuthenticationManager.auth.onAuthStateChanged((user) => {
-      if (user) {
-        if (!user.isAnonymous) {
-          console.log('authentication is true');
-          setAuthenticated(true);
-        }
-        AuthenticationManager.auth.currentUser
-          .getIdTokenResult()
-          .then((idTokenResult) => {
-            setAdmin(Boolean(idTokenResult.claims.admin));
-          })
-          .catch(() => setAdmin(false)); // Handle error gracefully
-      } else {
-        setAuthenticated(false);
-        setAdmin(false);
-      }
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
 
   // Update menu based on the current path
   useEffect(() => {
@@ -88,10 +60,10 @@ const Navbar = () => {
           <NoDecorationLink to={`/shop`}>Shop</NoDecorationLink>
           {menu === 'shop' ? <hr /> : <></>}
         </li>
-        <li onClick={() => { setMenu('eco-point'); }}>
+        {/* <li onClick={() => { setMenu('eco-point'); }}>
           <NoDecorationLink to={`/eco-point`}>EcoPoint</NoDecorationLink>
           {menu === 'eco-point' ? <hr /> : <></>}
-        </li>
+        </li> */}
         <li onClick={() => { setMenu('about'); }}>
           <NoDecorationLink to={`/about`}>About</NoDecorationLink>
           {menu === 'about' ? <hr /> : <></>}
@@ -109,13 +81,13 @@ const Navbar = () => {
           <img onClick={() => { setMenu('cart'); }} src={cart_icon} alt="" />
         </Link>
         {/* Display the total number of items in the cart */}
-        <div className="nav-cart-count">{totalItems > 0 ? totalItems : 0}</div>
+        <div className="nav-cart-count">{totalItem}</div>
         <div className="profile-menu">
-          <Link to = {isAuthenticated ? "/myaccount": "/login"}>
+          <Link to = {isAuthenticated ? "/account": "/login"}>
           <img onClick={toggleDropdown} src={account_icon} alt="" />
           </Link>
         </div>
-        {admin === true ? <Link to="/admin"><img onClick={() => { setMenu('admin'); }} src={admin_icon} alt="" /></Link> : <></>}
+        {isAdmin === true ? <Link to="/admin"><img onClick={() => { setMenu('admin'); }} src={admin_icon} alt="" /></Link> : <></>}
       </div>
     </div>
   );

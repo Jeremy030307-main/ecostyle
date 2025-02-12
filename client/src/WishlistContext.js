@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { addwishlistProduct, deleteWishlsitProduct, getUserWishlist } from './apiManager/methods/wishlistMethod';
 
 // Create the WishlistContext
 const WishlistContext = createContext();
@@ -9,55 +10,59 @@ export const useWishlist = () => useContext(WishlistContext);
 // WishlistProvider to wrap around the app and provide wishlist state
 export const WishlistProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useState([]);
+  const [wishlistTotalItems, setWishlistTotalItems] = useState(0)
+
+  const fetchWishlst = async() => {
+     try {
+      const data = await getUserWishlist();
+      console.log(data)
+      setWishlistItems(data)
+    } catch (error) {
+      console.log(error.message)
+    }
+   }
+
+   useEffect(() => {
+    fetchWishlst();
+   }, [])
+
+   useEffect(() => {
+    setWishlistTotalItems(wishlistItems?.length || 0)
+
+   }, [wishlistItems])
 
   // Function to add an item to the wishlist
-  const addItemToWishlist = (product) => {
-    setWishlistItems((prevItems) => {
-      const existingItem = prevItems.find(item => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map(item => item.id === product.id ? 
-          { ...item, quantity: item.quantity + 1 } : item);
-      }
-      return [...prevItems, { ...product, quantity: 1 }];
-    });
+  const addItemToWishlist = async(product) => {
+    try{
+      await addwishlistProduct(product);
+      fetchWishlst()
+    } catch (error) {
+      console.log(error.message)
+    }
   };
 
   // Function to remove an item from the wishlist
-  const removeItemFromWishlist = (productId) => {
-    setWishlistItems((prevItems) => prevItems.filter((item) => item.id !== productId));
+  const removeItemFromWishlist = async (product) => {
+    try {
+      await deleteWishlsitProduct(product);
+      fetchWishlst()
+    } catch (error) {
+      console.log(error.message)
+    }
   };
 
-  // Function to update the quantity of an item in the cart
-  const updateWishlistItemQuantity = (productId, newQuantity) => {
-    setWishlistItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === productId
-          ? { ...item, quantity: Math.max(1, newQuantity) } // Prevent quantity from being less than 1
-          : item
-      )
-    );
-  };
-
-  // Function to calculate subtotal
-  const calculateWishlistSubtotal = () => {
-    return wishlistItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
-  };
-
-  // Function to calculate total number of items in the cart
-  const calculateWishlistTotalItems = () => {
-    return wishlistItems.reduce((acc, item) => acc + item.quantity, 0);
+  const preesntInWishlist = (productID) => {
+    return wishlistItems.some(item => item.id === productID);
   };
 
   return (
     <WishlistContext.Provider
       value={{
         wishlistItems,
-        setWishlistItems,
+        wishlistTotalItems,
         addItemToWishlist,
         removeItemFromWishlist,
-        updateWishlistItemQuantity,
-        calculateWishlistSubtotal,
-        calculateWishlistTotalItems
+        preesntInWishlist
       }}
     >
       {children}

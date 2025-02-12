@@ -1,60 +1,56 @@
-/* General Grid Styling */
 .orders-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
-    align-items: start;
-    border: 2px solid #e5e7eb;
-    padding: 20px;
-    margin: 12px 0;
-    font-size: 0.75rem;
-    color: #374151;
+  display: grid;
+  grid-template-columns: 1fr; /* Default for small screens */
+  gap: 0.75rem; /* Equivalent to Tailwind's `gap-3` */
+  align-items: start; /* Equivalent to `items-start` */
+  border: 1px solid black; /* Equivalent to `border-2 border-gray-200` */
+  border-radius: 4px;
+  padding: 1.25rem; /* Equivalent to `p-5` */
+  margin-top: 0.75rem; /* Equivalent to `my-3` */
+  margin-bottom: 0.75rem;
+  font-size: 0.75rem; /* Equivalent to `text-xs` */
+  color: #4b5563; /* Equivalent to `text-gray-700` */
 }
 
-.orders-container.sm {
-grid-template-columns: 0.5fr 2fr 1fr;
+@media (min-width: 640px) {
+  .orders-container {
+    grid-template-columns: 0.5fr 2fr 1fr; /* Equivalent to `sm:grid-cols-[0.5fr_2fr_1fr]` */
+    padding: 2rem; /* Equivalent to `md:p-8` */
+    margin-top: 1rem; /* Equivalent to `md:my-4` */
+    margin-bottom: 1rem;
+    font-size: 0.875rem; /* Equivalent to `sm:text-sm` */
+  }
 }
 
-.orders-container.lg {
-grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr;
+@media (min-width: 1024px) {
+  .orders-container {
+    grid-template-columns: 0.5fr 2fr 1fr 1fr 1fr; /* Equivalent to `lg:grid-cols-[0.5fr_2fr_1fr_1fr_1fr]` */
+  }
 }
 
 /* Image Styling */
 .order-image {
-width: 48px;
+  width: 48px;
 }
 
 /* Order Item Details */
 .order-items p {
-padding: 2px 0;
+  padding: 2px 0;
 }
 
 /* Address Details */
 .order-address {
-margin-top: 12px;
-margin-bottom: 8px;
-font-weight: 500;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  font-weight: 500;
 }
 
 .order-address div {
-margin-bottom: 4px;
-}
-
-/* Payment & Order Info */
-.order-info {
-font-size: 0.875rem;
-}
-
-.order-info.sm {
-font-size: 0.9375rem;
-}
-
-.order-info p {
-margin-top: 12px;
+  margin-bottom: 4px;
 }
 
 /* Select Dropdown */
 .order-select {
-padding: 8px;
-font-weight: 600;
+  padding: 8px;
+  font-weight: 600;
 }

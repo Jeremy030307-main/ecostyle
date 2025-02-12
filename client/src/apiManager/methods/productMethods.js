@@ -1,39 +1,20 @@
 import { ApiMethods } from "../ApiMethods";
 import PRODUCT_ENDPOINTS from "../endpoints/productEndpoint";
-import useSEE from "../useSEE";
 
-/**
- * A custom hook for fetching product data via Server-Sent Events (SSE).
- *
- * @function
- * @param {string} [productID=""] - The ID of the specific product to fetch. If omitted, a query string will be constructed.
- * @param {Object} [query={}] - A query object used to construct query parameters for fetching multiple products or filtered results.
- * @param {string} [query.category] - The category to filter products by (optional).
- * @param {string} [query.priceRange] - The price range to filter products by (optional).
- * @param {string} [query.sortBy] - The sorting criteria for products (optional).
- * @returns {Object} - Returns the data fetched from the SSE endpoint as managed by the `useSEE` hook.
- *
- * @example
- * // Fetch a specific product by ID
- * const product = useProduct("12345");
- *
- * @example
- * // Fetch products with a query
- * const products = useProduct("", { category: "electronics", sortBy: "price" });
- */
-export const useProduct = (productID = "", query = {}) => {
-    let url = PRODUCT_ENDPOINTS.PRODUCT_ROUTE(productID);
+export const getProducts = (query = {}) => {
+    let url = PRODUCT_ENDPOINTS.PRODUCT_ROUTE();
 
     // Only add query string if productID is not provided
-    if (!productID) {
-        const queryString = new URLSearchParams(query).toString();
-        if (queryString) {
-            url += `?${queryString}`;
-        }
+    const queryString = new URLSearchParams(query).toString();
+    if (queryString) {
+        url += `?${queryString}`;
     }
+    return ApiMethods.get(url);
+}
 
-    return useSEE(url);
-};
+export const getProduct = (productID) => {
+    return ApiMethods.get(PRODUCT_ENDPOINTS.PRODUCT_ROUTE(productID));
+}
 
 /**
  * Adds a new product to the system.

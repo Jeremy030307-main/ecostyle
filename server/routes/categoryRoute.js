@@ -1,7 +1,7 @@
 import express from 'express';
 import { validateRequest } from './middleware.js';
-import { getCategories, addCategory, deleteCategory} from '../controllers/categoryController.js';
-import { categorySchema } from '../schema/categorySchema.js';
+import { getCategories, addCategory, deleteCategory, updateCategory} from '../controllers/categoryController.js';
+import { categorySchema, sizeGuideSchema } from '../schema/categorySchema.js';
 
 const publicCategoryRouter = express.Router();
 const adminCategoryRouter = express.Router();
@@ -10,7 +10,7 @@ publicCategoryRouter.get('/:id?', getCategories);
 
 // -------- Admin Route --------------
 adminCategoryRouter.post('/:parentID?',validateRequest(categorySchema), addCategory)
-
+adminCategoryRouter.put('/:id', validateRequest(sizeGuideSchema), updateCategory)
 adminCategoryRouter.delete('/:id', deleteCategory)
 
-export {publicCategoryRouter,adminCategoryRouter };
+export {publicCategoryRouter,adminCategoryRouter }; 

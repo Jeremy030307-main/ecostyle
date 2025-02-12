@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { assets } from "../Assets/assets";
 import "./Navbar.css";
 import { Link, useNavigate } from "react-router-dom";
-import AuthenticationManager from "../../../authentication/authenticationManager";
+import AuthenticationManager, { useAuth } from "../../../authentication/authenticationManager";
 import AlertDialog from "../AlertDialog/AlertDialog";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const {userSignOut} = useAuth()
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
@@ -16,7 +17,7 @@ const Navbar = () => {
   };
 
   const handleConfirmLogout = async () => {
-    const success = await AuthenticationManager.signOut();
+    const success = await userSignOut();
     console.log(success);
     if (success) {
       navigate("/login");
@@ -26,7 +27,9 @@ const Navbar = () => {
 
   return (
     <div className="navbar-container">
-      <img src={assets.logo_text} alt="" />
+      <Link to={"/"}>
+        <img src={assets.logo_text} alt="" />
+      </Link>
 
       <AlertDialog
         isOpen={isAlertOpen}

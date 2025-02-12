@@ -1,0 +1,64 @@
+/* Sidebar styles */
+.account-sidebar {
+    width: 300px;
+    background-color: #fff;
+    padding: 20px;
+    border-right: 1px solid #ddd;
+}
+
+/* Remove point form */
+.account-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Margin between each category */
+.account-sidebar nav ul li {
+    margin: 10px 0;
+}
+
+/* Button styles to mimic <a> */
+.account-sidebar nav ul li button {
+    all: unset; /* Reset button styles */
+    text-decoration: none;
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.account-main-option {
+    font-size: 25px;
+}
+
+.account-sub-options li {
+    border-radius: 2px;
+}
+
+/* Target the buttons inside the sub-options on hover */
+.account-sub-options li:hover {
+    cursor: pointer; /* Ensure pointer cursor */
+    background-color: #2fbd8e9d;
+    transition: 0.3s, background-color 0.3s; /* Smooth transition */
+}
+
+/* Ensure the main content takes up the full height of the page */
+.main-con {
+    display: flex;
+    height: 100vh; 
+    flex-direction: column; 
+    padding: 20px;
+  }
+
+.sub-options li {
+    border-radius: 2px;
+}
+
+/* Target the buttons inside the sub-options on hover */
+.sub-options li:hover {
+    cursor: pointer; /* Ensure pointer cursor */
+    background-color: #2fbd8e9d;
+    transition: 0.3s, background-color 0.3s; /* Smooth transition */
+}

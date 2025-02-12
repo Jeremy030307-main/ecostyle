@@ -9,7 +9,9 @@ export const COLLECTIONS = {
     USER: "user",
     REVIEW: "review",
     CART: "cart",
-    ADDRESS: "address"
+    ADDRESS: "address",
+    ORDER: "order",
+    WISHLIST: "wishlist",
 };
   
  

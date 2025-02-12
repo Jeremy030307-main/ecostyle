@@ -1,55 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { currency } from "../admin";
 import { assets } from "../Components/Assets/assets";
-import { getCategory } from "../../apiManager/methods/categoryMethods";
+import { useOrder } from "../../apiManager/methods/orderMethod";
+import "./Orders.css";
 
 const Orders = () => {
-  const [orders, setOrders] = useState([]);
+  const orderData = useOrder();
+  if (!orderData) {
+    return <p>Loading...</p>;
+  }
 
-  // Fetch categories on component mount
-  const [categoryData, setCategoryData] = useState(null);
-
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const data = await getCategory();
-        console.log(data);
-      } catch (err) {
-        console.log("Error");
-      }
-    };
-
-    fetchCategory(); // Fetch data when component mounts or categoryID changes
-  }, []); // Dependency array: only rerun if categoryID changes
-  
   return (
     <div>
       <h3>Order Page</h3>
       <div>
-        {orders.map((order, index) => (
+        {orderData.map((order, index) => (
           <div className="orders-container" key={index}>
             <img className="order-image" src={assets.parcel_icon} alt="" />
             <div>
               <div className="order-items">
-                {order.items.map((item, index) => {
-                  if (index === order.items.length - 1) {
+                {order.products.map((product, index) => {
+                  if (index === order.products.length - 1) {
                     return (
                       <p key={index}>
-                        {item.name} x {item.quantity} <span> {item.size} </span>
+                        {product.name} x {product.quantity}{" "}
+                        <span> {product.size} </span>
                       </p>
                     );
                   } else {
                     return (
                       <p key={index}>
-                        {item.name} x {item.quantity} <span> {item.size} </span>
-                        ,{" "}
+                        {product.name} x {product.quantity}{" "}
+                        <span> {product.size} </span>,{" "}
                       </p>
                     );
                   }
                 })}
               </div>
 
-              <p className="order-address">
+              {/* Can be used for future(Change the order data structure) */}
+              {/* <p className="order-address">
                 {order.address.firstName + " " + order.address.lastName}
               </p>
               <div>
@@ -65,20 +55,55 @@ const Orders = () => {
                 </p>
               </div>
 
-              <p>{order.address.phone}</p>
+              <p>{order.address.phone}</p> */}
+
+            {order.shippingAddress && (
+                <>
+                <p>
+                    <strong>Name:</strong> {order.shippingAddress.name}
+                </p>
+                <p>
+                    <strong>Phone:</strong> {order.shippingAddress.phone}
+                </p>
+                <p>
+                    <strong>Address:</strong>{" "}
+                    {`${order.shippingAddress.address.line1}, ${
+                    order.shippingAddress.address.line2 || ""
+                    }, ${order.shippingAddress.address.city}, ${
+                    order.shippingAddress.address.state
+                    } ${order.shippingAddress.address.postal_code}, ${
+                    order.shippingAddress.address.country
+                    }`}
+                </p>
+                {order.shippingAddress.carrier && (
+                    <p>
+                    <strong>Carrier:</strong> {order.shippingAddress.carrier}
+                    </p>
+                )}
+                {order.shippingAddress.tracking_number && (
+                    <p>
+                    <strong>Tracking Number:</strong>{" "}
+                    {order.shippingAddress.tracking_number}
+                    </p>
+                )}
+                </>
+            )}
             </div>
             <div className="order-info">
-              <p className="sm">Items : {order.items.length}</p>
-              <p className="mt-3">Method : {order.paymentMethod}</p>
-              <p>Payment : {order.payment ? "Done" : "Pending"}</p>
-              <p>Date : {new Date(order.date).toLocaleDateString()}</p>
+              <p className="sm">Items : {order.products.length}</p>
+              <p className="mt-3">
+                Method : {order.paymentDetails.paymentMethod.join(", ")}
+              </p>
+              <p>Payment ID: {order.paymentDetails.paymentID}</p>
+              {/* <p>Payment : {order.payment ? "Done" : "Pending"}</p>
+              <p>Date : {new Date(order.date).toLocaleDateString()}</p> */}
             </div>
 
             <p className="sm">
               {currency}
-              {order.amount}
+              {order.total}
             </p>
-            <select className="order-select">
+            <select value={order.status} className="order-select">
               <option value="Order Placed">Order Placed</option>
               <option value="Packing">Packing</option>
               <option value="Shipped">Shipped</option>

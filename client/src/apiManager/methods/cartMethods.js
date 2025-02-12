@@ -16,9 +16,13 @@ import useSEE from "../useSEE";
  *   // handle cart data
  * }
  */
-export const useCart = () => {
-    return useSEE(CART_ENDPOINTS.CART_ROUTE());
+export const getUserCart = () => {
+    return ApiMethods.get(CART_ENDPOINTS.CART_ROUTE())
 };
+
+export const checkoutCart = () => {
+    return ApiMethods.get(CART_ENDPOINTS.CHECKOUT)
+}
 
 /**
  * Adds a product to the user's cart.
@@ -42,7 +46,7 @@ export const addCartProduct = (productID, variant, size, quantity) => {
 
 /**
  * Updates the quantity of a product in the user's cart.
- * @param {string} productID - The ID of the product to update.
+ * @param {string} cartProductID - The ID of the cart product to update.
  * @param {number} quantity - The new quantity of the product.
  * @returns {Promise<Object>} A promise that resolves to the updated cart data.
  * @example
