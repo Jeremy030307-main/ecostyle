@@ -7,12 +7,11 @@ import CheckoutHeader from './CheckoutHeader';
 const Checkout = () => {
 
   const [address, setAddress] = useState(null);
-  const [card, setCard] = useState(null);
 
   return (
     <>
-      <CheckoutForm address={address} setAddress={setAddress} card={card} setCard={setCard}/>
-      <OrderSummary address={address} card={card}/>
+      <CheckoutForm address={address} setAddress={setAddress}/>
+      <OrderSummary address={address}/>
     </>
   );
 };

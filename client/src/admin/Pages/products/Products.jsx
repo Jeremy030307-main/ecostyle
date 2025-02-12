@@ -1,17 +1,32 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 import { assets } from "../../Components/Assets/assets";
 import { currency } from "../../admin";
 import "./Products.css";
 import {
-  useProduct,
   deleteProduct,
+  getProducts,
 } from "../../../apiManager/methods/productMethods";
 import ProductDetails from '../../Components/ProductDetails/ProductDetails';
 
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [list, setList] = useState(false)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts()
+        setList(data)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchProducts()
+  })
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
@@ -30,9 +45,6 @@ const Products = () => {
       }
     }
   };
-
-  const list = useProduct();
-  console.log(list);
 
   if (!list) {
     return <p>Loading...</p>;

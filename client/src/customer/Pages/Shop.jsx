@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import search_icon from "../Components/Assets/search_icon.png";
 import {
+  getProducts,
   useProduct,
 } from "../../apiManager/methods/productMethods";
 import { getCategory } from "../../apiManager/methods/categoryMethods";
@@ -136,7 +137,22 @@ const Shop = () => {
     "#964B00": "Brown",
   };
 
-  const productData = useProduct("", { category });
+  const [productData, setProductData] = useState(null)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProducts({ category })
+        console.log(data)
+        setProductData(data)
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchProducts()
+  }, [category])
 
   // Fetch category
   useEffect(() => {
@@ -301,7 +317,9 @@ const Shop = () => {
 
         <div className="shop-productCard-grid">
           {filteredProducts && filteredProducts.map((product) => (
-            <ProductCard productData={product}/>
+            <div key={product.id}>
+              <ProductCard productData={product}/>
+            </div>
           ))}
         </div>
       </main>
