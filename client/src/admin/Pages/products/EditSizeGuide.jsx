@@ -14,9 +14,9 @@ const EditSizeGuide = () => {
       try {
         const response = await api.get(`/size-guides/${id}`);
         setSizeGuide(response.data);
-        setLoading(false);
       } catch (err) {
         setError("Failed to fetch size guide");
+      } finally {
         setLoading(false);
       }
     };
@@ -35,9 +35,11 @@ const EditSizeGuide = () => {
 
   const handleSizeChange = (index, e) => {
     const { name, value } = e.target;
-    const updatedSizes = [...sizeGuide.sizes];
-    updatedSizes[index] = { ...updatedSizes[index], [name]: value };
-    setSizeGuide((prev) => ({ ...prev, sizes: updatedSizes }));
+    setSizeGuide((prev) => {
+      const updatedSizes = [...prev.sizes];
+      updatedSizes[index] = { ...updatedSizes[index], [name]: value };
+      return { ...prev, sizes: updatedSizes };
+    });
   };
 
   const addSize = () => {
@@ -45,7 +47,10 @@ const EditSizeGuide = () => {
   };
 
   const removeSize = (index) => {
-    setSizeGuide((prev) => ({ ...prev, sizes: prev.sizes.filter((_, i) => i !== index) }));
+    setSizeGuide((prev) => {
+      const updatedSizes = prev.sizes.filter((_, i) => i !== index);
+      return { ...prev, sizes: updatedSizes };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -56,7 +61,9 @@ const EditSizeGuide = () => {
       } else {
         await api.post("/size-guides", sizeGuide);
       }
-      navigate("/size-guides");
+
+      // Ensure that the page fetches updated data when navigating back
+      navigate("/size-guides", { replace: true });
     } catch (err) {
       setError("Failed to save size guide");
     }
