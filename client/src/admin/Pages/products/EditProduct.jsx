@@ -12,6 +12,10 @@ import {
   increaseStock,
   decreaseStock,
 } from "../../../apiManager/methods/stockMethods";
+import { getCategory } from "../../../apiManager/methods/categoryMethods";
+import { getAllCollection } from "../../../apiManager/methods/collectionMethods";
+import CustomSelect from "../../Components/Dropdown/CustomSelect";
+import CategorySelectionSection from "../../Components/Dropdown/Dropdown";
 import "./EditProduct.css";
 import { Link } from "react-router-dom";
 
@@ -21,20 +25,71 @@ const EditProduct = () => {
   const [product, setProduct] = useState(null)
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
+  // COLLECTIONS
+  const [collections, setCollections] = useState([]);
+  const [selectedCollection, setSelectedCollection] = useState(""); // Selected collection
 
-    useEffect(() => {
-      const fetchProducts = async () => {
-        try {
-          const data = await getProduct(id)
-          setProduct(data)
-  
-        } catch (error) {
-          console.log(error)
-        }
+  // CATEGORIES
+  const [categories, setCategories] = useState([]); // Full category structure
+  const [selectedCategory, setSelectedCategory] = useState(""); // Top-level category ID
+  const [selectedSubcategory, setSelectedSubcategory] = useState(""); // Subcategory ID
+  const [nestedSubcategory, setNestedSubcategory] = useState(""); // Nested subcategory ID (if applicable)
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await getProduct(id)
+        setProduct(data)
+
+      } catch (error) {
+        console.log(error)
       }
-  
-      fetchProducts()
-    })
+    }
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getCategory();
+        console.log("All Categories Fetched")
+        setCategories(categoryData); // Example: [{id: 'MEN', name: 'Men', subcategories: [...]}, ...]
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    }
+
+    const fetchCollections = async () => {
+
+      try {
+        const collection = await getAllCollection();
+        console.log("All Collections Fetched")
+        setCollections(collection);
+      } catch (error) {
+        console.error("Error fetching collection:", error);
+      }
+
+    }
+
+    fetchCategories();
+    fetchCollections();
+
+    fetchProducts();
+  })
+
+  // Handle top-level category selection
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setSelectedSubcategory(""); // Reset subcategory when parent changes
+    setNestedSubcategory(""); // Reset nested subcategory when parent changes
+  };
+
+  // Handle subcategory selection
+  const handleSubcategoryChange = (subcategoryId) => {
+    setSelectedSubcategory(subcategoryId);
+    setNestedSubcategory(""); // Reset nested subcategory when subcategory changes
+  };
+
+  // Handle nested subcategory selection
+  const handleNestedSubcategoryChange = (nestedSubcategoryId) => {
+    setNestedSubcategory(nestedSubcategoryId);
+  };
 
   // Update formData whenever product data changes
   useEffect(() => {
@@ -79,12 +134,12 @@ const EditProduct = () => {
 
   const handleStockUpdate = async (variantId, size, newQuantity, oldQuantity) => {
     try {
-  
+
       // Calculate the difference to determine whether to increase or decrease
       const difference = newQuantity - oldQuantity;
-      
+
       if (difference === 0) return; // No change needed
-  
+
       let apiResponse;
       if (difference > 0) {
         // Increase stock
@@ -103,11 +158,7 @@ const EditProduct = () => {
           Math.abs(difference)
         );
       }
-  
-      // if (!apiResponse.ok) {
-      //   throw new Error(`Failed to update stock: ${apiResponse.statusText}`);
-      // }
-  
+
       // Update local state after successful API call
       setFormData(prevData => ({
         ...prevData,
@@ -124,7 +175,7 @@ const EditProduct = () => {
           return v;
         })
       }));
-  
+
     } catch (error) {
       console.error('Error updating stock:', error);
       // Revert the input to the old value
@@ -143,7 +194,7 @@ const EditProduct = () => {
           return v;
         })
       }));
-      
+
       // Show error to user
       alert(`Failed to update stock: ${error.message}`);
     }
@@ -220,26 +271,48 @@ const EditProduct = () => {
           />
         </div>
 
+
         <div className="edit-product-form-group">
           <label>Category:</label>
-          <input
+          {isEditing ? (<div className="category-section sm-row">
+            {/* Catategory Dropdown */}
+            <CategorySelectionSection
+              categories={categories}
+              selectedCategory={selectedCategory}
+              selectedSubcategory={selectedSubcategory}
+              nestedSubcategory={nestedSubcategory}
+              handleCategoryChange={handleCategoryChange}
+              handleSubcategoryChange={handleSubcategoryChange}
+              handleNestedSubcategoryChange={handleNestedSubcategoryChange}
+            />
+
+          </div>) : (<input
             type="text"
             name="category"
             value={formData.category}
             onChange={handleInputChange}
             disabled={!isEditing}
-          />
+          />)}
+
         </div>
 
         <div className="edit-product-form-group">
           <label>Collection:</label>
-          <input
-            type="text"
-            name="collection"
-            value={formData.collection}
-            onChange={handleInputChange}
-            disabled={!isEditing}
-          />
+          {isEditing ? (
+            <CustomSelect
+              label="Collection"
+              value={selectedCollection}
+              options={collections}
+              onChange={setSelectedCollection}
+              placeholder="Select Collection"
+            />) : (<input
+              type="text"
+              name="collection"
+              value={formData.collection}
+              onChange={handleInputChange}
+              disabled={!isEditing}
+            />)}
+
         </div>
 
         {/* Sizes Section */}
@@ -277,15 +350,15 @@ const EditProduct = () => {
                       <span>{size}: </span>
                       {isEditing ? (
                         <input
-                        type="number"
-                        min="0"
-                        value={qty}
-                        onChange={(e) => {
-                          const newValue = parseInt(e.target.value) || 0;
-                          handleStockUpdate(v.id, size, newValue, qty);
-                        }}
-                        className="stock-input"
-                      />
+                          type="number"
+                          min="0"
+                          value={qty}
+                          onChange={(e) => {
+                            const newValue = parseInt(e.target.value) || 0;
+                            handleStockUpdate(v.id, size, newValue, qty);
+                          }}
+                          className="stock-input"
+                        />
                       ) : (
                         <span>{qty}</span>
                       )}

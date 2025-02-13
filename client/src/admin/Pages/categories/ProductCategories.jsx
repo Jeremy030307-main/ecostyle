@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+import { assets as assets_1 } from "../../Components/Assets/assets";
 import { getCategory, updateCategorySizeGuide, deleteCategory } from "../../../apiManager/methods/categoryMethods";
+import CategoryModal from "./CategoryModal";
 import "./ProductCategories.css";
 
 const CategoryTable = () => {
@@ -7,6 +9,7 @@ const CategoryTable = () => {
   const [editingCategory, setEditingCategory] = useState(null);
   const [sizeGuide, setSizeGuide] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -49,21 +52,35 @@ const CategoryTable = () => {
 
   const getMeasurementKeys = () => {
     const allKeys = new Set();
-    categories.forEach(cat =>
-      cat.subcategories.forEach(sub =>
-        sub.size_guide.forEach(size =>
-          Object.keys(size).forEach(key => allKeys.add(key))
-        )
-      )
-    );
+
+    categories.forEach((cat) => {
+      cat.subcategories.forEach((sub) => {
+        if (sub.size_guide) { // ✅ Check if size_guide exists
+          sub.size_guide.forEach((size) => {
+            Object.keys(size).forEach((key) => allKeys.add(key));
+          });
+        }
+      });
+    });
+
     return Array.from(allKeys);
   };
+
 
   const measurementKeys = getMeasurementKeys();
 
   return (
     <div>
-      <h2>Product Categories</h2>
+      <div className="add-categories-button-container">
+        <h2>Product Categories</h2>
+
+        <div onClick={() => setModalOpen(true)} className="add-categories-button">
+          <img src={assets_1.add_icon} alt="" />
+          <p className="button-word">Add A Category</p>
+        </div>
+        <CategoryModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+
+      </div>
       <table>
         <thead>
           <tr>
@@ -77,25 +94,28 @@ const CategoryTable = () => {
         <tbody>
           {categories.map((category) =>
             category.subcategories.map((sub) =>
-              sub.size_guide.map((item, index) => (
-                <tr key={index}>
-                  <td>{sub.id}</td>
-                  {measurementKeys.map((key) => (
-                    <td key={key}>{item[key] || "—"}</td> // Show dash if missing
-                  ))}
-                  <td>
-                    <button onClick={() => handleEdit(category)}>✏️</button>
-                  </td>
-                  <td>
-                    <button onClick={() => handleDelete(category.id)}>🗑️</button>
-                  </td>
-                </tr>
-              ))
+              sub.size_guide ? ( // ✅ Check if size_guide exists before calling .map()
+                sub.size_guide.map((item, index) => (
+                  <tr key={index}>
+                    <td>{sub.id}</td>
+                    {measurementKeys.map((key) => (
+                      <td key={key}>{item[key] || "—"}</td> // Show dash if missing
+                    ))}
+                    <td>
+                      <button onClick={() => handleEdit(category)}>✏️</button>
+                    </td>
+                    <td>
+                      <button onClick={() => handleDelete(category.id)}>🗑️</button>
+                    </td>
+                  </tr>
+                ))
+              ) : null
             )
           )}
         </tbody>
+
       </table>
-      
+
       {showModal && (
         <div className="modal">
           <div className="modal-content">
