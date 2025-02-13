@@ -213,59 +213,6 @@ const EditProduct = () => {
           <input type="text" name="collection" value={formData.collection} onChange={handleInputChange} disabled={!isEditing} />
         </div>
 
-        {/* Size Guide Section */}
-        <div className="info-section">
-          <h3>Size Guide</h3>
-          <button type="button" onClick={addSizeEntry} className="add-size-button">
-            Add Size Entry
-          </button>
-          <div className="size-guide-table">
-            <table>
-              <thead>
-                <tr>
-                  <th>Size</th>
-                  <th>Chest (in)</th>
-                  <th>Waist (in)</th>
-                  <th>Hip (in)</th>
-                  <th>Arm Length (in)</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sizeGuide.map((entry, index) => (
-                  <tr key={index}>
-                    <td>
-                      <input
-                        type="text"
-                        required
-                        value={entry.Size}
-                        onChange={(e) => handleSizeGuideFieldChange(index, "Size", e.target.value)}
-                        disabled={!isEditing}
-                      />
-                    </td>
-                    {["Chest", "Waist", "Hip", "Arm Length"].map((field) => (
-                      <td key={field}>
-                        <input
-                          type="number"
-                          step="0.1"
-                          value={entry[field] || ""}
-                          onChange={(e) => handleSizeGuideFieldChange(index, field, e.target.value)}
-                          disabled={!isEditing}
-                        />
-                      </td>
-                    ))}
-                    <td>
-                      <button type="button" onClick={() => removeSizeEntry(index)} className="remove-size-button">
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
         {/* Variants Section */}
         <h4>Variants:</h4>
         <div className="info-section">

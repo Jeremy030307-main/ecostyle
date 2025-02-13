@@ -8,6 +8,7 @@ const EditSizeGuide = () => {
   const [sizeGuide, setSizeGuide] = useState({ title: "", sizes: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     const fetchSizeGuide = async () => {
@@ -55,6 +56,7 @@ const EditSizeGuide = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true);
     try {
       if (id) {
         await api.put(`/size-guides/${id}`, sizeGuide);
@@ -62,10 +64,12 @@ const EditSizeGuide = () => {
         await api.post("/size-guides", sizeGuide);
       }
 
-      // Ensure that the page fetches updated data when navigating back
-      navigate("/size-guides", { replace: true });
+      // Navigate back to the EditProduct page after saving
+      navigate("/edit-product", { replace: true }); // Change this to your desired route
     } catch (err) {
       setError("Failed to save size guide");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -107,7 +111,9 @@ const EditSizeGuide = () => {
           ))}
           <button type="button" onClick={addSize}>Add Size</button>
         </div>
-        <button type="submit">Save</button>
+        <button type="submit" disabled={isSaving}>
+          {isSaving ? "Saving..." : "Save"}
+        </button>
       </form>
     </div>
   );

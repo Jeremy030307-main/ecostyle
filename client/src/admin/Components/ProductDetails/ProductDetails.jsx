@@ -35,6 +35,12 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
           >
             Edit Product
           </button>
+          <button
+              className="view-size-guide-button"
+              onClick={() => navigate(`/size-guides/${product.id}`)}
+            >
+              View Size Guide
+          </button>
         </div>
 
         <div className="modal-body">
