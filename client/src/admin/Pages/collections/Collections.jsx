@@ -45,7 +45,6 @@ const Collections = () => {
   // Fetch categories on component mount
   useEffect(() => {
     fetchCollections();
-    // addCollection("ER", "Eo Roots", "Description");
   }, []);
 
   return (
