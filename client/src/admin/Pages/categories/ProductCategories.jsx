@@ -2,66 +2,100 @@ import { useState, useEffect } from "react";
 import { getCategory, updateCategorySizeGuide, deleteCategory } from "../../../apiManager/methods/categoryMethods";
 import "./ProductCategories.css";
 
-const ProductCategories = () => {
+const CategoryTable = () => {
   const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [showModal, setShowModal] = useState(false);
+  const [editingCategory, setEditingCategory] = useState(null);
   const [sizeGuide, setSizeGuide] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
-
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getCategory();
+        console.log("All Categories Fetched", categories)
+        setCategories(categoryData); // Example: [{id: 'MEN', name: 'Men', subcategories: [...]}, ...]
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    }
+    fetchCategories();
+  }, []);
 
   const handleEdit = (category) => {
-    setSelectedCategory(category);
-    setSizeGuide(category.sizeGuide || []);
+    setEditingCategory(category);
+    setSizeGuide(category.size_guide || []);
     setShowModal(true);
   };
 
   const handleSave = () => {
-    updateCategorySizeGuide(selectedCategory.id, { size_guide: sizeGuide })
-      .then(() => {
-        setShowModal(false);
-        getCategory().then(data => setCategories(data));
-      });
+    if (editingCategory) {
+      updateCategorySizeGuide(editingCategory.id, { size_guide: sizeGuide })
+        .then(() => {
+          alert("Size Guide Updated Successfully!");
+          setShowModal(false);
+          window.location.reload();
+        })
+        .catch((error) => console.error("Error updating size guide:", error));
+    }
   };
 
   const handleDelete = (categoryID) => {
-    deleteCategory(categoryID).then(() => {
-      setCategories(categories.filter(cat => cat.id !== categoryID));
-    });
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      deleteCategory(categoryID).then(() => {
+        setCategories(categories.filter(cat => cat.id !== categoryID));
+      }).catch((error) => console.error("Error deleting category:", error));
+    }
   };
 
-  useEffect(() => {
-    getCategory().then((data) => {
-        setCategories(data);
-    }).catch((error) => {
-        console.error("Error fetching categories:", error);
-    });
-}, []);
+  const getMeasurementKeys = () => {
+    const allKeys = new Set();
+    categories.forEach(cat =>
+      cat.subcategories.forEach(sub =>
+        sub.size_guide.forEach(size =>
+          Object.keys(size).forEach(key => allKeys.add(key))
+        )
+      )
+    );
+    return Array.from(allKeys);
+  };
+
+  const measurementKeys = getMeasurementKeys();
 
   return (
-    <div className="categories-container">
+    <div>
       <h2>Product Categories</h2>
       <table>
         <thead>
           <tr>
             <th>Subcategory</th>
-            <th>Size Guide</th>
-            <th>Action</th>
+            {measurementKeys.map((key) => (
+              <th key={key}>{key.replace("_", " ")}</th> // Formatting column names
+            ))}
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {categories.map(category => category.subcategories?.map(sub => (
-            <tr key={sub.id}>
-              <td>{sub.name}</td>
-              <td>{JSON.stringify(sub.sizeGuide)}</td>
-              <td>
-                <button onClick={() => handleEdit(sub)}>Edit</button>
-                <button onClick={() => handleDelete(sub.id)}>Delete</button>
-              </td>
-            </tr>
-          )))}
+          {categories.map((category) =>
+            category.subcategories.map((sub) =>
+              sub.size_guide.map((item, index) => (
+                <tr key={index}>
+                  <td>{sub.id}</td>
+                  {measurementKeys.map((key) => (
+                    <td key={key}>{item[key] || "—"}</td> // Show dash if missing
+                  ))}
+                  <td>
+                    <button onClick={() => handleEdit(category)}>✏️</button>
+                  </td>
+                  <td>
+                    <button onClick={() => handleDelete(category.id)}>🗑️</button>
+                  </td>
+                </tr>
+              ))
+            )
+          )}
         </tbody>
       </table>
+      
       {showModal && (
         <div className="modal">
           <div className="modal-content">
@@ -69,6 +103,7 @@ const ProductCategories = () => {
             <textarea
               value={JSON.stringify(sizeGuide, null, 2)}
               onChange={(e) => setSizeGuide(JSON.parse(e.target.value))}
+              rows="5"
             />
             <button onClick={handleSave}>Save</button>
             <button onClick={() => setShowModal(false)}>Cancel</button>
@@ -79,4 +114,4 @@ const ProductCategories = () => {
   );
 };
 
-export default ProductCategories;
+export default CategoryTable;
