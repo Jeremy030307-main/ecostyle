@@ -150,6 +150,24 @@
   font-weight: 500;
 }
 
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.view-size-guide-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.view-size-guide-button:hover {
+  background-color: #0056b3;
+}
+
 @media (max-width: 768px) {
   .modal-content {
     width: 95%;
