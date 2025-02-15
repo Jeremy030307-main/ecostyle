@@ -1,0 +1,122 @@
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import api from "../api";
+
+const EditSizeGuide = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [sizeGuide, setSizeGuide] = useState({ title: "", sizes: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    const fetchSizeGuide = async () => {
+      try {
+        const response = await api.get(`/size-guides/${id}`);
+        setSizeGuide(response.data);
+      } catch (err) {
+        setError("Failed to fetch size guide");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchSizeGuide();
+    } else {
+      setLoading(false);
+    }
+  }, [id]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setSizeGuide((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSizeChange = (index, e) => {
+    const { name, value } = e.target;
+    setSizeGuide((prev) => {
+      const updatedSizes = [...prev.sizes];
+      updatedSizes[index] = { ...updatedSizes[index], [name]: value };
+      return { ...prev, sizes: updatedSizes };
+    });
+  };
+
+  const addSize = () => {
+    setSizeGuide((prev) => ({ ...prev, sizes: [...prev.sizes, { label: "", measurement: "" }] }));
+  };
+
+  const removeSize = (index) => {
+    setSizeGuide((prev) => {
+      const updatedSizes = prev.sizes.filter((_, i) => i !== index);
+      return { ...prev, sizes: updatedSizes };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      if (id) {
+        await api.put(`/size-guides/${id}`, sizeGuide);
+      } else {
+        await api.post("/size-guides", sizeGuide);
+      }
+
+      // Navigate back to the EditProduct page after saving
+      navigate("/edit-product", { replace: true }); // Change this to your desired route
+    } catch (err) {
+      setError("Failed to save size guide");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <div>
+      <h2>{id ? "Edit Size Guide" : "Add Size Guide"}</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Title:
+          <input type="text" name="title" value={sizeGuide.title} onChange={handleInputChange} required />
+        </label>
+        <div>
+          <h3>Sizes</h3>
+          {sizeGuide.sizes.map((size, index) => (
+            <div key={index}>
+              <input
+                type="text"
+                name="label"
+                placeholder="Size Label"
+                value={size.label}
+                onChange={(e) => handleSizeChange(index, e)}
+                required
+              />
+              <input
+                type="text"
+                name="measurement"
+                placeholder="Measurement"
+                value={size.measurement}
+                onChange={(e) => handleSizeChange(index, e)}
+                required
+              />
+              <button type="button" onClick={() => removeSize(index)}>
+                Remove
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={addSize}>Add Size</button>
+        </div>
+        <button type="submit" disabled={isSaving}>
+          {isSaving ? "Saving..." : "Save"}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default EditSizeGuide;
