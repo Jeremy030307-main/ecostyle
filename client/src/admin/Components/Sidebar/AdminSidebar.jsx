@@ -27,6 +27,13 @@ const AdminSidebar = () => {
           <p>Collections</p>
         </NavLink>
       </div>
+
+      <div className="admin-sidebar-section">
+        <NavLink className="admin-sidebar-link" to="categories">
+          <img src={assets.order_icon} alt="" />
+          <p>Categories</p>
+        </NavLink>
+      </div>
     </div>
   );
 };

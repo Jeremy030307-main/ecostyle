@@ -27,6 +27,7 @@ import Products from './admin/Pages/products/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
+import ProductCategories from './admin/Pages/categories/ProductCategories.jsx';
 import Collections from './admin/Pages/collections/Collections';
 import AddCollections from './admin/Pages/collections/AddCollections';
 import EditProduct from './admin/Pages/products/EditProduct.jsx'
@@ -69,7 +70,7 @@ function App() {
                 <Route path='eco-point' element={<EcoPoint/>}></Route>
                 <Route path='about' element={<About/>}></Route>
                 <Route path='wishlist' element={<Wishlist/>}></Route>
-                <Route path='cart' element={<Cart />} /> {/* Cart page */}
+                <Route path='cart' element={<Cart />} /> 
                 <Route path='product/:productID' element={<Product/>}></Route>
                 <Route path='login' element={<LoginSignUp/>}></Route>
             
@@ -84,7 +85,7 @@ function App() {
                     <Route path='edit' element={<AddAcountAddress/>}></Route>
                   </Route>
 
-                  <Route path="payment-options" element={<AccountPaymentOptions />} /> {/* Default: List cards */}
+                  <Route path="payment-options" element={<AccountPaymentOptions />} />
                   <Route path="payment-options/card-management" element={<AccountCardManagement includeClientSecret={true}/>}>
                     <Route path="add" element={<AddPaymentMethod />} />
                     <Route path="success" element={<AddPaymentStatus />} />
@@ -111,6 +112,7 @@ function App() {
                   <Route path='orders' element={<Orders/>}></Route>
                   <Route path='collections' element={<Collections/>}></Route>
                   <Route path='addCollections' element={<AddCollections/>}></Route>
+                  <Route path='categories' element={<ProductCategories/>}></Route>
                 </Route>
               </Route>
               

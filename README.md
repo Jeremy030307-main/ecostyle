@@ -12,9 +12,12 @@ EcoStyle is a modern e-commerce platform that promotes sustainability and recycl
 6. [Support](#support)
 7. [Roadmap](#roadmap)
 8. [Contributing](#contributing)
-9. [Authors and Acknowledgment](#authors-and-acknowledgment)
-10. [License](#license)
-11. [Project Status](#project-status)
+9. [Versioning Strategy](#versioning-strategy)
+10. [Pull Request Strategy](#pull-request-strategy)
+11. [Authors and Acknowledgment](#authors-and-acknowledgment)
+12. [License](#license)
+13. [Project Status](#project-status)
+14. [Generative AI Statement](#generative-ai)
 
 ## Features
 
@@ -115,6 +118,26 @@ We welcome contributions from the community! To contribute:
    ```
 6. **Submit a Merge Request**: Create a merge request on the main repository.
 
+## Versioning Strategy
+
+We follow Semantic Versioning:
+
+- Major versions (X.0.0): Introduces breaking changes that are not backward compatible
+- Minor versions (X.Y.0): Adds new features while maintaining backward compatibility
+- Update versions (X.Y.Z): Includes small bug fixes and performance improvements.
+
+Version updates can be tagged in the GitLab repository to ensure clarity and traceability.
+
+## Pull Request Strategy
+
+To ensure code quality and maintainability, we follow a structured pull request (PR) process:
+
+- All code changes must be submitted via pull requests (PRs)
+- Each PR must be linked to a relevant issue (if applicable) to maintain traceability
+- At least one reviewer approval is required before merging
+- Code must follow the project's coding standards and include necessary tests/documentation
+- PRs should include a clear description of changes through commit message of the problem being addressed
+
 ## Authors and Acknowledgment
 
 Developed by the EcoStyle Team. Special thanks to:
@@ -130,3 +153,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Project Status
 
 This project is currently active and under continuous development. New features and improvements are regularly added.
+
+## Generative AI Statement
+
+Generative AI tools were used to assist in structuring and refining this document. All technical content, project-specific details, and instructions were reviewed and verified by the EcoStyle development team.

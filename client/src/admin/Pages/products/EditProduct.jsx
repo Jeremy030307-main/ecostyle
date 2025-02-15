@@ -12,6 +12,10 @@ import {
   increaseStock,
   decreaseStock,
 } from "../../../apiManager/methods/stockMethods";
+import { getCategory } from "../../../apiManager/methods/categoryMethods";
+import { getAllCollection } from "../../../apiManager/methods/collectionMethods";
+import CustomSelect from "../../Components/Dropdown/CustomSelect";
+import CategorySelectionSection from "../../Components/Dropdown/Dropdown";
 import "./EditProduct.css";
 import { Link } from "react-router-dom";
 
@@ -202,6 +206,7 @@ const EditProduct = () => {
           <label>Price:</label>
           <input type="number" name="price" value={formData.price} onChange={handleInputChange} disabled={!isEditing} />
         </div>
+
 
         <div className="edit-product-form-group">
           <label>Category:</label>
