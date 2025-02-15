@@ -29,18 +29,20 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
 
         <div className="modal-header">
           <h2>{name}</h2>
-          <button
-            className="edit-button"
-            onClick={() => navigate(`/admin/products/${product.id}/edit`)}
-          >
-            Edit Product
-          </button>
-          <button
+          <div className="button-group">
+            <button
+              className="edit-button"
+              onClick={() => navigate(`/admin/products/${id}/edit`)}
+            >
+              Edit Product
+            </button>
+            <button
               className="view-size-guide-button"
-              onClick={() => navigate(`/size-guides/${product.id}`)}
+              onClick={() => navigate(`/size-guides/edit/${id}`)}
             >
               View Size Guide
-          </button>
+            </button>
+          </div>
         </div>
 
         <div className="modal-body">
