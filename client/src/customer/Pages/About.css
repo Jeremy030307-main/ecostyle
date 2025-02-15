@@ -34,9 +34,10 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 50px 10%;
-    background-color: #ffffff;
+    background-color: #e6d5be;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
+    margin-top: 20px;
     margin-bottom: 40px;
 }
 
@@ -128,25 +129,29 @@ body {
 .stat-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    background-color: #f0f4e3; /* Light green background on hover */
+    background-color: #e6d5be; /* Light green background on hover */
 }
 
 /* Testimonials Section */
 .about-testimonials {
     padding: 60px 5%;
-    background-color: #ffffff;
+    background-color: #e6d5be;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     margin-bottom: 40px;
+    margin-top: 40px;
 }
 
 .testimonial-card {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border-radius: 16px;
-    padding: 30px;
+    padding: 30px; /* Reduced padding to make the card smaller */
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 10px; /* Added margin to ensure edges are not cut off */
+    max-width: 300px; /* Optional: Set a max-width to control the card size */
+    width: 10%; /* Ensure the card takes full width within its container */
 }
 
 .testimonial-card:hover {
@@ -222,7 +227,7 @@ body {
 .service:hover {
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    background-color: #f0f4e3; /* Light green background on hover */
+    background-color: #e6d5be; /* Light green background on hover */
 }
 
 /* Responsive Design */
