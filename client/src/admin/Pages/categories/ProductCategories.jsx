@@ -11,29 +11,30 @@ const CategoryTable = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categoryData = await getCategory();
-        setCategories(categoryData);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
     fetchCategories();
   }, []);
 
-  // Enable editing of a subcategory's size guide
+  const fetchCategories = async () => {
+    try {
+      const categoryData = await getCategory();
+      setCategories(categoryData);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  // Enable inline editing
   const handleEdit = (subcategory) => {
     setEditingSubcategory(subcategory);
     setEditedSizeGuide(
       subcategory.size_guide.reduce((acc, item, index) => {
-        acc[index] = { ...item }; // Copy size guide
+        acc[index] = { ...item };
         return acc;
       }, {})
     );
   };
 
-  // Update state when the user edits a value
+  // Handle real-time updates to size guide
   const handleSizeGuideChange = (index, key, value) => {
     setEditedSizeGuide((prev) => ({
       ...prev,
@@ -44,14 +45,14 @@ const CategoryTable = () => {
     }));
   };
 
-  // Save changes to the backend
+  // Save updates to backend
   const handleSave = async () => {
     if (editingSubcategory) {
       const updatedSizeGuide = Object.values(editedSizeGuide);
       try {
         await updateCategorySizeGuide(editingSubcategory.id, { size_guide: updatedSizeGuide });
 
-        // Update local state to reflect changes
+        // Update local state immediately
         setCategories((prevCategories) =>
           prevCategories.map((category) => ({
             ...category,
@@ -70,17 +71,23 @@ const CategoryTable = () => {
     }
   };
 
-  // Delete a subcategory and update backend
+  // Delete a subcategory and update the backend
   const handleDelete = async (categoryID, subcategoryID) => {
     if (window.confirm("Are you sure you want to delete this subcategory?")) {
       try {
-        await deleteCategory(categoryID, subcategoryID);
+        await deleteCategory(categoryID);
+
+        // Remove subcategory from state without page refresh
         setCategories((prevCategories) =>
-          prevCategories.map((cat) => ({
-            ...cat,
-            subcategories: cat.subcategories.filter((sub) => sub.id !== subcategoryID),
-          }))
+          prevCategories
+            .map((cat) => ({
+              ...cat,
+              subcategories: cat.subcategories.filter((sub) => sub.id !== subcategoryID),
+            }))
+            .filter((cat) => cat.subcategories.length > 0) // Remove empty categories
         );
+
+        alert("Subcategory deleted successfully!");
       } catch (error) {
         console.error("Error deleting subcategory:", error);
       }
