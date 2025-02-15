@@ -8,6 +8,7 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
   if (!isOpen || !product) return null;
 
   const {
+    id,
     name = "",
     price = 0,
     thumbnail = "",
