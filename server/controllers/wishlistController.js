@@ -3,68 +3,72 @@ import { getVariantDetails } from "./productController.js";
 import { COLLECTIONS, message } from "./utility.js";
 
 export const getUserWishlist = async (req, res) => {
-    const uid = req.user;
-  
-    try {
+  const uid = req.user;
+
+  try {
+    await db.runTransaction(async (transaction) => {
+      // Reference to the user's wishlist collection
       const userWishlistRef = db
         .collection(COLLECTIONS.USER)
         .doc(uid)
-        .collection(COLLECTIONS.WISHLIST); // Reference to the user's wishlist collection
-  
-      const snapshot = await userWishlistRef.get();
-  
+        .collection(COLLECTIONS.WISHLIST);
+
+      const snapshot = await transaction.get(userWishlistRef);
+
       if (snapshot.empty) {
-        return res.status(200).json([]); // Return an empty array if the wishlist is empty
+        res.status(200).json([]);
+        return;
       }
-  
+
       // Fetch product details for each product ID in the wishlist
-      const wishlist = await Promise.all(
-        snapshot.docs.map(async (doc) => {
-          const productId = doc.id; // Assuming the document ID in the wishlist collection corresponds to the product ID
-          const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productId);
-  
-          try {
-            const productDoc = await productRef.get();
-            if (productDoc.exists) {
-              const productData = productDoc.data();
-  
-              // Fetch variant details (e.g., colors)
-              const variant = await getVariantDetails(productData.variant);
-  
-              return {
-                id: productId, // Include the product ID
-                name: productData.name,
-                price: productData.price,
-                thumbnail: productData.thumbnail,
-                variant: variant,
-                size: productData.size,
-                rating: productData.rating || null,
-                reviewCount: productData.reviewCount || null,
-                category: productData.category,
-                collection: productData.collection,
-                color: productData.color,
-              };
-            } else {
-              console.warn(`Product with ID ${productId} not found`);
-              return null; // Handle the case where the product document is missing
-            }
-          } catch (productError) {
-            console.error(`Error fetching product data for productId ${productId}:`, productError);
-            return null; // Handle errors during product retrieval
+      const wishlistPromises = snapshot.docs.map(async (doc) => {
+        const productId = doc.id; // Assuming the document ID corresponds to the product ID
+        const productRef = db.collection(COLLECTIONS.PRODUCT).doc(productId);
+
+        try {
+          const productDoc = await transaction.get(productRef);
+          if (productDoc.exists) {
+            const productData = productDoc.data();
+
+            // Fetch variant details (simulating this outside the transaction)
+            const variant = await getVariantDetails(productId, productData.variant, transaction);
+
+            return {
+              id: productId,
+              name: productData.name,
+              price: productData.price,
+              thumbnail: productData.thumbnail,
+              variant: variant,
+              size: productData.size,
+              rating: productData.rating || null,
+              reviewCount: productData.reviewCount || null,
+              category: productData.category,
+              collection: productData.collection,
+              color: productData.color,
+            };
+          } else {
+            console.warn(`Product with ID ${productId} not found`);
+            return null;
           }
-        })
-      );
-  
-      // Filter out null values (e.g., missing or failed product details)
+        } catch (productError) {
+          console.error(`Error fetching product data for productId ${productId}:`, productError);
+          return null;
+        }
+      });
+
+      // Resolve all promises and filter nulls
+      const wishlist = await Promise.all(wishlistPromises);
       const filteredWishlist = wishlist.filter((item) => item !== null);
-  
+
       // Send the wishlist data as a JSON response
       res.status(200).json(filteredWishlist);
-    } catch (error) {
-      console.error("Error retrieving wishlist data:", error);
-      res.status(500).json({ error: "Failed to retrieve wishlist" });
-    }
-  };
+    });
+  } catch (error) {
+    console.error("Error retrieving wishlist data:", error);
+    res.status(500).json({ error: "Failed to retrieve wishlist" });
+  }
+};
+
 
 export const addProductToWishlist = async (req, res) => {
     const uid = req.user; // Assuming middleware populates `req.user` with the authenticated user's ID

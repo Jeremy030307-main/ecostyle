@@ -2,8 +2,8 @@
 .product-page-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding: 80px 100px;
+  gap: 5rem;
+  padding: 80px 200px;
   font-family: Arial, sans-serif;
 }
 
@@ -16,8 +16,15 @@
 
 /* Left Section: Main Product Image */
 .product-image-section {
-  flex: 2;
-  max-width: 500px; /* Limits the image size for large screens */
+  flex: 5;
+  max-width: 800px; /* Limits the image size for large screens */
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-color: #b8bda6; /* Same background color */
+  border-radius: 10px; /* Matches card style */
+  height: 400px; /* Same as max-height of product image */
+  position: relative;
 }
 
 .product-rating-reviewCount {
@@ -33,14 +40,15 @@
 
 .main-product-image {
   width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ensures it doesn't stretch */
   border-radius: 8px;
-  object-fit: cover;
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  */
 }
 
 /* Right Section: Product Details */
 .product-details-section {
-  flex: 3;
+  flex: 5;
   display: flex;
   flex-direction: column;
   gap: 30px;

@@ -162,42 +162,34 @@ export const createPayment = async (req, res) => {
   const { total, paymentMethodID, shipping } = req.body;
   const userID = req.user;
 
-  try {
-    let paymentIntent;
+  const clientID = await getClientID(userID); // Fetch the customer ID for the logged-in user
 
-    if (paymentMethodID) {
-      // Use existing customer and payment method to confirm the payment
-      const clientID = await getClientID(userID); // Fetch the customer ID for the logged-in user
-      
-      paymentIntent = await stripe.paymentIntents.create({
-        amount: total,
-        currency: "myr",
-        customer: clientID,
-        payment_method: paymentMethodID,
-        confirm: true,
-        return_url: "http://localhost:3000/checkout/complete", // Optional return URL
-        off_session: true, // Indicates this is an off-session payment
-        shipping: shipping
-      });
-    } else {
-      // Create a new PaymentIntent for a new payment
-      paymentIntent = await stripe.paymentIntents.create({
-        amount: total,
-        currency: "myr",
-        automatic_payment_methods: {
-          enabled: true, // Let Stripe automatically handle payment methods
+  const intent = await stripe.paymentIntents.create({
+    amount: total,
+    currency: 'myr',
+    // In the latest version of the API, specifying the `automatic_payment_methods` parameter
+    // is optional because Stripe enables its functionality by default.
+    automatic_payment_methods: {enabled: true},
+    customer: clientID,
+  });
+
+  const customerSession = await stripe.customerSessions.create({
+    customer: clientID,
+    components: {
+      payment_element: {
+        enabled: true,
+        features: {
+          payment_method_redisplay: 'enabled',
+          payment_method_allow_redisplay_filters: ['always', 'limited', 'unspecified'],
         },
-      });
-    }
+      },
+    },
+  });
 
-    // Respond with the PaymentIntent's client secret
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (error) {
-    console.error("Error creating PaymentIntent:", error.message);
-    res.status(400).send(message(error.message));
-  }
+  res.json({
+    client_secret: intent.client_secret,
+    customer_session_client_secret: customerSession.client_secret
+  });
 };
 
 

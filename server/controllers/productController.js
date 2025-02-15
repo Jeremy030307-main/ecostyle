@@ -1,6 +1,8 @@
 import { db } from "../firebase.js";
 import admin from 'firebase-admin'
 import { COLLECTIONS, message } from "./utility.js"; 
+import { getProductStock } from "./stockController.js";
+import { getSizeGuide } from "./categoryController.js";
 
 export const checkProduct = async (body) => {
   try {
@@ -51,39 +53,42 @@ export const checkProduct = async (body) => {
   }
 };
  
+export const getVariantDetails = async (id, variantData, transaction) => {
+  try {
+    const inventory = await getProductStock(id, transaction);
 
-export const getVariantDetails = async (variantData) => {
-  try{
-
-    if (!variantData){
-      throw new Error("No Color IDs")
+    if (!variantData && !inventory) {
+      throw new Error("No Color IDs");
     }
 
     const variantDocs = await Promise.all(
       variantData.map(async (variantDoc) => {
-        const colorDoc = await db.collection('color').doc(variantDoc.color).get();
+        const colorRef = db.collection(COLLECTIONS.COLOR).doc(variantDoc.color);
+        const colorDoc = await transaction.get(colorRef);
 
-        if (colorDoc.exists){
-          const {color, ...data} = variantDoc
+        if (colorDoc.exists) {
+          const { color, ...data } = variantDoc;
+          const stock = inventory[color];
           return {
             id: color,
             ...colorDoc.data(),
-            ...data
-          }
+            ...data,
+            stock: { ...stock },
+          };
         }
 
-        return null
+        return null;
       })
-    )
+    );
 
     // Filter out null values (in case some color docs don't exist)
     const colors = variantDocs.filter((color) => color !== null);
-    return colors
+    return colors;
 
   } catch (error) {
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
-} 
+};
 
 const checkStock = async (stockData) => {
 
@@ -106,159 +111,110 @@ const getProductData = async (productID, t = null) => {
 };
 
 export const getProducts = async (req, res) => {
-  // Extract query parameters for filtering and sorting
   const { category, collection, color, sortBy, orderBy } = req.query;
 
   try {
     let query = db.collection(COLLECTIONS.PRODUCT);
-    console.log(req.query)
 
     if (category && category !== 'null') {
-      console.log(1)
       query = query.where('category', '>=', category).where('category', '<=', category + '\uf8ff');
     }
 
     if (collection && collection !== 'null') {
-      console.log(2)
       query = query.where('collection', '==', collection);
     }
 
     if (color && color !== 'null') {
-      console.log(3)
       query = query.where('color', 'array-contains-any', color.split(','));
     }
 
     if (sortBy && sortBy !== 'null') {
-      if (orderBy === 'asc' || orderBy === 'desc') {
-        query = query.orderBy(sortBy, orderBy); // Apply sorting with specified order
-      } else {
-        query = query.orderBy(sortBy); // Default to ascending order if orderBy is invalid or undefined
-      }
+      query = query.orderBy(sortBy, orderBy === 'asc' || orderBy === 'desc' ? orderBy : 'asc');
     }
 
-    // Set up SSE headers
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Content-Encoding', "none");
-    res.flushHeaders(); // Flush headers to establish SSE connection
+    const products = await db.runTransaction(async (transaction) => {
+      const productDocs = await transaction.get(query);
 
-    // Firestore Snapshot Listener
-    const unsubscribe = query.onSnapshot(
-      async (snapshot) => {
-
-        if (snapshot.empty) {
-          res.write(`event: error\ndata: ${JSON.stringify({ message: 'No Products found' })}\n\n`);
-          return;
-        }
-
-        // Process product data
-        const products = await Promise.all(
-          snapshot.docs
-            .filter((doc) => doc.id !== 'productID')
-            .map(async (doc) => {
-              const productData = doc.data();
-
-              // Fetch colors: list of document IDs
-              const variant = await getVariantDetails(productData.variant);
-
-              return {
-                id: doc.id,
-                name: productData.name,
-                price: productData.price,
-                thumbnail: productData.thumbnail,
-                variant: variant,
-                size: productData.size,
-                rating: productData.rating || null,
-                reviewCount: productData.reviewCount || null,
-                category: productData.category,
-                collection: productData.collection,
-                color: productData.color
-              };
-            })
-        );
-
-
-        // Stream updated products to the client
-        res.write(`data: ${JSON.stringify(products)}\n\n`);
-      },
-      (error) => {
-        // Handle Firestore listener errors
-        console.error('Firestore listener error:', error);
-        res.write(`event: error\ndata: ${JSON.stringify({ message: error.message })}\n\n`);
+      // Return empty list if no documents found
+      if (productDocs.empty) {
+        return [];
       }
-    );
 
-    // Cleanup when the client disconnects
-    req.on('close', () => {
-      console.log('Client disconnected');
-      unsubscribe(); // Stop Firestore listener
-      res.end();
+      return await Promise.all(
+        productDocs.docs
+          .filter((doc) => doc.id !== 'productID')
+          .map(async (doc) => {
+          const productData = doc.data();
+
+          const variant = await getVariantDetails(doc.id, productData.variant, transaction);
+
+          return {
+            id: doc.id,
+            name: productData.name,
+            price: productData.price,
+            thumbnail: productData.thumbnail,
+            variant,
+            size: productData.size,
+            rating: productData.rating || null,
+            reviewCount: productData.reviewCount || null,
+            category: productData.category,
+            collection: productData.collection,
+            color: productData.color,
+          };
+        })
+      );
     });
+
+    // Check if products are available
+    console.log(products)
+    res.status(200).json(products);
   } catch (error) {
-    // Handle any unexpected errors
-    console.error('Error setting up SSE:', error);
-    res.write(`event: error\ndata: ${JSON.stringify({ message: error.message })}\n\n`);
-    res.end();
+    res.status(500).json({ error: `Product not found: ${error.message}` });
   }
 };
 
-//get product by id
-export const getProduct = (req, res, next) => {
+export const getProduct = async (req, res, next) => {
   try {
     const id = req.params.id;
 
-    // Set up SSE headers
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Content-Encoding', "none");
-    res.flushHeaders(); // Flush headers to establish SSE connection
+    // Execute Firestore operations inside a transaction
+    await db.runTransaction(async (transaction) => {
+      const productRef = db.collection(COLLECTIONS.PRODUCT).doc(id);
+      const productDoc = await transaction.get(productRef);
 
-    // Start listening to Firestore document changes
-    const unsubscribe = db.collection(COLLECTIONS.PRODUCT).doc(id).onSnapshot(
-      async (snapshot) => {
-        if (!snapshot.exists) {
-          res.write(`event: error\ndata: ${JSON.stringify({ error: 'Product not found' })}\n\n`);
-          return;
-        }
-
-        const productData = snapshot.data();
-        const variant = await getVariantDetails(productData.variant);
-
-        // Clean and format the product data
-        const cleanedData = {
-          id: snapshot.id,
-          name: productData.name,
-          details: productData.details,
-          price: productData.price,
-          thumbnail: productData.thumbnail,
-          variant: variant,
-          size: productData.size,
-          rating: productData.rating || null,
-          reviewCount: productData.reviewCount || null,
-          category: productData.category,
-          collection: productData.collection
-        };
-
-        // Send the updated product data to the client
-        res.write(`data: ${JSON.stringify(cleanedData)}\n\n`);
-      },
-      (error) => {
-        console.error("Error listening to product changes:", error);
-        res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
+      if (!productDoc.exists) {
+        res.status(404).json({ error: 'Product not found' });
+        return;
       }
-    );
 
-    // Handle connection close and clean up listener
-    req.on('close', () => {
-      unsubscribe(); // Stop listening to Firestore changes
-      res.end();
+      const productData = productDoc.data();
+
+      // Fetch additional variant details
+      const variant = await getVariantDetails(id, productData.variant, transaction);
+      const sizeGuide = await getSizeGuide(productData.category, transaction)
+
+      // Clean and format the product data
+      const cleanedData = {
+        id: productDoc.id,
+        name: productData.name,
+        details: productData.details,
+        price: productData.price,
+        thumbnail: productData.thumbnail,
+        variant: variant,
+        size: productData.size,
+        rating: productData.rating || null,
+        reviewCount: productData.reviewCount || null,
+        category: productData.category,
+        collection: productData.collection,
+        size_guide: sizeGuide
+      };
+
+      // Send the product data as a normal JSON response
+      res.status(200).json(cleanedData);
     });
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    console.error("Error fetching product:", error);
+    res.status(500).json({ error: error.message });
   }
 };
 

@@ -43,7 +43,7 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
           </div>
 
           <div className="product-info">
-            <div className="info-section">
+            <div className="product-details-info-section">
               <h3>Product Details</h3>
               <p>
                 <strong>Price:</strong> ${price}
@@ -61,7 +61,7 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
             </div>
 
             {size.length > 0 && (
-              <div className="info-section">
+              <div className="product-details-info-section">
                 <h3>Sizes</h3>
                 <div className="sizes-container">
                   {size.map((s, index) => (
@@ -76,11 +76,11 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
         </div>
         <div>
           {variant.length > 0 && (
-            <div className="info-section">
+            <div className="product-details-info-section">
               <h3>Color Variants</h3>
               <div className="variants-container">
                 {variant.map((v, index) => (
-                  <div key={index} className="variant-item">
+                  <div key={index} className="product-details-variant-item">
                     <img src={v.image} alt={v.name} />
                     <p>{v.name}</p>
                   </div>
