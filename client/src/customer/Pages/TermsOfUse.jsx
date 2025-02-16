@@ -72,7 +72,7 @@ const TermsOfUse = () => {
         <h2 className="terms-section-title">6. Governing Law</h2>
         <p>
           These terms and conditions are governed by and construed in accordance
-          with the laws of [Your Country/State], and you irrevocably submit to
+          with the laws of Malaysia, and you irrevocably submit to
           the exclusive jurisdiction of the courts in that location.
         </p>
       </div>
