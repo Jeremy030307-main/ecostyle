@@ -2,7 +2,7 @@ import { useState } from "react";
 import { addCollection } from "../../../apiManager/methods/collectionMethods";
 import "./CollectionModal.css"
 
-const CollectionModal = ({ isOpen, onClose, parentcollectionID = "" }) => {
+const CollectionModal = ({ isOpen, onClose}) => {
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [description, setDescription] = useState("");
