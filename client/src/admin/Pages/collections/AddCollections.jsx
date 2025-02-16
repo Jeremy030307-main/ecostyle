@@ -36,9 +36,9 @@ const AddCollections = () => {
   return (
     <form onSubmit={onSubmitHandler} className="add-form">
       {/* Images */}
-      <div>
+      <div>   
         <div className="title-container">
-          <p className="title">Upload Image</p>
+          <p className="title">Create A Collection</p>
           <Link className="button-link" to="../collections">
             <button>
               <svg
@@ -55,7 +55,7 @@ const AddCollections = () => {
           </Link>
         </div>
 
-        <div className="upload-images">
+        {/* <div className="upload-images">
           <label className="upload-label" htmlFor="image1">
             <img
               src={!image1 ? assets.upload_area : URL.createObjectURL(image1)}
@@ -100,7 +100,7 @@ const AddCollections = () => {
               id="image4"
             />
           </label>
-        </div>
+        </div> */}
       </div>
 
       {/* ID */}
