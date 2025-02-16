@@ -29,7 +29,7 @@ import Orders from './admin/Pages/Orders';
 import AdminRoutes from './authentication/protectedRoute';
 import ProductCategories from './admin/Pages/categories/ProductCategories.jsx';
 import Collections from './admin/Pages/collections/Collections';
-import AddCollections from './admin/Pages/collections/AddCollections';
+import AddCollections from './admin/Pages/collections/CollectionModal.jsx';
 import EditProduct from './admin/Pages/products/EditProduct.jsx'
 import Checkout from './customer/Checkout/Checkout.jsx'
 

@@ -59,6 +59,7 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .aname_category_button {

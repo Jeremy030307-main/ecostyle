@@ -137,7 +137,7 @@ const ProductCategories = () => {
                       className="aname_subcategory_button"
                       onClick={() => toggleSubcategory(subcategory.id)}
                     >
-                      <span>{subcategory.name}</span>
+                      <span className='aname_cat_name'>{subcategory.name}</span>
                       <span className="aname_chevron">
                         {expandedSubcategories[subcategory.id] ? '▼' : '▶'}
                       </span>
