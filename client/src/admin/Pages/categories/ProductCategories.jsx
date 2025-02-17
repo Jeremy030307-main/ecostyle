@@ -146,40 +146,40 @@ const ProductCategories = () => {
                     {expandedSubcategories[subcategory.id] && subcategory.size_guide && (
                       <div className="aname_size_guide_container">
                         <div className='aname_size_guide-edit-button'>
-                        {editingSubcategory?.id === subcategory.id ? (
-                          <>
-                            <button
-                              className="aname_save_btn"
-                              onClick={handleSave}
-                            >
-                              💾 Save
-                            </button>
-                            <button
-                              className="aname_cancel_btn"
-                              onClick={() => {
-                                setEditingSubcategory(null);
-                                setEditedSizeGuide({});
-                              }}
-                            >
-                              ❌ Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              className="aname_edit_btn"
-                              onClick={() => handleEdit(subcategory)}
-                            >
-                              ✏️ Edit
-                            </button>
-                            {/* <button
+                          {editingSubcategory?.id === subcategory.id ? (
+                            <>
+                              <button
+                                className="aname_save_btn"
+                                onClick={handleSave}
+                              >
+                                💾 Save
+                              </button>
+                              <button
+                                className="aname_cancel_btn"
+                                onClick={() => {
+                                  setEditingSubcategory(null);
+                                  setEditedSizeGuide({});
+                                }}
+                              >
+                                ❌ Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                className="aname_edit_btn"
+                                onClick={() => handleEdit(subcategory)}
+                              >
+                                ✏️ Edit
+                              </button>
+                              {/* <button
                                         className="aname_delete_btn"
                                         onClick={() => handleDelete(category.id, subcategory.id)}
                                       >
                                         Delete
                                       </button> */}
-                          </>
-                        )}
+                            </>
+                          )}
                         </div>
                         <table className="aname_size_guide_table">
                           <thead>

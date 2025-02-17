@@ -236,9 +236,9 @@ const Product = () => {
               <thead>
                 <tr>
                   <th>Size</th>
-                  <th>Chest (in)</th>
-                  <th>Waist (in)</th>
-                  <th>Hip (in)</th>
+                  <th>Chest (cm)</th>
+                  <th>Waist (cm)</th>
+                  <th>Hip (cm)</th>
                 </tr>
               </thead>
               <tbody>
