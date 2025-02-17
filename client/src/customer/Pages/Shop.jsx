@@ -243,13 +243,6 @@ const Shop = () => {
   return (
     <div className="shop-container">
       <aside className="shop-sidebar">
-        
-        <div className="search">
-          <div className="search-wrapper">
-            <img src={search_icon} className="search_icon" alt="" />
-            <input type="text" placeholder="Whatchu looking for?" />
-          </div>
-        </div>
 
         <Dropdown title={"Category"}>
           <ul className="filter-options">
