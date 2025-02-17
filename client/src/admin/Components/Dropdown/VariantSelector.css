@@ -31,11 +31,9 @@
 }
 
 .image-preview {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; /* Made circular to match your design */
+  width: 120px;
+  height: 120px;
   overflow: hidden;
-  border: 2px solid #2d3643;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,7 +43,6 @@
 .image-preview img {
   width: 70%;
   height: 70%;
-  object-fit: contain;
 }
 
 .remove-button {

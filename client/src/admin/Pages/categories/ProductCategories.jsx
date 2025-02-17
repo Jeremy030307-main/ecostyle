@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
-import { assets as assets_1 } from "../../Components/Assets/assets";
-import { getCategory, updateCategorySizeGuide, deleteCategory } from "../../../apiManager/methods/categoryMethods";
-import CategoryModal from "./CategoryModal";
-import "./ProductCategories.css";
+// ProductCategories.jsx
+import React, { useState, useEffect } from 'react';
+import { assets } from "../../Components/Assets/assets";
+import { getCategory, updateCategorySizeGuide, deleteCategory } from '../../../apiManager/methods/categoryMethods';
+import CategoryModal from './CategoryModal'
+import './ProductCategories.css';
 
-const CategoryTable = () => {
+const ProductCategories = () => {
   const [categories, setCategories] = useState([]);
+  const [expandedCategories, setExpandedCategories] = useState({});
+  const [expandedSubcategories, setExpandedSubcategories] = useState({});
   const [editingSubcategory, setEditingSubcategory] = useState(null);
   const [editedSizeGuide, setEditedSizeGuide] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
@@ -16,14 +19,27 @@ const CategoryTable = () => {
 
   const fetchCategories = async () => {
     try {
-      const categoryData = await getCategory();
-      setCategories(categoryData);
+      const data = await getCategory();
+      setCategories(Array.isArray(data) ? data : [data]);
     } catch (error) {
-      console.error("Error fetching categories:", error);
+      console.error('Error fetching categories:', error);
     }
   };
 
-  // Enable inline editing
+  const toggleCategory = (categoryId) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
+
+  const toggleSubcategory = (subcategoryId) => {
+    setExpandedSubcategories(prev => ({
+      ...prev,
+      [subcategoryId]: !prev[subcategoryId]
+    }));
+  };
+
   const handleEdit = (subcategory) => {
     setEditingSubcategory(subcategory);
     setEditedSizeGuide(
@@ -34,7 +50,6 @@ const CategoryTable = () => {
     );
   };
 
-  // Handle real-time updates to size guide
   const handleSizeGuideChange = (index, key, value) => {
     setEditedSizeGuide((prev) => ({
       ...prev,
@@ -45,14 +60,12 @@ const CategoryTable = () => {
     }));
   };
 
-  // Save updates to backend
   const handleSave = async () => {
     if (editingSubcategory) {
       const updatedSizeGuide = Object.values(editedSizeGuide);
       try {
         await updateCategorySizeGuide(editingSubcategory.id, { size_guide: updatedSizeGuide });
 
-        // Update local state immediately
         setCategories((prevCategories) =>
           prevCategories.map((category) => ({
             ...category,
@@ -71,20 +84,18 @@ const CategoryTable = () => {
     }
   };
 
-  // Delete a subcategory and update the backend
   const handleDelete = async (categoryID, subcategoryID) => {
     if (window.confirm("Are you sure you want to delete this subcategory?")) {
       try {
         await deleteCategory(categoryID);
 
-        // Remove subcategory from state without page refresh
         setCategories((prevCategories) =>
           prevCategories
             .map((cat) => ({
               ...cat,
               subcategories: cat.subcategories.filter((sub) => sub.id !== subcategoryID),
             }))
-            .filter((cat) => cat.subcategories.length > 0) // Remove empty categories
+            .filter((cat) => cat.subcategories.length > 0)
         );
 
         alert("Subcategory deleted successfully!");
@@ -94,86 +105,140 @@ const CategoryTable = () => {
     }
   };
 
-  // Extract unique measurement keys dynamically
-  const getMeasurementKeys = () => {
-    const allKeys = new Set();
-    categories.forEach((cat) => {
-      cat.subcategories.forEach((sub) => {
-        if (sub.size_guide) {
-          sub.size_guide.forEach((size) => {
-            Object.keys(size).forEach((key) => allKeys.add(key));
-          });
-        }
-      });
-    });
-    return Array.from(allKeys);
-  };
-
-  const measurementKeys = getMeasurementKeys();
-
   return (
-    <div>
-      <div className="add-categories-button-container">
+    <div className="aname_product_categories">
+      <div className="aname_category_header">
         <h2>Product Categories</h2>
         <div onClick={() => setModalOpen(true)} className="add-categories-button">
-          <img src={assets_1.add_icon} alt="" />
+          <img src={assets.add_icon} alt="" />
           <p className="button-word">Add A Category</p>
         </div>
         <CategoryModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
       </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Subcategory</th>
-            {measurementKeys.map((key) => (
-              <th key={key}>{key.replace("_", " ")}</th>
-            ))}
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {categories.map((category) =>
-            category.subcategories.map((sub) =>
-              sub.size_guide ? (
-                sub.size_guide.map((item, index) => (
-                  <tr key={`${sub.id}-${index}`}>
-                    <td>{sub.id}</td>
-                    {measurementKeys.map((key) => (
-                      <td key={key}>
-                        {editingSubcategory?.id === sub.id ? (
-                          <input
-                            type="text"
-                            value={editedSizeGuide[index]?.[key] || ""}
-                            onChange={(e) => handleSizeGuideChange(index, key, e.target.value)}
-                          />
+      <div className="aname_category_menu">
+        {categories.map((category) => (
+          <div key={category.id} className="aname_category_item">
+            <button
+              className="aname_category_button"
+              onClick={() => toggleCategory(category.id)}
+            >
+              <span>{category.name}</span>
+              <span className="aname_chevron">
+                {expandedCategories[category.id] ? '▼' : '▶'}
+              </span>
+            </button>
+
+            {expandedCategories[category.id] && category.subcategories && (
+              <div className="aname_subcategory_list">
+                {category.subcategories.map((subcategory) => (
+                  <div key={subcategory.id} className="aname_subcategory_item">
+                    <button
+                      className="aname_subcategory_button"
+                      onClick={() => toggleSubcategory(subcategory.id)}
+                    >
+                      <span className='aname_cat_name'>{subcategory.name}</span>
+                      <span className="aname_chevron">
+                        {expandedSubcategories[subcategory.id] ? '▼' : '▶'}
+                      </span>
+                    </button>
+
+                    {expandedSubcategories[subcategory.id] && subcategory.size_guide && (
+                      <div className="aname_size_guide_container">
+                        <div className='aname_size_guide-edit-button'>
+                        {editingSubcategory?.id === subcategory.id ? (
+                          <>
+                            <button
+                              className="aname_save_btn"
+                              onClick={handleSave}
+                            >
+                              💾 Save
+                            </button>
+                            <button
+                              className="aname_cancel_btn"
+                              onClick={() => {
+                                setEditingSubcategory(null);
+                                setEditedSizeGuide({});
+                              }}
+                            >
+                              ❌ Cancel
+                            </button>
+                          </>
                         ) : (
-                          item[key] || "—"
+                          <>
+                            <button
+                              className="aname_edit_btn"
+                              onClick={() => handleEdit(subcategory)}
+                            >
+                              ✏️ Edit
+                            </button>
+                            {/* <button
+                                        className="aname_delete_btn"
+                                        onClick={() => handleDelete(category.id, subcategory.id)}
+                                      >
+                                        Delete
+                                      </button> */}
+                          </>
                         )}
-                      </td>
-                    ))}
-                    <td>
-                      {editingSubcategory?.id === sub.id ? (
-                        <>
-                          <button onClick={handleSave}>💾 Save</button>
-                          <button onClick={() => setEditingSubcategory(null)}>❌ Cancel</button>
-                        </>
-                      ) : (
-                        <>
-                          <button onClick={() => handleEdit(sub)}>✏️ Edit</button>
-                          <button onClick={() => handleDelete(category.id, sub.id)}>🗑️ Delete</button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              ) : null
-            )
-          )}
-        </tbody>
-      </table>
+                        </div>
+                        <table className="aname_size_guide_table">
+                          <thead>
+                            <tr>
+                              <th>Size</th>
+                              {Object.keys(subcategory.size_guide[0])
+                                .filter(key => key !== 'Size')
+                                .map(key => (
+                                  <th key={key}>{key.replace('_', ' ')}</th>
+                                ))}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {subcategory.size_guide.map((item, index) => (
+                              <tr key={index}>
+                                <td>
+                                  {editingSubcategory?.id === subcategory.id ? (
+                                    <input
+                                      type="text"
+                                      className="aname_edit_input"
+                                      value={editedSizeGuide[index]?.Size || ''}
+                                      onChange={(e) => handleSizeGuideChange(index, 'Size', e.target.value)}
+                                    />
+                                  ) : (
+                                    item.Size
+                                  )}
+                                </td>
+                                {Object.keys(item)
+                                  .filter(key => key !== 'Size')
+                                  .map(key => (
+                                    <td key={key}>
+                                      {editingSubcategory?.id === subcategory.id ? (
+                                        <input
+                                          type="text"
+                                          className="aname_edit_input"
+                                          value={editedSizeGuide[index]?.[key] || ''}
+                                          onChange={(e) => handleSizeGuideChange(index, key, e.target.value)}
+                                        />
+                                      ) : (
+                                        item[key] || '—'
+                                      )}
+                                    </td>
+                                  ))}
+
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default CategoryTable;
+export default ProductCategories;
