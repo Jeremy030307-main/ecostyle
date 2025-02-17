@@ -25,20 +25,53 @@ const EditProduct = () => {
   const [product, setProduct] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
-  const [sizeGuide, setSizeGuide] = useState([]); // State for size guide
+
+  // COLLECTIONS
+  const [collections, setCollections] = useState([]);
+  const [selectedCollection, setSelectedCollection] = useState(""); // Selected collection
+
+  // CATEGORIES
+  const [categories, setCategories] = useState([]); // Full category structure
+  const [selectedCategory, setSelectedCategory] = useState(""); // Top-level category ID
+  const [selectedSubcategory, setSelectedSubcategory] = useState(""); // Subcategory ID
+  const [nestedSubcategory, setNestedSubcategory] = useState(""); // Nested subcategory ID (if applicable)
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const data = await getProduct(id);
         setProduct(data);
-        setSizeGuide(data.size_guide || []); // Initialize size guide from product data
       } catch (error) {
         console.log(error);
       }
     };
 
     fetchProducts();
+
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await getCategory();
+        console.log("All Categories Fetched")
+        setCategories(categoryData); // Example: [{id: 'MEN', name: 'Men', subcategories: [...]}, ...]
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    }
+
+    const fetchCollections = async () => {
+
+      try {
+        const collection = await getAllCollection();
+        console.log("All Collections Fetched")
+        setCollections(collection);
+      } catch (error) {
+        console.error("Error fetching collection:", error);
+      }
+
+    }
+
+    fetchCategories();
+    fetchCollections();
   }, [id]);
 
   // Update formData whenever product data changes
@@ -50,30 +83,31 @@ const EditProduct = () => {
 
   if (!product || !formData) return <div>Loading...</div>;
 
-  // Size Guide Functions
-  const addSizeEntry = () => {
-    setSizeGuide([...sizeGuide, { Size: "", Chest: "", Waist: "", Hip: "", "Arm Length": "" }]);
+  const handleCategoryChange = (categoryId) => {
+    setSelectedCategory(categoryId);
+    setSelectedSubcategory("");
+    setNestedSubcategory("");
+    setFormData(prev => ({
+      ...prev,
+      category: categoryId
+    }));
   };
 
-  const removeSizeEntry = (index) => {
-    const newGuide = sizeGuide.filter((_, i) => i !== index);
-    setSizeGuide(newGuide);
+  const handleSubcategoryChange = (subcategoryId) => {
+    setSelectedSubcategory(subcategoryId);
+    setNestedSubcategory("");
   };
 
-  const handleSizeGuideFieldChange = (index, field, value) => {
-    const newGuide = [...sizeGuide];
-    newGuide[index][field] = value;
-    setSizeGuide(newGuide);
+  const handleNestedSubcategoryChange = (nestedSubcategoryId) => {
+    setNestedSubcategory(nestedSubcategoryId);
   };
 
-  const handleSizeGuideUpdate = async () => {
-    try {
-      await updateProduct(id, { size_guide: sizeGuide });
-      alert("Size guide updated successfully!");
-    } catch (error) {
-      console.error("Error updating size guide:", error);
-      alert("Failed to update size guide");
-    }
+  const handleCollectionChange = (collectionId) => {
+    setSelectedCollection(collectionId);
+    setFormData(prev => ({
+      ...prev,
+      collection: collectionId
+    }));
   };
 
   const handleInputChange = (e) => {
@@ -82,18 +116,6 @@ const EditProduct = () => {
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handleSizeDelete = async (sizeToDelete) => {
-    try {
-      await deleteSize(id, sizeToDelete);
-      setFormData((prev) => ({
-        ...prev,
-        size: prev.size.filter((s) => s !== sizeToDelete),
-      }));
-    } catch (error) {
-      console.error("Error deleting size:", error);
-    }
   };
 
   const handleVariantDelete = async (variantId) => {
@@ -163,8 +185,7 @@ const EditProduct = () => {
         name: formData.name,
         price: Number(formData.price),
         category: formData.category,
-        collection: formData.collection,
-        size_guide: sizeGuide, // Include size guide in the update
+        collection: formData.collection
       };
       await updateProduct(id, updatedProduct);
       setIsEditing(false);
@@ -207,19 +228,43 @@ const EditProduct = () => {
           <input type="number" name="price" value={formData.price} onChange={handleInputChange} disabled={!isEditing} />
         </div>
 
-
-        <div className="edit-product-form-group">
-          <label>Category:</label>
-          <input type="text" name="category" value={formData.category} onChange={handleInputChange} disabled={!isEditing} />
-        </div>
-
-        <div className="edit-product-form-group">
-          <label>Collection:</label>
-          <input type="text" name="collection" value={formData.collection} onChange={handleInputChange} disabled={!isEditing} />
-        </div>
+        {/* Category and Collection display/edit section */}
+        {!isEditing ? (
+          <>
+            <div className="edit-product-form-group">
+              <label>Category:</label>
+              <input type="text" value={formData.category} disabled />
+            </div>
+            <div className="edit-product-form-group">
+              <label>Collection:</label>
+              <input type="text" value={formData.collection} disabled />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="category-section sm-row">
+              <CategorySelectionSection
+                categories={categories}
+                selectedCategory={selectedCategory}
+                selectedSubcategory={selectedSubcategory}
+                nestedSubcategory={nestedSubcategory}
+                handleCategoryChange={handleCategoryChange}
+                handleSubcategoryChange={handleSubcategoryChange}
+                handleNestedSubcategoryChange={handleNestedSubcategoryChange}
+              />
+            </div>
+            <CustomSelect
+              label="Collection"
+              value={selectedCollection}
+              options={collections}
+              onChange={handleCollectionChange}
+              placeholder="Select Collection"
+            />
+          </>
+        )}
 
         {/* Variants Section */}
-        <h4>Variants:</h4>
+        <h4>Variants: (Stock Count)</h4>
         <div className="info-section">
           <div className="variants-container">
             {formData.variant.map((v, index) => (
@@ -267,7 +312,6 @@ const EditProduct = () => {
               onClick={() => {
                 setIsEditing(false);
                 setFormData(product);
-                setSizeGuide(product.size_guide || []);
               }}
             >
               Cancel

@@ -123,7 +123,7 @@ const AddProducts = () => {
       const productData = {
         name: name,
         price: Number(price),
-        thumbnail: image1,
+        thumbnail: "image1",
         size: sizes,
         details: {
           description: description,
