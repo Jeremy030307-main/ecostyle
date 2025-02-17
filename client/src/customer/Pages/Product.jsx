@@ -7,9 +7,10 @@ import {
   createNewReview,
   getProductReview,
 } from "../../apiManager/methods/reviewMethods";
-import { getProduct, useProduct } from "../../apiManager/methods/productMethods";
+import { getProduct } from "../../apiManager/methods/productMethods";
 import { RatingStar, SmallRatingStar } from "./RatingStart";
 import ReviewModal from "../Components/Review Modal/ReviewModal";
+import SizeGuideModal from "../Components/SizeModal/SizeGuideModal";
 
 const ReviewCard = ({ review }) => {
   return (
@@ -30,7 +31,7 @@ const ReviewCard = ({ review }) => {
           <p>{review.comment}</p>
         </div>
       </div>
-      <hr style={{opacity:"0.5"}}/>
+      <hr style={{ opacity: "0.5" }} />
     </>
   );
 };
@@ -42,11 +43,13 @@ const Product = () => {
   const [addedToWishlist, setAddedToWishlist] = useState(false);
   const [product, setProduct] = useState(null);
   const [reviews, setReview] = useState([]);
-  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVariant, setVariant] = useState(null);
   const [selectedSize, setSize] = useState("S");
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const [sizeGuide, setSizeGuide] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const fetchReview = async () => {
     try {
@@ -66,7 +69,7 @@ const Product = () => {
         console.log(error.message);
       }
     };
-    
+
     fetchProduct();
     fetchReview();
   }, [productID]);
@@ -82,6 +85,7 @@ const Product = () => {
       setVariant(product.variant[0].id);
       setSize(product.size[0]);
       setSelectedImage(product.thumbnail);
+      setSizeGuide(product.size_guide || []);
     }
   }, [product]);
 
@@ -141,12 +145,17 @@ const Product = () => {
           <div className="product-selection">
             <div className="size-section-header">
               <h2>Available Sizes</h2>
-              <button 
-                className="size-guide-link"
-                onClick={() => setIsSizeGuideOpen(true)}
-              >
-                Size Guide
+              {/* Size Guide Link */}
+              <button className="size-guide" onClick={() => setModalOpen(true)}>
+                View Size Guide
               </button>
+
+              {/* Size Guide Modal */}
+              <SizeGuideModal
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                sizeGuide={sizeGuide}
+              />
             </div>
             <div className="product-sizes">
               {product.size?.map((size, index) => (
@@ -162,23 +171,23 @@ const Product = () => {
           </div>
 
           <div className="action-buttons">
-            <button 
-              className="fav-btn" 
+            <button
+              className="fav-btn"
               onClick={(e) => {
                 e.stopPropagation();
                 if (product) {
-                  addedToWishlist 
+                  addedToWishlist
                     ? removeItemFromWishlist(product.id)
                     : addItemToWishlist(product.id);
                 }
               }}
             >
-              {addedToWishlist 
+              {addedToWishlist
                 ? <i className="fa-solid fa-heart"></i>
                 : <i className="fa-regular fa-heart"></i>}
             </button>
-            <button 
-              className="add-to-cart-btn" 
+            <button
+              className="add-to-cart-btn"
               onClick={() => addItemToCart(productID, selectedVariant, selectedSize)}
             >
               Add to Cart
@@ -220,60 +229,6 @@ const Product = () => {
           <p>No reviews available</p>
         )}
       </div>
-
-      {/* Size Guide Modal */}
-      {isSizeGuideOpen && (
-        <div className="size-guide-modal">
-          <div className="size-guide-content">
-            <button 
-              className="close-button"
-              onClick={() => setIsSizeGuideOpen(false)}
-            >
-              &times;
-            </button>
-            <h2>Size Guide</h2>
-            <table className="size-chart">
-              <thead>
-                <tr>
-                  <th>Size</th>
-                  <th>Chest (cm)</th>
-                  <th>Waist (cm)</th>
-                  <th>Hip (cm)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>S</td>
-                  <td>34-36</td>
-                  <td>28-30</td>
-                  <td>36-38</td>
-                </tr>
-                <tr>
-                  <td>M</td>
-                  <td>38-40</td>
-                  <td>32-34</td>
-                  <td>40-42</td>
-                </tr>
-                <tr>
-                  <td>L</td>
-                  <td>42-44</td>
-                  <td>36-38</td>
-                  <td>44-46</td>
-                </tr>
-                <tr>
-                  <td>XL</td>
-                  <td>46-48</td>
-                  <td>40-42</td>
-                  <td>48-50</td>
-                </tr>
-              </tbody>
-            </table>
-            <p className="size-note">
-              * Measurements are body dimensions, not garment dimensions
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

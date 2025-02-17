@@ -86,7 +86,7 @@
   margin-bottom: 10px;
 }
 
-.size-guide-link {
+.size-guide {
   background: none;
   border: none;
   color: #666;
@@ -97,7 +97,7 @@
   transition: color 0.2s ease;
 }
 
-.size-guide-link:hover {
+.size-guide:hover {
   color: #333;
 }
 
@@ -288,7 +288,7 @@
   font-weight: bold;
   border: none;
   border-radius: 50%;
-  background-color: #000;
+  background-color: red;
   cursor: pointer;
   display: flex;
   align-items: center;
