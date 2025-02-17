@@ -3,10 +3,13 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { CheckoutContext } from './CheckoutWrapper';
-import { ApiMethods } from "../../apiManager/ApiMethods";
+import {  payOrder } from "../../apiManager/methods/orderMethod";
+import checkoutCompleteStockImage from "../Components/Assets/checkout-complete-image.svg"
+import logo_text_image from "../Components/Assets/logo_text.png"
+import { useNavigate } from "react-router-dom";
 
 const SuccessIcon =
-  <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="16" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path fillRule="evenodd" clipRule="evenodd" d="M15.4695 0.232963C15.8241 0.561287 15.8454 1.1149 15.5171 1.46949L6.14206 11.5945C5.97228 11.7778 5.73221 11.8799 5.48237 11.8748C5.23253 11.8698 4.99677 11.7582 4.83452 11.5681L0.459523 6.44311C0.145767 6.07557 0.18937 5.52327 0.556912 5.20951C0.924454 4.89575 1.47676 4.93936 1.79051 5.3069L5.52658 9.68343L14.233 0.280522C14.5613 -0.0740672 15.1149 -0.0953599 15.4695 0.232963Z" fill="white"/>
   </svg>;
 
@@ -24,7 +27,7 @@ const InfoIcon =
 
 const STATUS_CONTENT_MAP = {
   succeeded: {
-    text: "Payment succeeded",
+    text: "Thank you for your purchases",
     iconColor: "#30B130",
     icon: SuccessIcon,
   },
@@ -45,26 +48,76 @@ const STATUS_CONTENT_MAP = {
   }
 };
 
+const OrderSummaryLine = ({productData, quantity}) => {
+
+  return (
+    <div className="order-summary-line">
+      
+      <img 
+        src={productData.image} 
+        alt={productData.name} 
+        className="summary-product-image" 
+      />
+
+      <div className="summary-line-detail">
+        <div>
+          <h4 style={{ margin: "0", padding: "0" }}>{productData.name}</h4>
+          <p style={{ margin: "0", padding: "0" }}  className="summary-product-code">Item: #{productData.product}/ {productData.variant}/ {productData.size}</p>
+        </div>
+
+        <div className="summary-price-quantity ">
+          <p>RM{productData.price}</p>
+          <p>× {quantity}</p>
+        </div>
+      </div>
+
+      <div className="summary-line-total">
+        <p>RM{productData.price * quantity}</p>
+      </div>
+    </div>
+  );
+};
+
+const OrderSummaryTotal = ({total, subtotal, shippingFee}) => {
+
+  return (
+    <div className="summary-total-container">
+      <div className="summary-total">
+        <p>Subtotal</p>
+        <p>RM{subtotal}</p>
+      </div>
+
+      <div className="summary-total">
+        <p>Shipping</p>
+        <p>RM{shippingFee}</p>
+      </div>
+
+      <hr />
+
+      <div className="summary-total summary-final_amount" style={{fontSize: "larger"}}>
+        <p>Total</p>
+        <p>RM{total}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function CheckoutComplete() {
 
-  const {userCart} = useContext(CheckoutContext)
-
   const stripe = useStripe();
+  const navigate = useNavigate()
 
   const [status, setStatus] = useState("default");
   const [intentId, setIntentId] = useState(null);
+  const [order, setOrder] = useState(null)
 
   useEffect(() => {
 
-    const createOrder = async(total, shippingAddress,paymentDetails) => {
-      console.log(shippingAddress)
+    const paidOrder = async(paymentIntentID) => {
+
       try{
-        await ApiMethods.post("/order", {
-          cartsData: userCart,
-          total,
-          shippingAddress: shippingAddress ? shippingAddress : "hshsh",
-          paymentDetails
-        })
+        const orderData = await payOrder(paymentIntentID)
+        setOrder(orderData.order)
       } catch (error) {
         console.log(error.message)
       }
@@ -88,40 +141,100 @@ export default function CheckoutComplete() {
       }
 
       if (paymentIntent.status === "succeeded"){
-        console.log("Create order")
 
-        createOrder(paymentIntent.amount, paymentIntent.shipping, {
-          paymentID: paymentIntent.id,
-          paymentMethod: paymentIntent.payment_method_types,
-        })
+        paidOrder(paymentIntent.id)
         console.log("Order Created")
       }
 
       setStatus(paymentIntent.status);
       setIntentId(paymentIntent.id);
     });
-  }, [stripe, userCart]);
+  }, [stripe]);
+
+  useEffect(() => {
+    console.log(order)
+  }, [order])
 
   return (
-    <div id="payment-status">
-      <div id="status-icon" style={{backgroundColor: STATUS_CONTENT_MAP[status].iconColor}}>
-        {STATUS_CONTENT_MAP[status].icon}
-      </div>
-      <h2 id="status-text">{STATUS_CONTENT_MAP[status].text}</h2>
-      {intentId && <div id="details-table">
-        <table>
-          <tbody>
-            <tr>
-              <td className="TableLabel">Payment ID</td>
-              <td id="intent-id" className="TableContent">{intentId}</td>
-            </tr>
-            <tr>
-              <td className="TableLabel">Status</td>
-              <td id="intent-status" className="TableContent">{status}</td>
-            </tr>
-          </tbody>
-        </table>
+    <div className="checkout-complete-container">
+
+      <img src={checkoutCompleteStockImage} alt="" className="checkout-complete-image"/>
+
+      { intentId && order && <div className="checkout-compelte-detail">
+
+        <img src={logo_text_image} alt=""/>
+        
+        <div id="payment-status">
+
+          <div id="status-icon" style={{backgroundColor: STATUS_CONTENT_MAP[status].iconColor}}>
+            {STATUS_CONTENT_MAP[status].icon}
+          </div>
+
+          <h2 id="status-text">{STATUS_CONTENT_MAP[status].text}</h2>
+
+          <div className="order-summary" style={{width: "80%"}}>
+            <p style={{fontWeight:"bolder", fontSize: "20px"}} className="summary-header">
+            Order Summary <br />
+              <span style={{fontWeight: "lighter", fontSize: "15px"}}>#{intentId.slice(3)}</span>
+
+              <div style={{paddingTop: "10px", display: "flex", justifyContent: "space-between"}}>
+                <p>Delivery Information: </p>
+                <div style={{fontWeight: "lighter", fontSize: "15px"}}>
+                  <span>{order.shippingAddress.name}</span><br />
+                  <span>{order.shippingAddress.address.line1}</span><br />
+                  <span>{order.shippingAddress.address.line2}</span><br />
+                  <span>{order.shippingAddress.address.postal_code}, {order.shippingAddress.address.city}, </span>
+                  <span>{order.shippingAddress.address.state}</span><br />
+                  <span>{order.shippingAddress.phone}</span>
+                </div>
+              </div>
+
+            </p>
+
+            <div className="summary-details">
+              {order === null ? (
+                <p>Your cart is empty.</p>
+              ) : (
+                <>
+                {order.products.slice(0, 1).map((cartLine, index) => (
+                  <OrderSummaryLine
+                    key={index}
+                    productData={cartLine} // Assuming cartLine has product details
+                    quantity={cartLine.quantity} // Assuming cartLine has quantity
+                  />
+                ))}
+
+                {/* Show a line if there are more than 2 items */}
+                {order.products.length > 1 && (
+                  <div style={{ marginTop: "10px", fontStyle: "italic", color: "#666", justifyContent: "right", display: "flex"}}>
+                    +{order.products.length - 1} more items...
+                  </div>
+                )}
+
+                <OrderSummaryTotal
+                total={order.roundedTotal}
+                subtotal={order.subtotal}
+                shippingFee={order.shippingFee}
+                />
+
+                </>
+
+              )}
+            </div> 
+
+
+          </div>
+
+          <div className="checkout-complete-button">
+            <button onClick={()=> {navigate("/..")}}>Back to Home</button>
+            <button style={{backgroundColor: "black"}} onClick={()=> {navigate("/../account/order")}}>Order Details</button>
+          </div>
+
+
+        </div>
       </div>}
+
     </div>
+
   );
 }

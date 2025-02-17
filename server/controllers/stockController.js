@@ -106,3 +106,37 @@ export const decreaseStock = async (req, res) => {
         res.status(400).send({ message: error.message });
     }
 };
+
+export const placedOrder = async (productID, size, variant, quantity) => {
+    try {
+        const { productID, size, variant, quantity } = req.body;
+
+        // Generate the SKU as the document ID
+        const sku = `${productID}_${variant}_${size}`;
+
+        // Reference to the specific document in the 'stock' collection
+        const stockDocRef = db.collection(COLLECTIONS.STOCK).doc(sku);
+
+        // Get the document to check stock availability
+        const stockDoc = await stockDocRef.get();
+
+        if (!stockDoc.exists) {
+            return res.status(404).send({ message: 'Stock not found for the specified SKU' });
+        }
+
+        const currentStock = stockDoc.data().stock;
+
+        if (currentStock < quantity) {
+            return res.status(400).send({ message: 'Insufficient stock to fulfill the order' });
+        }
+
+        // Decrease the stock
+        await stockDocRef.update({
+            stock: currentStock - quantity,
+        });
+
+        res.status(200).send({ message: 'Stock decreased successfully' });
+    } catch (error) {
+        res.status(400).send({ message: error.message });
+    }
+};

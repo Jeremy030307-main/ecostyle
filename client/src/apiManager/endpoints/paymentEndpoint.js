@@ -3,6 +3,7 @@ const PAYMENT_ENDPOINTS = {
     PAYMENT_SETUP : `/payment/secret`,
     PAYMENT_METHOD:  `/payment/payment-method`,
     PAYMENT_INTENT: '/payment/create-payment-intent',
+    UPDATE_PAYMENT: '/payment/update-payment-intent',
     PAYMENT_ROUTE: (id) => `/payment/${id}`
 
 }

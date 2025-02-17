@@ -127,6 +127,7 @@ body {
   justify-content: space-between;
   margin-top: 10px;
   font-weight: bold;
+  padding-bottom: 10px;
 }
 
 .checkout-btn {

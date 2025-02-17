@@ -10,8 +10,14 @@ export const useOrder = () => {
     return useSEE(ORDER_ENDPOINTS.ADMIN_ORDER_ROUTE);
 }
 
-export const createNewOrder = (cartsData, total, shippingAddress, paymentDetails) => {
-    return ApiMethods.post(ORDER_ENDPOINTS.ORDER_ROUTE, {
-        cartsData, total, shippingAddress, paymentDetails
+export const createNewOrder = (cartsData,paymentIntentID) => {
+    return ApiMethods.post(ORDER_ENDPOINTS.PLACE_ORDER, {
+        cartsData, paymentIntentID
+    } )
+}
+
+export const payOrder = (paymentIntentID) => {
+    return ApiMethods.put(ORDER_ENDPOINTS.PAY_ORDER, {
+        paymentIntentID
     } )
 }

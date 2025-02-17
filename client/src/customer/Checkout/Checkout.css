@@ -71,15 +71,15 @@
 
 /* Flex portion for checkout form and order summary */
 .checkout-form {
-  flex: 7; /* Takes more space on the left */
+  flex: 6; /* Takes more space on the left */
   display: flex;
   flex-direction: column;
   gap: 20px;
-  max-width:600px;
+  /* max-width:600px; */
 }
   
 .order-summary {
-  flex: 2; /* Takes less space on the right */
+  flex: 4; /* Takes less space on the right */
 }
 
 .address-element-wrapper {
@@ -114,11 +114,16 @@
 .edit-btn{
   font-weight: bold;
   cursor: pointer;
+  flex: 0.1
 }
 
 .checkout-selected-address-container{
   display: flex;
   justify-content:space-between;
+}
+
+.checkout-selected-box{
+  flex: 0.5
 }
 
 .checkout-form-navbar{
@@ -171,8 +176,9 @@
 }
 
 .checkout-selected-address-info{
-  padding-left: 20px;
+  /* padding-left: 20px; */
   padding-top: 10px;
+  flex: 1;
 
 }
 
@@ -404,8 +410,6 @@ button:disabled {
   width: 100%;
   min-height: 380px;
   align-self: center;
-  box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
-    0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
   border-radius: 7px;
   padding: 40px;
   opacity: 0;
@@ -492,3 +496,103 @@ td {
     min-width: initial;
   }
 }
+
+.shipping-mode-container {
+  padding: 16px;
+}
+
+.shipping-mode-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.shipping-mode-list {
+  list-style: none;
+  padding: 0;
+}
+
+.shipping-mode-list-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  margin-bottom: 6px;
+  transition: background 0.3s ease-in-out;
+}
+
+.shipping-mode-list-item:hover {
+  background-color: #e0e0e0;
+}
+
+.shipping-mode-selected {
+  background-color: #419c7e !important;
+  color: white;
+}
+
+.shipping-mode-selected-text {
+  margin-top: 10px;
+  color: green;
+  font-weight: bold;
+}
+
+.checkout-complete-container {
+  display: flex;
+  height: 100vh;
+}
+
+.checkout-complete-image {
+  flex: 1;
+  width: 50%;
+  height: 100%;
+  object-fit: cover; /* Ensures the image fills its container without distortion */
+}
+
+.checkout-complete-detail {
+  flex: 1;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center; /* Centers content vertically */
+  justify-content: center; /* Centers content horizontally */
+  padding: 20px; /* Adds some spacing */
+}
+.checkout-complete-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Add these rules to handle flex item sizing */
+.checkout-complete-container > * {
+  min-width: 0; /* Override default min-width: auto */
+  flex: 1;
+}
+
+.checkout-complete-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* or 'contain' depending on your needs */
+}
+
+.checkout-compelte-detail {
+  /* Add any additional styling needed for the detail section */
+  padding: 20px 10px;
+}
+
+.checkout-complete-button{
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  width: 60%;
+}
+
+.checkout-complete-button button{
+  width: 150px;
+  height: 40px;
+  border-width: 0;
+  background-color:#17A375;
+  color: #ffffff;
+  border-radius: 5px;
+}
+

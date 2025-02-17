@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import "./Checkout.css"
 import { AddressElement, useElements,PaymentElement } from '@stripe/react-stripe-js';
-import { getClientPaymentMethod } from '../../apiManager/methods/paymentMethod';
-import { ReactComponent as MasterCardLogo } from "../Components/Assets/mc_symbol.svg";  // If using ReactComponent export
-import { ReactComponent as VisaLogo } from "../Components/Assets/Visa_2021.svg";  // Correct path and import statement
-import { getUserAddress } from '../../apiManager/methods/addressMethods';
+import { CheckoutContext } from './CheckoutWrapper';
+import { updatePaymentIntent } from '../../apiManager/methods/paymentMethod';
 
 
 const AddressCard = ({addressData, bgColor}) => {
@@ -29,9 +27,14 @@ const AddressCard = ({addressData, bgColor}) => {
   )
 }
 
-const AddressForm = ({addressData, savedAddress, setSavedAddress, address, setAddress, toPayment}) => {
+const AddressForm = ({toAddress, toPayment, onAddress}) => {
+
   const elements = useElements();
+  const {total, subtotal, address, setAddress, addressData, shippingFeeOptions, shippingMode, setShippingMode, paymentIntentID} = useContext(CheckoutContext)
+  
+  const [savedAddress, setSavedAddress] = useState(true)
   const [selectAddress, setSelectAddress] = useState(false);
+  const [onShippingMode, setOnShippingMode] = useState(false)
 
   useEffect(() => {
     if (!addressData || addressData.length <= 0){
@@ -49,136 +52,216 @@ const AddressForm = ({addressData, savedAddress, setSavedAddress, address, setAd
     }
   }, [addressData, savedAddress, setAddress])
 
-  const handleSelectAddress = (address) => {
+  const [shippingID, setShippingID] = useState(null)
+  useEffect(() => {
+    setShippingID(shippingMode.id)
 
+  }, [shippingMode])
+
+  const handleSelectShipping = (shippingMode) => {
+    setShippingMode(shippingMode)
+    setShippingID(shippingMode.id)
+  }
+
+  const handleSelectAddress = (address) => {
     setAddress(address)
     setSelectAddress(false)
   }
 
   const handleNextStep = async () => {
 
-      const addressElement = elements?.getElement('address');
-      if (!addressElement) {
-          console.error('Address Element not found!');
-          return;
-      }
+    if (onShippingMode){
+      toPayment()
+      updatePaymentIntent(total, subtotal, shippingMode.price, paymentIntentID, address)
 
-      const { complete, value } = await addressElement.getValue();
-
-      if (complete) {
-          
-          try {
-            const addressData = {
-              name: value.name,   // Correctly include the name
-              ...value.address,   // Spread the address object
-              phone: value.phone, // Include the phone number
-              // postalCode: value.address.postal_code
-            };
-
-            delete addressData.postal_code
-            setAddress(addressData)
-            toPayment()
-
-          } catch (error) {
-              console.log(error.message)
-          }
+    } else {
+      if (savedAddress) {
+        // toPayment()
+        setOnShippingMode(true)
+  
       } else {
-          console.error('Address form is incomplete.');
+  
+        const addressElement = elements?.getElement('address');
+        if (!addressElement) {
+            console.error('Address Element not found!');
+            return;
+        }
+  
+        const { complete, value } = await addressElement.getValue();
+  
+        if (complete) {
+            
+            try {
+              const addressData = {
+                name: value.name,   // Correctly include the name
+                ...value.address,   // Spread the address object
+                phone: value.phone, // Include the phone number
+                postalCode: value.address.postal_code
+              };
+  
+              delete addressData.postal_code
+              setAddress(addressData)
+              // toPayment()
+              setOnShippingMode(true)
+  
+            } catch (error) {
+                console.log(error.message)
+            }
+        } else {
+            console.error('Address form is incomplete.');
+        }
       }
+
+    }
   };
 
   return (
     <div>
 
-      <div className='checkout-form-navbar'>
-        <ul className='checkout-form-navbar-item'>
-          {addressData && addressData.length > 0 ? (
-            <li 
-              className={`navbar-item ${savedAddress ? 'active' : ''}`}
-              onClick={() => { setSavedAddress(true); }}
-            >
-              <p>Saved Address</p>
-              {savedAddress ? <hr /> : null}
-            </li>
-          ) : null}
+      { onAddress && !onShippingMode && (
 
-          <li 
-            className={`navbar-item ${!savedAddress ? 'active' : ''}`}
-            onClick={() => { setSavedAddress(false); }}
-          >
-            <p>New Address</p>
-            {!savedAddress ? <hr /> : null}
-          </li>
-        </ul>
-      </div>
+        <div>
+          <div className='checkout-form-navbar'>
+            <ul className='checkout-form-navbar-item'>
+              {addressData && addressData.length > 0 ? (
+                <li 
+                  className={`navbar-item ${savedAddress ? 'active' : ''}`}
+                  onClick={() => { setSavedAddress(true); }}
+                >
+                  <p>Saved Address</p>
+                  {savedAddress ? <hr /> : null}
+                </li>
+              ) : null}
 
-      <div>
-          { savedAddress ? (
+              <li 
+                className={`navbar-item ${!savedAddress ? 'active' : ''}`}
+                onClick={() => { setSavedAddress(false); }}
+              >
+                <p>New Address</p>
+                {!savedAddress ? <hr /> : null}
+              </li>
+            </ul>
+          </div>
 
-          <div className='checkout-saved-address' >
-            <div className='checkout-saved-address-selection-header'>
-              <h3>Ship To</h3>
+          <div>
+              { savedAddress ? (
 
-              {selectAddress ? (
-                <i className="fa-solid fa-xmark fa-" onClick={() => setSelectAddress(false)}></i>
-              ) : (
-              <i className="fa-solid fa-pen-to-square fa-xl" onClick={() => setSelectAddress(true)}></i>
-              )}
-            </div>
+              <div className='checkout-saved-address' >
+                <div className='checkout-saved-address-selection-header'>
+                  <h3>Ship To</h3>
+
+                  {selectAddress ? (
+                    <i className="fa-solid fa-xmark fa-" onClick={() => setSelectAddress(false)}></i>
+                  ) : (
+                  <i className="fa-solid fa-pen-to-square fa-xl" onClick={() => setSelectAddress(true)}></i>
+                  )}
+                </div>
 
 
-            {selectAddress ? (
-              <div className='checkout-saved-address-selection-container'>
-                {addressData && addressData.length > 0 ? (
-                  addressData.map((address, index) => (
-                    <div  className='checkout-address-card-box' key={index} onClick={() => handleSelectAddress(address)}>
-                      <AddressCard 
-                        addressData={address}
-                      />
-                    </div>
-                  ))
-                ) : (
-                  <p>No payment methods available.</p> // Show a message if no payment methods exist
+                {selectAddress ? (
+                  <div className='checkout-saved-address-selection-container'>
+                    {addressData && addressData.length > 0 ? (
+                      addressData.map((address, index) => (
+                        <div  className='checkout-address-card-box' key={index} onClick={() => handleSelectAddress(address)}>
+                          <AddressCard 
+                            addressData={address}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <p>No payment methods available.</p> // Show a message if no payment methods exist
+                    )}
+                  </div>
+                  ) : (
+                    <></>
                 )}
+
+                { address && !selectAddress ? (
+                  <div className='checkout-selected-card-info'>
+                  <AddressCard
+                    addressData={address}
+                    bgColor={"white"}
+                  />
               </div>
-              ) : (
-                <></>
+                  
+                ): (
+                  <></>
+                )}            
+              </div>
+
+            ) : (
+              <div className='address-component'>
+                <AddressElement
+                  options={{
+                      mode: 'shipping',
+                      fields: {
+                          phone: 'always', // Include the phone number field
+                      },
+                  }}
+                />
+
+              </div>
             )}
-
-            { address && !selectAddress ? (
-              <div className='checkout-selected-card-info'>
-              <AddressCard
-                addressData={address}
-                bgColor={"white"}
-              />
           </div>
-              
-            ): (
-              <></>
-            )}            
-          </div>
+        </div>
+      )}
 
-        ) : (
-          <div className='address-component'>
-            <AddressElement
-              options={{
-                  mode: 'shipping',
-                  fields: {
-                      phone: 'always', // Include the phone number field
-                  },
-              }}
-            />
-
+      { onShippingMode && address && (
+          <div className='checkout-selected-address-container'>
+            <h3 className='checkout-selected-box' >Ship Address: </h3>
+            <div className='checkout-selected-address-info'>
+              <p>{address.name}</p>
+              <p>{address.line1}</p>
+              <p>{address.line2}</p>
+              <p>{address.city}, {address.postalCode}</p>
+              <p>{address.state}</p>
+              <p>{address.phone}</p>
+            </div>
+            <p className='edit-btn' onClick={() => {setOnShippingMode(false); toAddress()}}>Edit</p>
           </div>
-        )}
+      )}
+
+      { onAddress && onShippingMode &&  (
+        <div className="shipping-mode-container">
+          <h3 className="shipping-mode-title">Select a Shipping Option:</h3>
+          <ul className="shipping-mode-list">
+            {shippingFeeOptions.map((option) => (
+              <li
+                key={option.id}
+                className={`shipping-mode-list-item ${shippingID === option.id ? "shipping-mode-selected" : ""}`}
+                onClick={() => handleSelectShipping(option)}
+              >
+                <div>
+                  <h4>{option.name}</h4>
+                  <p>RM{option.price} - {option.description}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
       </div>
+      )}
 
-      <p className='checkout-form-shipping-btn' onClick={()=>{savedAddress ? toPayment(): handleNextStep()}}>Continue to Payment</p>
+      { shippingMode && !onAddress && (
+        <div className='checkout-selected-address-container'>
+        <h3 className='checkout-selected-box'>Shipping Mode: </h3>
+        <div className='checkout-selected-address-info'>
+          <p>{shippingMode.name}</p>
+          <p>{shippingMode.description}</p>
+        </div>
+        <p className='edit-btn' onClick={() => {setOnShippingMode(true); toAddress()}}>Edit</p>
+      </div>
+      )}
+
+    { onAddress && (
+      <p className='checkout-form-shipping-btn' onClick={handleNextStep}>{ onShippingMode ? ("Continue to Payment"):("Continue to Shipping Option")}</p>
+    )}
     </div>
   )
 }
 
-const CheckoutForm = ({address, setAddress}) => {
+const CheckoutForm = () => {
+
+  const {address} = useContext(CheckoutContext)
 
   // state varialbe to determince weather whcih window user is currently at (filling shipping address ot payment method)
   const [onAddress, setOnAddress] = useState(true)
@@ -200,22 +283,6 @@ const CheckoutForm = ({address, setAddress}) => {
     }
   }
 
-  // fetch all the user address book information (if any)
-  const [addressData, setAddressData] = useState([])
-  useEffect(() => {
-      const fetchUserAddres = async () => {
-        try{
-          const data = await getUserAddress();
-          setAddressData(data)
-        } catch (error) {
-          console.log(error)
-        }
-      }
-  
-      fetchUserAddres()
-    }, [])
-  const [savedAddress, setSavedAddress] = useState(true)
-
   return (
 
     <div className='checkout-form'>
@@ -231,35 +298,11 @@ const CheckoutForm = ({address, setAddress}) => {
           }
         </div>
 
-        {
-          onAddress ? (
-            <AddressForm 
-              addressData={addressData}
-              savedAddress={savedAddress}
-              setSavedAddress={setSavedAddress}
-              address={address}
-              setAddress={setAddress}
-              toPayment={toPayment}
-            />
-          ) : 
-          ( address ? (
-            <div className='checkout-selected-address-container'>
-              <h3>Ship To: </h3>
-              <div className='checkout-selected-address-info'>
-                <p>{address.name}</p>
-                <p>{address.line1}</p>
-                <p>{address.line2}</p>
-                <p>{address.city}, {address.postalCode}</p>
-                <p>{address.state}</p>
-                <p>{address.phone}</p>
-              </div>
-              <p className='edit-btn' onClick={() => {toAddress()}}>Edit</p>
-            </div>
-          ): (
-            <></>
-          )
-          )
-        }
+        <AddressForm 
+          toAddress={toAddress}
+          toPayment={toPayment}
+          onAddress={onAddress}
+        />
     </div>
 
       {/* Checkout Form - payment Section */}

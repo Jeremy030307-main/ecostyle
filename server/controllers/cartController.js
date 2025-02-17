@@ -153,7 +153,9 @@ export const checkout = async (req, res) => {
 
   try {
     let cartData = [];
+    let shippingFeeData = []
     const userCartRef = db.collection(COLLECTIONS.USER).doc(userId).collection(COLLECTIONS.CART);
+    const shippingFeeRef = db.collection('shippingFee')
 
     await db.runTransaction(async (transaction) => {
       const cartSnapshot = await transaction.get(userCartRef);
@@ -195,10 +197,23 @@ export const checkout = async (req, res) => {
           };
         })
       );
+
+      const shippingFeeSnapshot = await transaction.get(shippingFeeRef)
+      shippingFeeData = await Promise.all(
+        shippingFeeSnapshot.docs.map(async (doc) => {
+          const shippingFeeItem = doc.data();
+
+          return {
+            id: doc.id, // Include document ID for reference
+            ...shippingFeeItem,
+          };
+        })
+      );
+
     });
 
     // Send the updated cart data back to the client
-    res.status(200).send(cartData);
+    res.status(200).json({cartData, shippingFeeData});
 
   } catch (error) {
     console.error('Error during checkout:', error);
