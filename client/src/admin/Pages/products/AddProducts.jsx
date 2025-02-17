@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {assets} from '../../Components/Assets/assets.js'
 import './AddProducts.css';
-import { addProduct, addVariant, updateVariant } from '../../../apiManager/methods/productMethods.js';
+import { addProduct } from '../../../apiManager/methods/productMethods.js';
 import { getCategory } from '../../../apiManager/methods/categoryMethods.js';
 import { useColors } from '../../../apiManager/methods/colorMethods.js';
 import { getAllCollection } from '../../../apiManager/methods/collectionMethods.js';

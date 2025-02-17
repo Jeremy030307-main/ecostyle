@@ -37,12 +37,6 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
             >
               Edit Product
             </button>
-            <button
-              className="view-size-guide-button"
-              onClick={() => navigate(`/size-guides/edit/${id}`)}
-            >
-              View Size Guide
-            </button>
           </div>
         </div>
 
