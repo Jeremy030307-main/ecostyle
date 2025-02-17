@@ -60,6 +60,7 @@ button:hover > svg {
 
 .upload-label img {
   cursor: pointer; /* Makes the upload image clickable */
+  width: 200px;
 }
 
 .upload-label input {
