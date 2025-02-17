@@ -77,7 +77,7 @@ function MainApp() {
   const location = useLocation();
 
   // List of paths where the footer should not appear
-  const noFooterPaths = ['/admin', '/login', '/contact'];
+  const noFooterPaths = ['/admin', '/login', '/contact','/checkout'];
 
   return (
     <>

@@ -1,8 +1,96 @@
 // src/pages/Cancellation.js
-import React, { useEffect, useState } from "react";
-import { getUserOrder } from "../../apiManager/methods/orderMethod";
+import React from "react";
 import "./Account.css";
 import { useLocation } from "react-router-dom";
+import { FaCheck, FaArrowLeft } from 'react-icons/fa';
+
+function convertDate(datetime) {
+    // Convert seconds to milliseconds
+    const date = new Date(datetime._seconds * 1000);
+
+    // Format the date
+    const formattedDate = date.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false, // 24-hour format
+    });
+
+    return formattedDate
+}
+
+const StatusTimeline = ({orderID, orderStatus, total, order_placed, order_paid, order_ship_out, order_received, order_completed}) => {
+    
+    const steps = [
+        {
+          title: 'Order Placed',
+          date: order_placed ? convertDate(order_placed) : null,
+          completed: !!order_placed
+        },
+        {
+          title: `Order Paid ${total? `(RM${total})` : ''}`,
+          date: order_paid ? convertDate(order_paid) : null,
+          completed: !!order_paid
+        },
+        {
+          title: 'Order Shipped Out',
+          date: order_ship_out ? convertDate(order_ship_out) : null,
+          completed: !!order_ship_out
+        },
+        {
+          title: 'Order Received',
+          date: order_received ? convertDate(order_received) : null,
+          completed: !!order_received
+        },
+        {
+          title: 'Order Completed',
+          date: order_completed ? convertDate(order_completed) : null,
+          completed: !!order_completed
+        }
+      ];
+
+    return (
+      <div className="order-status-container">
+        {/* Header Section */}
+        <div className="order-status-header">
+          <button className="order-back-button">
+            <FaArrowLeft/> BACK
+          </button>
+
+          <div className="order-info">
+            <span className="order-id">ORDER ID . {orderID}</span>|
+            <span className="order-status">{orderStatus}</span>
+          </div>
+        </div>
+
+        {/* Horizontal Timeline */}
+      <div className="timeline-wrapper">
+        <div className="timeline">
+          {steps.map((step, index) => (
+            <div key={index} className="timeline-item">
+              {/* Progress Line */}
+              {index !== 0 && <div className="timeline-progress" />}
+              
+              {/* Step Content */}
+              <div className="step-content">
+                <div className={`step-icon ${step.completed ? 'completed' : ''}`}>
+                  {step.completed && <FaCheck className="check-icon" />}
+                </div>
+                <div className="step-dates">
+                  <div className="step-date">{step.date}</div>
+                  <div className="step-title">{step.title}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+  
+      </div>
+    );
+  };
 
 const AccountOrderDetail = () => {
 
@@ -18,6 +106,7 @@ const AccountOrderDetail = () => {
 
     <div className='payment-option-container'>
 
+        
       <div className='payment-option-header'>
         < h1>My Orders</h1> 
       </div>
@@ -25,50 +114,16 @@ const AccountOrderDetail = () => {
       <div className="account-order-wrapper" >
         {/* Order Header */}
         <div className="account-order-header">
-            <div className="account-order-detail">
-            <strong>
-                <span className="account-order-label">Order ID</span>
-            </strong>
-            <strong>
-                <span className="account-order-value">{order.id}</span>
-            </strong>
-            </div>
-            <div className="account-order-detail">
-            <strong>
-                <span className="account-order-label">Paid by</span>
-            </strong>
-            <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <span className="account-order-value" style={{ marginRight: "8px" , marginTop: "5px"}}>**** **** ****</span>
-                <span className="account-order-value">{order.paymentDetails.cardLast4}</span>
-            </div>
-            </div>
-        </div>
-
-        {/* Order Items */}
-        <div className="account-order-items">
-            {order.products.map((product, productIndex) => (
-            <div key={productIndex} className="account-order-item">
-                <div className="account-order-item-image">
-                <img src={product.image} alt={product.name} />
-                </div>
-                <div className="account-order-item-details">
-                <h3>{product.name}</h3>
-                <span className="account-order-price">${product.price}</span>
-                <div className="account-order-item-meta">
-                    <span>Size: {product.size}</span>
-                    <span>Variant: {product.variant}</span>
-                    <span>Product ID: {product.product}</span>
-                </div>
-                </div>
-                <div className="account-order-item-quantity">
-                x {product.quantity}
-                </div>
-                <div className="account-order-item-subtotal">
-                <span>Subtotal: ${getSubtotal(product)}</span>
-                </div>
-            </div>
-            ))}
-            <div className="account-order-total">Total: ${order.total}</div>
+        <StatusTimeline
+        orderID={order.id.slice(3)}
+        orderStatus={order.order_status}
+        total={order.roundedTotal}
+        order_placed={order.order_placed}
+        order_paid={order.order_paid}
+        order_ship_out={order.order_ship_out}
+        order_completed={order.order_completed}
+        order_received={order.order_received}
+        />
         </div>
 
         {/* Delivery Information */}
@@ -108,6 +163,37 @@ const AccountOrderDetail = () => {
             )}
             </div>
         </div>
+
+        {/* Order Items */}
+        <div className="account-order-items">
+            {order.products.map((product, productIndex) => (
+            <div key={productIndex} className="account-order-item">
+                <div className="account-order-item-image">
+                <img src={product.image} alt={product.name} />
+                </div>
+                <div className="account-order-item-details">
+                <h3>{product.name}</h3>
+                <span className="account-order-price">${product.price}</span>
+                <div className="account-order-item-meta">
+                    <span>Size: {product.size}</span>
+                    <span>Variant: {product.variant}</span>
+                    <span>Product ID: {product.product}</span>
+                </div>
+                </div>
+                <div className="account-order-item-quantity">
+                x {product.quantity}
+                </div>
+                <div className="account-order-item-subtotal">
+                <span>RM {getSubtotal(product)}</span>
+                </div>
+            </div>
+            ))}
+            <div className="account-order-total"><p>Subtotal: </p> <p>RM {order.subtotal}</p></div>
+            <div className="account-order-total"><p>Shipping Fee: </p>RM {order.shippingFee}</div>
+            <div className="account-order-total"><p>Total: </p> <p style={{fontWeight: "bold", fontSize:"25px", color:"#17a375" }}>RM {order.roundedTotal}</p></div>
+            <div className="account-order-total"><p>Payment Method: </p> {order.paymentType.charAt(0).toUpperCase() + order.paymentType.slice(1)}</div>
+        </div>
+
     </div>
 
     </div>

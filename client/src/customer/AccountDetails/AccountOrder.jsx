@@ -20,7 +20,7 @@ const AccountOrderCard = ({ order, index }) => {
           <span className="account-order-label">Order ID: </span>
         </strong>
         <strong>
-          <span className="account-order-value">{order.id}</span>
+          <span className="account-order-value">{order.id.slice(3)}</span>
         </strong>
       </div>
 
@@ -48,12 +48,12 @@ const AccountOrderCard = ({ order, index }) => {
 
       {/* Display "X more items" if there are additional products */}
       {order.products.length > 1 && (
-        <div className="account-order-more-items">
-          <span>{order.products.length - 1} more items</span>
+        <div style={{ marginTop: "10px", fontStyle: "italic", color: "#666", justifyContent: "right", display: "flex"}}>
+          <span>{order.products.length - 1} more items ...</span>
         </div>
       )}
 
-      <div className="account-order-total">Total: ${order.total}</div>
+      <div className="account-order-total">Total: ${order.roundedTotal}</div>
     </div>
   );
 };

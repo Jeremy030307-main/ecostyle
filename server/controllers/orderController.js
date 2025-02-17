@@ -157,23 +157,9 @@ export const getUserOrder = async (req, res) => {
       snapshot.docs.map(async (doc) => {
         const data = doc.data();
 
-        let last4Digits = null;
-
-        // Extract the PaymentIntent ID from the client secret
-        const paymentIntentId = data.paymentDetails?.paymentID;
-
-        if (paymentIntentId) {
-          last4Digits = await getLast$Digit(paymentIntentId)
-          console.log(last4Digits)
-        }
-
         return {
           id: doc.id, // Include document ID for reference
           ...data,
-          paymentDetails: {
-            ...data.paymentDetails,
-            cardLast4: last4Digits, // Add the last 4 digits of the card
-          },
         };
       })
     );
@@ -185,6 +171,26 @@ export const getUserOrder = async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve orders" });
   }
 };
+
+export const getOrderDetail = async (req, res) => {
+  const userId = req.user;
+  const {order_ID} = req.body
+
+  try {
+    
+    const data = await db.collection(COLLECTIONS.ORDER).doc(order_ID).get()
+
+    if (data.data().customerID !== userId){
+      return res.status(400).send("Invalid permission")
+    }
+
+    // Send the cart data back to the client
+    res.status(200).json(data.data());
+  } catch (error) {
+    console.error("Error retrieving user orders:", error);
+    res.status(500).json({ error: "Failed to retrieve orders" });
+  }
+}
 
 export const getAllOrder = (req, res) => {
     
@@ -232,4 +238,3 @@ export const getAllOrder = (req, res) => {
       res.status(500).json({ error: 'Failed to retrieve cart' });
     }
 };
-

@@ -68,7 +68,7 @@ const Product = () => {
     
     fetchProduct()
     fetchReview()
-  }, [fetchReview, productID]);
+  }, [productID]);
 
   useEffect(() => {
     if (product){
@@ -77,7 +77,7 @@ const Product = () => {
 }, [preesntInWishlist, product, wishlistItems])
 
   const [selectedVariant, setVariant] = useState(null);
-  const [selectedSize, setSize] = useState("S");
+  const [selectedSize, setSize] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
@@ -94,6 +94,10 @@ const Product = () => {
     await createNewReview(productID, rating, comment);
     await fetchReview()
   }
+
+  useEffect(() => {
+    console.log(selectedSize)
+  }, [selectedSize])
 
   if (!product) {
     return <p>Product not found!</p>;
