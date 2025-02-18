@@ -43,7 +43,6 @@
   height: 100%;
   object-fit: contain; /* Ensures it doesn't stretch */
   border-radius: 8px;
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  */
 }
 
 /* Right Section: Product Details */
@@ -63,7 +62,7 @@
 .product-name {
   font-size: 2rem;
   font-weight: bold;
-  color: #333; /* Darker color for better readability */
+  color: #333;
   padding: 0;
   margin: 0;
 }
@@ -73,11 +72,33 @@
   color: #555;
 }
 
-.product-sizes,
-.product-colors {
+/* Size Selection Styles */
+.product-sizes {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap; /* Allows wrapping for smaller screens */
+  flex-wrap: wrap;
+}
+
+.size-section-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.size-guide {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.size-guide:hover {
+  color: #333;
 }
 
 .size-button {
@@ -86,16 +107,23 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .size-button.selected {
-  border: 2px solid #000 !important; /* Thick border for the selected color */
+  border: 2px solid #000 !important;
 }
 
 .size-button:hover {
   background-color: #e0e0e0;
-  transform: scale(1.05); /* Subtle scaling effect */
+  transform: scale(1.05);
+}
+
+/* Color Selection Styles */
+.product-colors {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .color-swatch {
@@ -108,7 +136,7 @@
 }
 
 .color-swatch.selected {
-  border: 2px solid #000; /* Thick border for the selected color */
+  border: 2px solid #000;
 }
 
 .color-swatch:hover {
@@ -116,28 +144,73 @@
   transform: scale(1.1);
 }
 
-/* Variants Section */
-.product-variants {
+/* Size Guide Modal Styles */
+.size-guide-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap; /* Allows wrapping for smaller screens */
-  cursor: pointer;
-}
-.variant-item {
-  text-align: center;
-}
-.variant-image {
-  width: 100px;
-  height: 100px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  object-fit: cover;
-  transition: transform 0.3s; /* Hover effect */
-}
-.variant-image:hover {
-  transform: scale(1.1);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
+.size-guide-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.size-chart {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.size-chart th,
+.size-chart td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.size-chart th {
+  background-color: #f8f8f8;
+  font-weight: 600;
+}
+
+.size-note {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 5px;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+/* Reviews Section Styles */
 .product-review-card {
   display: flex;
   justify-content: left;
@@ -181,17 +254,15 @@
   gap: 10px;
 }
 
-/* Add to Cart and Favorite Buttons */
-/* Action Buttons: Container for Add to Cart and Favorite buttons */
+/* Action Buttons */
 .action-buttons {
   display: flex;
-  justify-content: flex-start; /* Align items to the left */
-  align-items: center; /* Vertically align items */
-  gap: 2rem; /* Add spacing between buttons */
-  margin-top: 1rem; /* Space above the button container */
+  justify-content: flex-start;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 1rem;
 }
 
-/* Add to Cart Button */
 .add-to-cart-btn {
   background-color: #17a375;
   color: white;
@@ -202,7 +273,7 @@
   border-radius: 8px;
   cursor: pointer;
   display: flex;
-  align-items: center; /* Center content inside */
+  align-items: center;
   justify-content: center;
 }
 
@@ -210,7 +281,6 @@
   background-color: #0e6a4b;
 }
 
-/* Favorite Button */
 .fav-btn {
   background-color: white;
   padding: 0.8rem;
@@ -218,8 +288,7 @@
   font-weight: bold;
   border: none;
   border-radius: 50%;
-  /* border: 2px solid red; */
-  background-color: #000;
+  background-color: red;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -237,6 +306,7 @@
   transform: scale(1.05);
 }
 
+/* Review Form Styles */
 .add-review-container {
   display: flex;
 }
@@ -252,7 +322,7 @@
   border-radius: 8px;
   cursor: pointer;
   display: flex;
-  align-items: center; /* Center content inside */
+  align-items: center;
   justify-content: center;
 }
 

@@ -13,7 +13,6 @@ const Account = () => {
           <Outlet/>
         </div>
       </div>
-      {/* <button onClick={handleLogOut}>LogOut</button> */}
 
     </div>
   )

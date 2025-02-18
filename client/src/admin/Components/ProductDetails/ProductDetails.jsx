@@ -8,6 +8,7 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
   if (!isOpen || !product) return null;
 
   const {
+    id,
     name = "",
     price = 0,
     thumbnail = "",
@@ -21,29 +22,31 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
   } = product;
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-content">
+    <div className="product-details-modal-overlay">
+      <div className="product-details-modal-content">
         <button className="close-button" onClick={onClose}>
           ×
         </button>
 
-        <div className="modal-header">
+        <div className="product-details-modal-header">
           <h2>{name}</h2>
-          <button
-            className="edit-button"
-            onClick={() => navigate(`/admin/products/${product.id}/edit`)}
-          >
-            Edit Product
-          </button>
+          <div className="product-details-button-group">
+            <button
+              className="product-details-edit-button"
+              onClick={() => navigate(`/admin/products/${id}/edit`)}
+            >
+              Edit Product
+            </button>
+          </div>
         </div>
 
-        <div className="modal-body">
-          <div className="thumbnail-image">
+        <div className="product-details-modal-body">
+          <div className="product-details-thumbnail-image">
             <img src={thumbnail} alt={name} />
           </div>
 
-          <div className="product-info">
-            <div className="product-details-info-section">
+          <div className="product-details-product-info">
+            <div className="product-details-product-details-info-section">
               <h3>Product Details</h3>
               <p>
                 <strong>Price:</strong> ${price}
@@ -61,11 +64,11 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
             </div>
 
             {size.length > 0 && (
-              <div className="product-details-info-section">
+              <div className="product-details-product-details-info-section">
                 <h3>Sizes</h3>
-                <div className="sizes-container">
+                <div className="product-details-sizes-container">
                   {size.map((s, index) => (
-                    <span key={index} className="size-badge">
+                    <span key={index} className="product-details-size-badge">
                       {s}
                     </span>
                   ))}
@@ -78,11 +81,12 @@ const ProductDetails = ({ product, isOpen, onClose }) => {
           {variant.length > 0 && (
             <div className="product-details-info-section">
               <h3>Color Variants</h3>
-              <div className="variants-container">
+              <div className="product-details-variants-container">
                 {variant.map((v, index) => (
                   <div key={index} className="product-details-variant-item">
-                    <img src={v.image} alt={v.name} />
                     <p>{v.name}</p>
+                    <img src={v.image} alt={v.name} />
+                    
                   </div>
                 ))}
               </div>

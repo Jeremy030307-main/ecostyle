@@ -1,0 +1,175 @@
+/* ProductCategories.css */
+.aname_product_categories {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.aname_category_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-categories-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  color: black;
+  text-decoration: none;
+  background-color: #2fbd8e9d;
+  border-color: black;
+  cursor: pointer;
+}
+
+.add-categories-button img {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.add-categories-button p {
+  margin: 0px;
+}
+
+.aname_category_menu {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.aname_category_item {
+  border-bottom: 1px solid #ddd;
+}
+
+.aname_category_item:last-child {
+  border-bottom: none;
+}
+
+.aname_category_button,
+.aname_subcategory_button {
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.aname_category_button {
+  font-weight: bold;
+}
+
+.aname_category_button:hover,
+.aname_subcategory_button:hover {
+  background-color: #f5f5f5;
+}
+
+.aname_subcategory_list {
+  padding-left: 20px;
+}
+
+.aname_subcategory_item {
+  border-top: 1px solid #eee;
+}
+
+.aname_chevron {
+  font-size: 12px;
+  color: #666;
+}
+
+.aname_size_guide_container {
+  padding: 20px;
+  background-color: #f9f9f9;
+}
+
+.aname_size_guide_table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.aname_size_guide_table th,
+.aname_size_guide_table td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.aname_size_guide_table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.aname_size_guide-edit-button{
+  display: flex;
+  justify-content: end;
+  padding-bottom: 10px;
+}
+
+.aname_edit_btn,
+.aname_delete_btn,
+.aname_save_btn,
+.aname_cancel_btn {
+  padding: 6px 12px;
+  margin: 0 4px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.aname_edit_btn {
+  background-color: #2196F3;
+  color: white;
+}
+
+.aname_delete_btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.aname_save_btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.aname_cancel_btn {
+  background-color: #757575;
+  color: white;
+}
+
+.aname_edit_btn:hover {
+  background-color: #1976D2;
+}
+
+.aname_delete_btn:hover {
+  background-color: #D32F2F;
+}
+
+.aname_save_btn:hover {
+  background-color: #45a049;
+}
+
+.aname_cancel_btn:hover {
+  background-color: #616161;
+}
+
+.aname_edit_input {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.aname_edit_input:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}

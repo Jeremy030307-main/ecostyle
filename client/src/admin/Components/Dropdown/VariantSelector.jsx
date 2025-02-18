@@ -64,7 +64,7 @@ const CustomSelect = ({ value, options, onChange, placeholder }) => {
 
 const VariantSelector = ({ variants, availableColors, handleColorChange, handleImageUpload, removeVariant }) => {
   return (
-    <div className="variants-container">
+    <div className="add-variants-container">
       <p className="upload-section">Variances</p>
       {variants.map((variant, index) => (
         <div key={index} className="variant-row">
@@ -96,7 +96,7 @@ const VariantSelector = ({ variants, availableColors, handleColorChange, handleI
             </div>
           )}
 
-          <button 
+          <button type='button'
             className="remove-button" 
             onClick={() => removeVariant(index)}
           >

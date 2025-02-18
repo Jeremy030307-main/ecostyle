@@ -6,6 +6,7 @@ import "./Orders.css";
 
 const Orders = () => {
   const orderData = useOrder();
+  console.log(orderData)
   if (!orderData) {
     return <p>Loading...</p>;
   }
@@ -92,16 +93,16 @@ const Orders = () => {
             <div className="order-info">
               <p className="sm">Items : {order.products.length}</p>
               <p className="mt-3">
-                Method : {order.paymentDetails.paymentMethod.join(", ")}
+                Method : {order.paymentType}
               </p>
-              <p>Payment ID: {order.paymentDetails.paymentID}</p>
+              <p>Payment ID: {order.id}</p>
               {/* <p>Payment : {order.payment ? "Done" : "Pending"}</p>
               <p>Date : {new Date(order.date).toLocaleDateString()}</p> */}
             </div>
 
             <p className="sm">
               {currency}
-              {order.total}
+              {order.subtotal}
             </p>
             <select value={order.status} className="order-select">
               <option value="Order Placed">Order Placed</option>

@@ -31,7 +31,21 @@
   margin-bottom: 10px;
 }
 
-.add-product-size-select-container{
+/* Image upload section */
+.upload-section {
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.upload-label img {
+  cursor: pointer; /* Makes the upload image clickable */
+  width: 200px;
+}
+
+.upload-label input {
+  display: none; /* hidden */
+}
+
+.upload-images {
   display: flex;
 }
 
