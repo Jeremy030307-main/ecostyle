@@ -6,6 +6,7 @@ import AccountOrderDetail from "./AccountOrderDetail";
 import { useNavigate } from "react-router-dom";
 
 const AccountOrderCard = ({ order, index }) => {
+
   const getSubtotal = (product) => {
     return product.price * product.quantity;
   };
@@ -53,7 +54,7 @@ const AccountOrderCard = ({ order, index }) => {
         </div>
       )}
 
-      <div className="account-order-total">Total: ${order.roundedTotal}</div>
+      <div className="account-order-total" style={{justifyContent: "right"}}>Total: ${order.roundedTotal}</div>
     </div>
   );
 };

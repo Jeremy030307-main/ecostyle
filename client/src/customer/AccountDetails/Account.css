@@ -434,11 +434,32 @@
   font-weight: 500;
 }
 
+.account-order-detail-items{
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
 .account-order-items {
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
+}
+
+.account-order-items:hover {
+  background-color: #d5d6d7;
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Optional subtle shadow */
+  z-index: 2; /* Bring hovered element above others */
+  transition: background-color 0.1s ease-in-out, 
+            transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Optional: Add transition to child elements */
+.account-order-items > * {
+  transition: inherit; /* Inherit parent's transition */
 }
 
 .account-order-item {

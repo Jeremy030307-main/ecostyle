@@ -1,7 +1,7 @@
 // src/pages/Cancellation.js
 import React from "react";
 import "./Account.css";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaCheck, FaArrowLeft } from 'react-icons/fa';
 
 function convertDate(datetime) {
@@ -22,6 +22,8 @@ function convertDate(datetime) {
 }
 
 const StatusTimeline = ({orderID, orderStatus, total, order_placed, order_paid, order_ship_out, order_received, order_completed}) => {
+    
+      const navigate = useNavigate()
     
     const steps = [
         {
@@ -55,7 +57,7 @@ const StatusTimeline = ({orderID, orderStatus, total, order_placed, order_paid, 
       <div className="order-status-container">
         {/* Header Section */}
         <div className="order-status-header">
-          <button className="order-back-button">
+          <button className="order-back-button" onClick={() => {navigate("/account/order")}}>
             <FaArrowLeft/> BACK
           </button>
 
@@ -165,7 +167,7 @@ const AccountOrderDetail = () => {
         </div>
 
         {/* Order Items */}
-        <div className="account-order-items">
+        <div className="account-order-detail-items">
             {order.products.map((product, productIndex) => (
             <div key={productIndex} className="account-order-item">
                 <div className="account-order-item-image">

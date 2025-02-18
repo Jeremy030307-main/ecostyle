@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import "./CustomSelect.css"
 
 // Custom Select Component
-const CustomSelect = ({ label, value, options, onChange, placeholder }) => {
+const CustomSelect = ({ label, value, options, onChange, placeholder, nolabel, bgcolor}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(placeholder);
   const dropdownRef = useRef(null);
@@ -32,11 +32,12 @@ const CustomSelect = ({ label, value, options, onChange, placeholder }) => {
 
   return (
     <div className="custom-select-container">
-      <p className="upload-section">{label}</p>
+      {!nolabel && <p className="upload-section">{label}</p>}
       <div className="select-wrapper" ref={dropdownRef}>
         <div 
           className={`custom-select ${isOpen ? 'open' : ''}`}
           onClick={() => setIsOpen(!isOpen)}
+          style={ bgcolor ? { backgroundColor: bgcolor, color: "black" } : {} }
         >
           <span className="selected-text">{selectedOption}</span>
           <svg className="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24">
@@ -44,14 +45,15 @@ const CustomSelect = ({ label, value, options, onChange, placeholder }) => {
           </svg>
         </div>
         {isOpen && (
-          <div className="dropdown-menu show">
-            <div onClick={() => handleSelect('', placeholder)}>
+          <div className="dropdown-menu show" style={ bgcolor ? { backgroundColor: bgcolor} : {} }>
+            <div onClick={() => handleSelect('', placeholder)} style={ bgcolor ? {color: "black" } : {} }>
               {placeholder}
             </div>
             {options.map((option) => (
               <div
                 key={option.id}
                 onClick={() => handleSelect(option.id, option.name)}
+                style={ bgcolor ? {color: "black" } : {} }
               >
                 {option.name}
               </div>
