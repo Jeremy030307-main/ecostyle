@@ -15,6 +15,7 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+
 // Export the db (Firestore) and any other services you may need
 export { db };
 

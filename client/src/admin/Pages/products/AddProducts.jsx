@@ -275,98 +275,16 @@ const AddProducts = () => {
     await addProduct({
       name: productName,
       price: productPrice,
-      thumbnail: productVariants[0].image,
-      sizes: productSize,
+      size: productSize,
       details: {
         description: productDescription
       },
       category: productCategory,
       collection: productCollection,
-      variants: productVariants
+      variant: productVariants
     })
   }
 
-  // Handle color selection
-  const handleColorChange = (index, color) => {
-    const updatedVariants = [...variants];
-    updatedVariants[index].color = color;
-    setVariants(updatedVariants);
-  };
-
-  // Handle image upload
-  const handleImageUpload = (index, file) => {
-    const updatedVariants = [...variants];
-    updatedVariants[index].image = file; // Store the file object
-    setVariants(updatedVariants);
-  };
-
-  // Add a new variant
-  const chooseVariant = () => {
-    setVariants([...variants, { color: "", image: null }]);
-  };
-
-  // Remove a variant
-  const removeVariant = (index) => {
-    const updatedVariants = variants.filter((_, i) => i !== index);
-    setVariants(updatedVariants);
-  };
-
-  // Handle top-level category selection
-  const handleCategoryChange = (categoryId) => {
-    setSelectedCategory(categoryId);
-    setSelectedSubcategory(""); // Reset subcategory when parent changes
-    setNestedSubcategory(""); // Reset nested subcategory when parent changes
-  };
-
-  // Handle subcategory selection
-  const handleSubcategoryChange = (subcategoryId) => {
-    setSelectedSubcategory(subcategoryId);
-    setNestedSubcategory(""); // Reset nested subcategory when subcategory changes
-  };
-
-  // Handle nested subcategory selection
-  const handleNestedSubcategoryChange = (nestedSubcategoryId) => {
-    setNestedSubcategory(nestedSubcategoryId);
-  };
-  
-  // 1. Material and fit (Nid implement or can dont need)
-  // 2. Change thumbnail and variant images to URL
-  const onSubmitHandler = async (e) => {
-    e.preventDefault();
-
-    try {
-
-      console.log(image1)
-
-      const productData = {
-        name: name,
-        price: Number(price),
-        thumbnail: "image1",
-        size: sizes,
-        details: {
-          description: description,
-          material: "100% Cotton",
-          fit: "Regular"
-        },
-        category: selectedCategory,
-        collection: selectedCollection,
-        variant: variants
-      };
-    
-      await addProduct(productData)
-        .then(response => {
-          console.log("Product added successfully:", productData);
-          window.location.reload();
-        })
-        .catch(error => {
-          console.error("Error adding product:", error);
-        });
-
-    } catch(error) {
-      console.log("Error Dumbbitch")
-    }
-  }
-  
   return (
 
     <div>
@@ -484,54 +402,9 @@ const AddProducts = () => {
           <div className='add-new-product-variant-container'>
             <h3>Variant</h3>
 
-      {/* Description */}
-      <div className="w-full">
-        <p className="upload-section">Product Description</p>
-        <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className="textarea-field" placeholder="Write Content Here" required></textarea>
-      </div>
-
-      {/* Price */}
-      <div>
-        <p className="upload-section">Product Price</p>
-        <input onChange={(e)=>setPrice(e.target.value)} value={price} className="input-field category-price-input" type="number" placeholder="25" />
-      </div>
-
-      {/* Category */}
-      <div className="category-section sm-row">
-        {/* Catategory Dropdown */}
-        <CategorySelectionSection
-          categories={categories}
-          selectedCategory={selectedCategory}
-          selectedSubcategory={selectedSubcategory}
-          nestedSubcategory={nestedSubcategory}
-          handleCategoryChange={handleCategoryChange}
-          handleSubcategoryChange={handleSubcategoryChange}
-          handleNestedSubcategoryChange={handleNestedSubcategoryChange}
-        />
-
-      </div>
-
-      {/* Collection */}
-      <CustomSelect
-        label="Collection"
-        value={selectedCollection}
-        options={collections}
-        onChange={setSelectedCollection}
-        placeholder="Select Collection"
-      />
-      
-      {/* Sizes */}
-      <div>
-        <p className="upload-section">Product Sizes</p>
-        <div className="size-options">
-          <div onClick={()=>setSizes(prev => prev.includes("XXS") ? prev.filter(item => item !== "XXS") : [...prev,"XXS"])} className="size-option">
-            <p className={`${sizes.includes("XXS") ? "bg-green-100" : "bg-slate-200"}`}>XXS</p>
-          </div>
-          <div onClick={()=>setSizes(prev => prev.includes("XS") ? prev.filter(item => item !== "XS") : [...prev,"XS"])} className="size-option">
-            <p className={`${sizes.includes("XS") ? "bg-green-100" : "bg-slate-200"}`}>XS</p>
-          </div>
-          <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter(item => item !== "S") : [...prev,"S"])} className="size-option">
-            <p className={`${sizes.includes("S") ? "bg-green-100" : "bg-slate-200"}`}>S</p>
+            <VariantContainer 
+            productVariant={productVariants}
+            setProductVariant={setProductVariants}/>
           </div>
 
           {/* Category */}
@@ -555,11 +428,13 @@ const AddProducts = () => {
           </div>
         </div>
 
-      {/* Add new variant */}
-      <button type='button' onClick={chooseVariant} className='add-variant-button'>Add Variant</button>
-  
-      <button type="submit" className="add-products-submit-button">ADD</button>
-    </form>
+      </div>
+
+      <button onClick={handleCreateProduct} disabled={!productName || !productDescription || !productCollection || !productCategory || productSize.length <= 0 || productPrice<=0 || productVariants.length<=0
+      }>Save Product</button>
+
+
+    </div>
 
   );
 }
