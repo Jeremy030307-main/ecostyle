@@ -13,13 +13,13 @@ export const getHeaders = async () => {
 
 class ApiMethods {
     
-    static apiRequest(method, url, body = null) {
+    static apiRequest(method, url, body = null, headers = null) {
 
         return new Promise(async (resolve, reject) => {
             const options = {
                 method: method,
-                headers: await getHeaders(), // Make sure getHeaders() is defined correctly
-                credentials: 'include',
+                headers: headers ? headers :  await getHeaders(), // Make sure getHeaders() is defined correctly
+                // credentials: 'include',
             };
     
             // Add the body only for methods that allow it (like POST or PUT)
@@ -62,8 +62,8 @@ class ApiMethods {
         return this.apiRequest('GET', url);
     }
 
-    static post(url, data){
-        return this.apiRequest('POST', url, data);
+    static post(url, data, headers = null){
+        return this.apiRequest('POST', url, data, headers);
     }
 
     static put(url, data){

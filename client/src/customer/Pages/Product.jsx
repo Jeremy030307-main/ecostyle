@@ -94,6 +94,10 @@ const Product = () => {
     await fetchReview();
   };
 
+  useEffect(() => {
+    console.log(selectedSize)
+  }, [selectedSize])
+
   if (!product) {
     return <p>Product not found!</p>;
   }

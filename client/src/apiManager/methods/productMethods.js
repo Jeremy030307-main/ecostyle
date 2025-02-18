@@ -1,5 +1,6 @@
 import { ApiMethods } from "../ApiMethods";
 import PRODUCT_ENDPOINTS from "../endpoints/productEndpoint";
+import { uploadImage } from "./uploadImageMethod";
 
 export const getProducts = (query = {}) => {
     let url = PRODUCT_ENDPOINTS.PRODUCT_ROUTE();
@@ -70,8 +71,13 @@ export const getProduct = (productID) => {
  *     console.error("Error adding product:", error);
  *   });
  */
-export const addProduct = (productData) => {
-    return ApiMethods.post(PRODUCT_ENDPOINTS.ADMIN_PRODUCT_ROUTE(), productData);
+export const addProduct = async (productData) => {
+
+    console.log(productData)
+    const data = uploadImage(productData.variants[0].image)
+
+    console.log(data)
+    // return ApiMethods.post(PRODUCT_ENDPOINTS.ADMIN_PRODUCT_ROUTE(), productData);
 }
 
 /**

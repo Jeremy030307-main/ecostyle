@@ -1,6 +1,7 @@
 .account-content-wrapper {
     display: flex;
     width: 100%;
+    min-height: 100vh;
 }
   
 /* Main content styling */
@@ -433,11 +434,32 @@
   font-weight: 500;
 }
 
+.account-order-detail-items{
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
 .account-order-items {
   background-color: #f8f9fa;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 20px;
+}
+
+.account-order-items:hover {
+  background-color: #d5d6d7;
+  transform: scale(1.01);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Optional subtle shadow */
+  z-index: 2; /* Bring hovered element above others */
+  transition: background-color 0.1s ease-in-out, 
+            transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Optional: Add transition to child elements */
+.account-order-items > * {
+  transition: inherit; /* Inherit parent's transition */
 }
 
 .account-order-item {
@@ -495,8 +517,10 @@
 .account-order-total {
   text-align: right;
   padding-top: 20px;
-  font-weight: 600;
-  font-size: 18px;
+  font-size: 17px;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 60%;
 }
 
 .account-order-shipping,
@@ -534,4 +558,132 @@
 .account-order-address {
   margin: 5px 0;
   line-height: 1.4;
+}
+
+.account-order-more-items {
+  display: flex;
+  justify-content: right;
+}
+
+.order-status-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.order-back-button{
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  border-width: 0;
+  background-color: transparent;
+}
+
+.order-back-button:hover {
+  background-color: #f5f5f5;
+}
+
+.order-id{
+  padding-right: 15px;
+}
+
+.order-status{
+  padding-left: 15px;
+  text-transform:uppercase;
+  color: #17a375;
+  font-weight: bolder;
+}
+
+.timeline-wrapper {
+  overflow-x: auto;
+  padding: 50px 0 20px 0;
+}
+
+.timeline {
+  display: flex;
+  justify-content: space-between;
+  min-width: 800px;
+  position: relative;
+}
+
+.timeline-item {
+  flex: 1;
+  position: relative;
+  min-width: 160px;
+}
+
+.timeline-progress {
+  position: absolute;
+  left: -50%;
+  right: 50%;
+  top: 16px;
+  height: 2px;
+  background-color: #4CAF50;
+  z-index: 1;
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.step-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.step-icon.completed {
+  background: #4CAF50;
+  color: white;
+}
+
+.check-icon {
+  font-size: 14px;
+}
+
+.step-dates {
+  text-align: center;
+  padding: 0 10px;
+}
+
+.step-date {
+  color: #666;
+  font-size: 12px;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+.step-title {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .timeline {
+    min-width: 1200px;
+  }
+  
+  .timeline-item {
+    min-width: 200px;
+  }
+  
+  .step-date {
+    font-size: 11px;
+  }
+  
+  .step-title {
+    font-size: 12px;
+  }
 }
