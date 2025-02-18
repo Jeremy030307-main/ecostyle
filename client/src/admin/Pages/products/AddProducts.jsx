@@ -12,10 +12,10 @@ import VariantSelector from '../../Components/Dropdown/VariantSelector.jsx';
 
 
 const AddProducts = () => {
-  const [image1, setImage1] = useState(false)
-  const [image2, setImage2] = useState(false)
-  const [image3, setImage3] = useState(false)
-  const [image4, setImage4] = useState(false)
+  const [image1, setImage1] = useState("")
+  const [image2, setImage2] = useState("")
+  const [image3, setImage3] = useState("")
+  const [image4, setImage4] = useState("")
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -83,7 +83,7 @@ const AddProducts = () => {
   };
 
   // Add a new variant
-  const addVariant = () => {
+  const chooseVariant = () => {
     setVariants([...variants, { color: "", image: null }]);
   };
 
@@ -117,6 +117,8 @@ const AddProducts = () => {
     e.preventDefault();
 
     try {
+
+      console.log(image1)
 
       const productData = {
         name: name,
@@ -227,6 +229,12 @@ const AddProducts = () => {
       <div>
         <p className="upload-section">Product Sizes</p>
         <div className="size-options">
+          <div onClick={()=>setSizes(prev => prev.includes("XXS") ? prev.filter(item => item !== "XXS") : [...prev,"XXS"])} className="size-option">
+            <p className={`${sizes.includes("XXS") ? "bg-green-100" : "bg-slate-200"}`}>XXS</p>
+          </div>
+          <div onClick={()=>setSizes(prev => prev.includes("XS") ? prev.filter(item => item !== "XS") : [...prev,"XS"])} className="size-option">
+            <p className={`${sizes.includes("XS") ? "bg-green-100" : "bg-slate-200"}`}>XS</p>
+          </div>
           <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter(item => item !== "S") : [...prev,"S"])} className="size-option">
             <p className={`${sizes.includes("S") ? "bg-green-100" : "bg-slate-200"}`}>S</p>
           </div>
@@ -254,7 +262,7 @@ const AddProducts = () => {
       />
 
       {/* Add new variant */}
-      <button onClick={addVariant} className='add-variant-button'>Add Variant</button>
+      <button type='button' onClick={chooseVariant} className='add-variant-button'>Add Variant</button>
   
       <button type="submit" className="add-products-submit-button">ADD</button>
     </form>

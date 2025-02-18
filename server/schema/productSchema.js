@@ -17,7 +17,7 @@ export const productSchema =  Joi.object({
     name: Joi.string().required(),
     price: Joi.number().min(0).required(),
     thumbnail: Joi.string().allow(null),
-    size: Joi.array().items(Joi.string().valid('S', 'M', 'L', 'XL')).required(),
+    size: Joi.array().items(Joi.string().valid('XXS','XS','S', 'M', 'L', 'XL', 'XXL')).required(),
     details: detailsSchema.required(), 
     category: Joi.string().required(),
     collection: Joi.string().required(),

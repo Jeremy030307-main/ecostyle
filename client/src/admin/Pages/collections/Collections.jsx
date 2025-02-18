@@ -1,16 +1,17 @@
+// Collections.jsx
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { assets } from "../../Components/Assets/assets";
-import "./Collections.css";
-import {
-  getAllCollection,
-  deleteCollection
-} from "../../../apiManager/methods/collectionMethods";
+import { getAllCollection, deleteCollection } from "../../../apiManager/methods/collectionMethods";
 import AlertDialog from "../../Components/AlertDialog/AlertDialog";
+import "./Collections.css";
+import CollectionModal from "./CollectionModal";
 
 const Collections = () => {
   const [collections, setCollections] = useState([]);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [selectedCollectionId, setSelectedCollectionId] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  
 
   const fetchCollections = async () => {
     try {
@@ -22,17 +23,17 @@ const Collections = () => {
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = (collectionId) => {
+    setSelectedCollectionId(collectionId);
     setIsAlertOpen(true);
   };
 
-  // Handle product deletion
-  const handleConfirmDelete = async (collectionId) => {
-    if (isAlertOpen === true) {
+  const handleConfirmDelete = async () => {
+    if (selectedCollectionId) {
       try {
-        await deleteCollection(collectionId); // Call deleteProduct API
+        await deleteCollection(selectedCollectionId);
         setCollections((prevList) =>
-          prevList.filter((item) => item.id !== collectionId)
+          prevList.filter((item) => item.id !== selectedCollectionId)
         );
         setIsAlertOpen(false);
         console.log("Collection deleted successfully");
@@ -42,53 +43,47 @@ const Collections = () => {
     }
   };
 
-  // Fetch categories on component mount
   useEffect(() => {
     fetchCollections();
-    // addCollection("ER", "Eo Roots", "Description");
   }, []);
 
   return (
-    <>
-      <div className="title-container">
-        <p className="our-products">Our Collections</p>
-        <div>
-          <NavLink className="add-product-button" to="/admin/addCollections">
-            <img src={assets.add_icon} alt="" />
-            <p className="button-word">Add A Collection</p>
-          </NavLink>
+    <div className="collections-container">
+      <div className="collections-header">
+        <h2 className="collections-title">Collections</h2>
+        <div onClick={() => setModalOpen(true)} className="collections-add-button">
+          <img src={assets.add_icon} alt="Add" className="collections-add-icon" />
+          <span className="collections-add-text">Add A Collection</span>
         </div>
+        <CollectionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
       </div>
 
-      <div className="product-list-container">
-        {/* List Table Title */}
-        <div className="product-list-header">
-          <b>Name</b>
-          <b className="collection-action-header">Action</b>
-        </div>
-
-        {/* Product List */}
-        {collections.map((item, index) => (
-          <div className="collection-item" key={index}>
-            <p>{item.name}</p>
-            <img
-              onClick={() => handleDelete()}
-              className="collection-delete-icon"
-              src={assets.delete_icon}
-              alt=""
-            />
-
-            <AlertDialog
-              isOpen={isAlertOpen}
-              onClose={() => setIsAlertOpen(false)}
-              onConfirm={() => handleConfirmDelete(item.id)}
-              title="Are you absolutely sure?"
-              message="This action cannot be undone. This will permanently delete your collection."
-            />
+      <div className="collections-list">
+        {collections.map((collection) => (
+          <div key={collection.id} className="collections-item">
+            <div className="collections-item-content">
+              <span className="collections-item-name">{collection.name}</span>
+              <div className="collections-item-actions">
+                <img
+                  className="collections-delete-button"
+                  onClick={() => handleDelete(collection.id)}
+                  src={assets.delete_icon}
+                                  alt=""
+                />
+              </div>
+            </div>
           </div>
         ))}
       </div>
-    </>
+
+      <AlertDialog
+        isOpen={isAlertOpen}
+        onClose={() => setIsAlertOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Collection"
+        message="Are you sure you want to delete this collection?"
+      />
+    </div>
   );
 };
 

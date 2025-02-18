@@ -30,8 +30,9 @@ import Products from './admin/Pages/products/Products';
 import Orders from './admin/Pages/Orders';
 
 import AdminRoutes from './authentication/protectedRoute';
+import ProductCategories from './admin/Pages/categories/ProductCategories.jsx';
 import Collections from './admin/Pages/collections/Collections';
-import AddCollections from './admin/Pages/collections/AddCollections';
+import AddCollections from './admin/Pages/collections/CollectionModal.jsx';
 import EditProduct from './admin/Pages/products/EditProduct.jsx'
 import Checkout from './customer/Checkout/Checkout.jsx'
 
@@ -65,7 +66,60 @@ function App() {
           <BrowserRouter>
             {/* <MainApp /> */}
             <ScrollToTop/>
-            <MainApp />
+            <Routes>
+              <Route path='/' element={<Customer/>}>
+                <Route path='' element={<HomePage/>}></Route>
+                <Route path='shop' element={<Shop/>}></Route>
+                <Route path='eco-point' element={<EcoPoint/>}></Route>
+                <Route path='about' element={<About/>}></Route>
+                <Route path='wishlist' element={<Wishlist/>}></Route>
+                <Route path='cart' element={<Cart />} /> 
+                <Route path='product/:productID' element={<Product/>}></Route>
+                <Route path='login' element={<LoginSignUp/>}></Route>
+            
+                <Route path='account' element={<Account/>}>
+
+                  <Route index element={<AccountProfile/>}></Route>
+                  <Route path='update-profile' element={<UpdateProfile/>}></Route>
+
+                  <Route path='address-book' element={<AccountAddressbook/>}></Route>
+                  <Route path="address-book/address-management" element={<AccountCardManagement includeClientSecret={false}/>}>
+                    <Route path='add' element={<AddAcountAddress/>}></Route>
+                    <Route path='edit' element={<AddAcountAddress/>}></Route>
+                  </Route>
+
+                  <Route path="payment-options" element={<AccountPaymentOptions />} />
+                  <Route path="payment-options/card-management" element={<AccountCardManagement includeClientSecret={true}/>}>
+                    <Route path="add" element={<AddPaymentMethod />} />
+                    <Route path="success" element={<AddPaymentStatus />} />
+                  </Route>
+
+                  <Route path='order' element={<AccountOrder/>}></Route>
+                  <Route path='order/:orderID' element={<AccountOrderDetail/>}></Route>
+
+                  <Route path='cancellation' element={<Cancellation/>}></Route>
+
+                </Route>
+              </Route>
+    
+              <Route path="/checkout" element={<CheckoutWrapper/>}>
+                <Route index element={<Checkout/>}/>
+                <Route path='complete' element={<CheckoutComplete/>}></Route>
+              </Route>
+              
+              <Route path='/admin' element={<AdminRoutes/>}>
+                <Route path='' element={<Admin/>}>
+                  <Route path='add' element={<AddProducts/>}></Route>
+                  <Route path='products' element={<Products/>}></Route>
+                  <Route path='products/:id/edit' element={<EditProduct/>}></Route>
+                  <Route path='orders' element={<Orders/>}></Route>
+                  <Route path='collections' element={<Collections/>}></Route>
+                  <Route path='addCollections' element={<AddCollections/>}></Route>
+                  <Route path='categories' element={<ProductCategories/>}></Route>
+                </Route>
+              </Route>
+              
+            </Routes>
           </BrowserRouter>
         </WishlistProvider>
       </CartProvider>
