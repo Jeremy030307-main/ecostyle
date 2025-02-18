@@ -1,6 +1,6 @@
 import { ApiMethods } from "../ApiMethods";
 import PRODUCT_ENDPOINTS from "../endpoints/productEndpoint";
-import { uploadImage } from "./uploadImageMethod";
+import { uploadImageToFirebase } from "./uploadImageMethod";
 
 export const getProducts = (query = {}) => {
     let url = PRODUCT_ENDPOINTS.PRODUCT_ROUTE();
@@ -72,14 +72,38 @@ export const getProduct = (productID) => {
  *   });
  */
 export const addProduct = async (productData) => {
-
-    console.log(productData)
-    const data = uploadImage(productData.variants[0].image)
-
-    console.log(data)
-    // return ApiMethods.post(PRODUCT_ENDPOINTS.ADMIN_PRODUCT_ROUTE(), productData);
-}
-
+    console.log("Original Product Data:", productData);
+  
+    // Store uploaded image URLs
+    let uploadedImages = [];
+  
+    // Loop through all variants and upload images
+    for (let i = 0; i < productData.variant.length; i++) {
+      const variant = productData.variant[i];
+  
+      if (variant.image) {
+        try {
+          // Upload image and store URL
+          const imageUrl = await uploadImageToFirebase(variant.image);
+          uploadedImages.push(imageUrl);
+          productData.variant[i].image = imageUrl; // Replace with uploaded URL
+        } catch (error) {
+          console.error(`Error uploading image for variant ${variant.color}:`, error);
+        }
+      }
+    }
+  
+    // Set the first uploaded image as the thumbnail (if available)
+    if (uploadedImages.length > 0) {
+      productData.thumbnail = uploadedImages[0];
+    }
+  
+    console.log("Updated Product Data with Uploaded Images:", productData);
+  
+    // Send updated productData to backend
+    return ApiMethods.post(PRODUCT_ENDPOINTS.ADMIN_PRODUCT_ROUTE(), productData);
+  };
+  
 /**
  * Updates the product data based on the provided product ID and product data.
  * At least one of the following fields must be included in the `productData` object: 

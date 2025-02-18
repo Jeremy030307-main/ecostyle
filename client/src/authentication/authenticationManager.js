@@ -3,6 +3,8 @@ import { getAuth, signInWithEmailAndPassword, signOut, signInAnonymously, update
 import { ApiMethods } from "../apiManager/ApiMethods";
 import { createUser } from '../apiManager/methods/userMethods';
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { getStorage } from "firebase/storage";
+
 
 // Firebase project configuration
 const firebaseConfig = {
@@ -16,6 +18,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const storage = getStorage(app);
 
 const AuthContext = createContext();
 
