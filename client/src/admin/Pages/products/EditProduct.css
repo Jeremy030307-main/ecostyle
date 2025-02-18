@@ -30,6 +30,37 @@
   margin-right: 10px;
 }
 
+
+.button-link {
+  text-decoration: none;
+}
+
+.button-link button {
+  display: flex;
+  height: 3em;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+button > svg {
+  margin-right: 5px;
+  margin-left: 5px;
+  font-size: 20px;
+  transition: all 0.4s ease-in;
+}
+
+button:hover > svg {
+  font-size: 1.2em;
+  transform: translateX(-5px);
+}
+
+
 .edit-product-form-group {
   margin-bottom: 20px;
 }
