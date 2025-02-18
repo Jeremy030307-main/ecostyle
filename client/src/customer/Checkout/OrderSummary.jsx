@@ -83,8 +83,13 @@ const OrderSummary = () => {
     setIsLoading(true);
     
     try {
-      await createNewOrder(userCart, paymentIntentID);
-  
+      const {error: createOrderError} = await createNewOrder(userCart, paymentIntentID);
+      
+      if (createOrderError){
+        setMessage(createOrderError)
+        return
+      }
+
       // Proceed only if createNewOrder succeeds
       const { error } = await stripe.confirmPayment({
         elements,

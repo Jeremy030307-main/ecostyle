@@ -1,7 +1,8 @@
 import admin from 'firebase-admin';
 import { db } from "../firebase.js";
-import { getLast$Digit, getPaymentIntentObject, getPaymentMethodObject } from "./paymentController.js";
+import { getPaymentIntentObject, getPaymentMethodObject } from "./paymentController.js";
 import { COLLECTIONS, message } from "./utility.js"; 
+import {placedOrder} from "./stockController.js"
 
 const ORDER_STATUS = {
   ORDER_PLACED: "Order Placed",
@@ -44,20 +45,25 @@ export const createOrder = async (req, res) => {
         try {
           // Start a Firestore transaction
           await db.runTransaction(async (transaction) => {
-              const orderRef = db.collection(COLLECTIONS.ORDER).doc(paymentIntentID); // Generate a new document reference for the order
-              const userCartRef = db.collection(COLLECTIONS.USER).doc(uid).collection(COLLECTIONS.CART);
 
-              const cartSnapshot = await transaction.get(userCartRef);
-              // Add the order data to the 'orders' collection
+            for (const product of products) {
+              await placedOrder(transaction, product.product, product.size, product.variant, product.quantity);
+          }
 
-              transaction.set(orderRef, orderData);
-              cartSnapshot.docs.forEach(doc => {
-                transaction.delete(doc.ref);
-              });
+            const orderRef = db.collection(COLLECTIONS.ORDER).doc(paymentIntentID); // Generate a new document reference for the order
+            const userCartRef = db.collection(COLLECTIONS.USER).doc(uid).collection(COLLECTIONS.CART);
 
-              // You can add more actions here if necessary (e.g., updating user data, adding payment logs, etc.)
+            const cartSnapshot = await transaction.get(userCartRef);
+            // Add the order data to the 'orders' collection
 
-              // The transaction will automatically commit at the end of this block
+            transaction.set(orderRef, orderData);
+            cartSnapshot.docs.forEach(doc => {
+              transaction.delete(doc.ref);
+            });
+
+            // You can add more actions here if necessary (e.g., updating user data, adding payment logs, etc.)
+
+            // The transaction will automatically commit at the end of this block
           });
 
           console.log('Order created and inventory updated successfully!');
@@ -65,7 +71,7 @@ export const createOrder = async (req, res) => {
 
       } catch (error) {
           console.error('Error creating order in transaction: ', error);
-          return { message: 'Failed to create order', error };
+          return message(error.message);
       }
       };
 
