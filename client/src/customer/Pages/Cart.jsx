@@ -13,6 +13,8 @@ const Cart = () => {
     navigate('/checkout'); // Navigate to the Checkout page
   };
 
+
+
   return (
     <div className="cart-container">
       <div className="breadcrumbs">
@@ -31,7 +33,7 @@ const Cart = () => {
                   <div className="cart-item-details">
                     <h2 className="cart-item-name">{item.name}</h2>
                     <p className="cart-item-id">
-                      #{item.product} / {item.color} / {item.size}
+                      #{item.product} / {item.variant} / {item.size}
                     </p>
                   </div>
                   <div className="cart-item-price-details">
@@ -72,10 +74,22 @@ const Cart = () => {
           <div className="cart-order-summary">
             <h2>Order Summary</h2>
             {/* Update this line to show total quantity */}
-            <p>{totalItem} items subtotal</p>
+
+            <div className='cart-order-total'>
+              <p>Subtotal ({totalItem})</p>
+              <p>${subtotal.toFixed(2)}</p>
+            </div>
+
+            <div className='cart-order-total'>
+              <p>Estimated Shipping</p>
+              <p>$5.00</p>
+            </div>
+
+            <hr />
+
             <div className="cart-order-total">
               <h3>Order Total</h3>
-              <p>${subtotal}</p>
+              <p>${(5 + subtotal).toFixed(2)}</p>
             </div>
             <button className="checkout-btn" onClick={handleCheckout}>
               Checkout

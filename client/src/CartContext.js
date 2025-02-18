@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const calculateSubtotal = () => {
       if (cartItems && cartItems.length > 0){
-        setSubtotal(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2))
+        setSubtotal(cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0))
       } else {
         setSubtotal(0)
       }

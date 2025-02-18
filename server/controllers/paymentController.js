@@ -159,7 +159,7 @@ export const deleteClientPaymentMethod = async (req, res) => {
 }
 
 export const createPayment = async (req, res) => {
-  const { total, paymentMethodID, shipping } = req.body;
+  const { total, subtotal, shippingFee} = req.body;
   const userID = req.user;
 
   const clientID = await getClientID(userID); // Fetch the customer ID for the logged-in user
@@ -171,6 +171,10 @@ export const createPayment = async (req, res) => {
     // is optional because Stripe enables its functionality by default.
     automatic_payment_methods: {enabled: true},
     customer: clientID,
+    metadata: {
+      shippingFee,
+      subtotal
+    }
   });
 
   const customerSession = await stripe.customerSessions.create({
@@ -185,11 +189,49 @@ export const createPayment = async (req, res) => {
       },
     },
   });
+ 
 
   res.json({
+    paymentIntentID: intent.id,
     client_secret: intent.client_secret,
     customer_session_client_secret: customerSession.client_secret
   });
 };
 
+export const updatePayment = async (req, res) => {
+  const { total, subtotal, shippingFee, paymentIntentID, shippingAddress} = req.body;
+
+  console.log(shippingAddress)
+
+   await stripe.paymentIntents.update(paymentIntentID, {
+    amount: total,
+    metadata: {
+      shippingFee,
+      subtotal
+    },
+    shipping: { 
+      address: shippingAddress ? {
+        city: shippingAddress.city,
+        country: shippingAddress.country,
+        line1: shippingAddress.line1,
+        line2: shippingAddress.line2,
+        postal_code: shippingAddress.postalCode,
+        state: shippingAddress.state
+      } : null,
+      name: shippingAddress.name,
+      phone: shippingAddress.phone
+    }
+   });
+
+}
+
+export const getPaymentIntentObject = async (payment_intent_id) => {
+  const data = await stripe.paymentIntents.retrieve(payment_intent_id);
+  return data
+} 
+
+export const getPaymentMethodObject = async (payment_method_id) => {
+  const data = await stripe.paymentMethods.retrieve(payment_method_id);
+  return data
+}
 

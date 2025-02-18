@@ -1,6 +1,6 @@
 import React,{ createContext, useEffect, useState } from "react";
 import { checkoutCart } from "../../apiManager/methods/cartMethods";
-import { createPaymentIntent } from "../../apiManager/methods/paymentMethod";
+import { createPaymentIntent, updatePaymentIntent } from "../../apiManager/methods/paymentMethod";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Outlet } from "react-router-dom";
@@ -13,19 +13,26 @@ const stripePromise = loadStripe('pk_test_51PnWiiGrBUkxkf9EfMve8DW3an5XYGU1KGENb
 export const CheckoutContext = createContext();
 
 const CheckoutWrapper = () => {
-    const [userCart, setUserCart] = useState([]);
-    const [total, setTotal] = useState(0)
-    const [address, setAddress] = useState(null);
 
-    const [clientSecret, setClientSecret] = useState("");
-    const [customerSessionClientSecret, setCustomerSessionClientSecret] = useState("");
+    const [userCart, setUserCart] = useState([]);
+    const [subtotal, setSubtotal] = useState(0)
+    const [shippingFeeOptions, setShippingFeeOptions] = useState([])
+
+    const [clientSecret, setClientSecret] = useState(null);
+    const [customerSessionClientSecret, setCustomerSessionClientSecret] = useState(null);
+    const [paymentIntentID, setPaymentIntentID] = useState(null)
     const [isLoading, setIsLoading] = useState(true);
+
+    const [address, setAddress] = useState(null);
+    const [shippingMode, setShippingMode] = useState(null)
   
     // fetch the user shopping cart
     useEffect(() => {
       const fetchCart = async () => {
         const data = await checkoutCart();
-        setUserCart(data);
+        setUserCart(data.cartData);
+        setShippingFeeOptions(data.shippingFeeData)
+        setShippingMode(data.shippingFeeData[0])
       };
       fetchCart();
     }, []);
@@ -36,30 +43,34 @@ const CheckoutWrapper = () => {
         return accumulatedTotal + (cartLine.price * cartLine.quantity);
       }, 0);
 
-      setTotal(cartTotal ? cartTotal : 0)
+      setSubtotal(cartTotal ? cartTotal : 0)
     }, [userCart])
+
+    const [total, setTotal] = useState(0)
+    useEffect(() => {
+      if (shippingMode){
+        setTotal(shippingMode.price + subtotal)
+      }
+    }, [shippingMode, subtotal])
   
-    // create the payment intent from stripe 
+    // Create PaymentIntent (only when needed)
     useEffect(() => {
       const fetchClientSecret = async () => {
+        if (clientSecret || total <= 0) return; // Prevent unnecessary calls
         try {
-          console.log(total)
-          const data = await createPaymentIntent(total);
-          console.log(data)
-          setClientSecret(data.client_secret);
-          setCustomerSessionClientSecret(data.customer_session_client_secret)
+          const data = await createPaymentIntent(total, subtotal, shippingMode.price);
+          setClientSecret(prev => prev ?? data.client_secret);
+          setCustomerSessionClientSecret(prev => prev ?? data.customer_session_client_secret);
+          setPaymentIntentID(prev => prev ?? data.paymentIntentID);
         } catch (error) {
           console.error("Error fetching client secret:", error);
-        }finally {
+        } finally {
           setIsLoading(false);
         }
       };
 
-      if (total > 0){
       fetchClientSecret();
-      }
-      
-    }, [total]);
+    }, [clientSecret, total]);
 
     // fetch all the user address book information (if any)
     const [addressData, setAddressData] = useState([])
@@ -75,7 +86,6 @@ const CheckoutWrapper = () => {
     
         fetchUserAddres()
       }, [])
-    const [savedAddress, setSavedAddress] = useState(true)
   
     const appearance = {
       theme: 'stripe',
@@ -93,15 +103,8 @@ const CheckoutWrapper = () => {
       <div>
       {clientSecret ? (
         <Elements options={{ clientSecret,customerSessionClientSecret, appearance }} stripe={stripePromise}>
-          <CheckoutContext.Provider value={{ userCart, total, clientSecret }}>
-            <div className="checkout-container">
-              <div id="payment-form">
-                <CheckoutHeader />
-                <div className="checkout-body">
-                  <Outlet /> 
-                </div>
-              </div>
-            </div>
+          <CheckoutContext.Provider value={{ userCart, total, subtotal, clientSecret, address, setAddress, addressData, shippingFeeOptions, shippingMode, setShippingMode, paymentIntentID }}>
+            <Outlet />
           </CheckoutContext.Provider>
         </Elements>
       ) : (

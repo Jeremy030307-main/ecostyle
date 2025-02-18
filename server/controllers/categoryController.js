@@ -213,7 +213,7 @@ export const updateCategory = async (req, res) => {
 
         // Use spread operator to pass individual objects to arrayUnion
         await categoryRef.update({
-            size_guide: size_guide
+            size_guide: admin.firestore.FieldValue(...size_guide)
         });
 
         res.status(200).send(message("Category Information Updated"));

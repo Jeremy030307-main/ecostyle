@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import "./Checkout.css"
 import { CheckoutContext } from "./CheckoutWrapper";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
-import { createPaymentIntent } from "../../apiManager/methods/paymentMethod";
+import { createNewOrder } from "../../apiManager/methods/orderMethod";
 
 // OrderSummaryLine component: Accepts productID and quantity as props
 const OrderSummaryLine = ({productData, quantity}) => {
@@ -35,7 +35,8 @@ const OrderSummaryLine = ({productData, quantity}) => {
   );
 };
 
-const OrderSummaryTotal = ({subtotal, shippingFee}) => {
+const OrderSummaryTotal = () => {
+  const {total, subtotal, shippingMode} = useContext(CheckoutContext)
 
   return (
     <div className="summary-total-container">
@@ -46,22 +47,22 @@ const OrderSummaryTotal = ({subtotal, shippingFee}) => {
 
       <div className="summary-total">
         <p>Shipping</p>
-        <p>RM{shippingFee}</p>
+        <p>RM{shippingMode ? shippingMode.price : "-"}</p>
       </div>
 
       <hr />
 
       <div className="summary-total summary-final_amount" style={{fontSize: "larger"}}>
         <p>Total</p>
-        <p>RM{subtotal + shippingFee}</p>
+        <p>RM{total}</p>
       </div>
     </div>
   )
 }
 
-const OrderSummary = ({address}) => {
+const OrderSummary = () => {
 
-  const {userCart, total} = useContext(CheckoutContext)
+  const {userCart, address, paymentIntentID} = useContext(CheckoutContext)
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -79,40 +80,29 @@ const OrderSummary = ({address}) => {
       return;
     }
   
-    // Prepare the shipping address data
-    const addressData = {
-      name: address.name,
-      address: {
-        line1: address.line1,
-        line2: address.line2 || null,
-        city: address.city,
-        state: address.state,
-        postal_code: address.postalCode,
-        country: address.country,
-      },
-      phone: address.phone || null,
-    };
-  
     setIsLoading(true);
+    
+    try {
+      await createNewOrder(userCart, paymentIntentID);
   
-    // Use the payment element (UI embedded flow)
-    const { error } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: "http://localhost:3000/checkout/complete",
-        shipping: addressData,
-      },
-    });
-
-    if (error) {
-      console.error("Payment confirmation error:", error.message);
-      setMessage(error.message);
-      setIsLoading(false);
-    } else {
-      // Stripe will handle the redirection automatically
-      console.log("Payment successful with PaymentElement!");
-    }
+      // Proceed only if createNewOrder succeeds
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: "http://localhost:3000/checkout/complete",
+        },
+      });
   
+      if (error) {
+        console.error("Payment confirmation error:", error.message);
+        setMessage(error.message);
+      } else {
+        console.log("Payment successful with PaymentElement!");
+      }
+  } catch (error) {
+      console.error("Order creation error:", error.message);
+      setMessage(error.message); // Display the error message
+  }
     setIsLoading(false);
   };
 
@@ -136,9 +126,7 @@ const OrderSummary = ({address}) => {
         )}
       </div>
 
-      <OrderSummaryTotal 
-        subtotal = {total}
-        shippingFee={0}/>
+      <OrderSummaryTotal/>
 
       <button className='checkout-place-order-btn' disabled={isLoading || !stripe || !elements || !address } id="submit" onClick={() => handleSubmit()}>
         <span id="button-text">

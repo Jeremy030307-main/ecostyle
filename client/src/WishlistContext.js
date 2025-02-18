@@ -15,7 +15,6 @@ export const WishlistProvider = ({ children }) => {
   const fetchWishlst = async() => {
      try {
       const data = await getUserWishlist();
-      console.log(data)
       setWishlistItems(data)
     } catch (error) {
       console.log(error.message)

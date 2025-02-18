@@ -1,0 +1,161 @@
+.privacy-policy-container {
+    padding: 40px 10%;
+    font-family: "Poppins", Arial, sans-serif;
+    background-color: #f9f9f9; /* Matches FAQ background */
+    color: #2c3e50;
+    border-radius: 8px; /* Consistent rounded corners */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .privacy-policy-title {
+    font-size: 2.8rem; /* Same as FAQ title */
+    margin-bottom: 30px;
+    text-align: center;
+    color: #3498db; /* Blue accent for the title */
+    font-weight: bold;
+    border-bottom: 3px solid #3498db; /* Underline effect */
+    display: inline-block;
+    padding-bottom: 10px;
+  }
+  
+  .privacy-policy-intro {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    text-align: center;
+    line-height: 1.8;
+    color: #555; /* Softer text color */
+  }
+  
+  .privacy-section {
+    margin-bottom: 30px; /* Consistent spacing with FAQ items */
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .privacy-section:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Hover effect for depth */
+  }
+  
+  .privacy-section-title {
+    font-size: 1.8rem; /* Matches FAQ category title */
+    margin-bottom: 15px;
+    color: #e74c3c; /* Red accent for section titles */
+    border-bottom: 2px solid #e74c3c; /* Underline effect */
+    display: inline-block;
+    padding-bottom: 5px;
+  }
+  
+  .privacy-section p {
+    font-size: 1.1rem; /* Readable paragraph text */
+    line-height: 1.8;
+    color: #555; /* Consistent paragraph text color */
+    margin-bottom: 15px;
+  }
+  
+  .privacy-list {
+    list-style: disc;
+    margin-left: 20px;
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  .privacy-list li {
+    margin-bottom: 10px;
+  }
+  
+  .privacy-list li::marker {
+    color: #3498db; /* Blue marker for list items */
+  }
+  
+  .privacy-section a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold; /* Highlight links */
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s ease, border-bottom 0.3s ease;
+  }
+  
+  .privacy-section a:hover {
+    color: #e74c3c;
+    border-bottom: 1px solid #e74c3c; /* Matches hover color */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .privacy-policy-container {
+      padding: 30px 8%;
+    }
+  
+    .privacy-policy-title {
+      font-size: 2.5rem;
+    }
+  
+    .privacy-section-title {
+      font-size: 1.5rem;
+    }
+  
+    .privacy-section p,
+    .privacy-list {
+      font-size: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .privacy-policy-container {
+      padding: 20px 5%;
+    }
+  
+    .privacy-policy-title {
+      font-size: 2rem;
+    }
+  
+    .privacy-section-title {
+      font-size: 1.3rem;
+    }
+  
+    .privacy-section p,
+    .privacy-list {
+      font-size: 0.95rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .privacy-policy-container {
+      padding: 15px 5%;
+    }
+  
+    .privacy-policy-title {
+      font-size: 1.8rem;
+    }
+  
+    .privacy-section-title {
+      font-size: 1.2rem;
+    }
+  
+    .privacy-section p {
+      font-size: 0.9rem;
+    }
+  
+    .privacy-list {
+      font-size: 0.9rem;
+    }
+  }
+  
+  /* Enhanced Scrollbar Styling (Optional) */
+  .privacy-policy-container::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .privacy-policy-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #3498db, #e74c3c);
+    border-radius: 4px;
+  }
+  
+  .privacy-policy-container::-webkit-scrollbar-track {
+    background: #f4f4f4;
+  }
+  

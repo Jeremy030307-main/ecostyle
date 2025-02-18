@@ -1,77 +1,146 @@
+import admin from 'firebase-admin';
 import { db } from "../firebase.js";
-import { getLast$Digit } from "./paymentController.js";
+import { getLast$Digit, getPaymentIntentObject, getPaymentMethodObject } from "./paymentController.js";
 import { COLLECTIONS, message } from "./utility.js"; 
 
-
+const ORDER_STATUS = {
+  ORDER_PLACED: "Order Placed",
+  ORDER_PAID: "Order Paid",
+  ORDER_SHIPPPED_OUT: "Order Ship Out",
+  ORDER_RECEIVED: "Order Received",
+  ORDER_COMPLETED: "Order Completed"
+}
 
 export const createOrder = async (req, res) => {
 
     const uid = req.user
-    const { cartsData, total, shippingAddress, paymentDetails } = req.body;
-    
-    console.log(req.body)
-    // // Validate input (you can customize this further)
-    // if (!cartsData || !total || !paymentDetails || (shippingAddress === null || shippingAddress === undefined)) {
-    //     return res.status(400).send(message("Missing required fields or invalid shipping address" ));
-    // }
+    const { cartsData,paymentIntentID } = req.body;
 
     // Remove the `id` field from each cart item
     const products = cartsData.map((product) => {
-        // Destructure the product object, excluding the `id` field
-        const { id, ...restOfProduct } = product;
-        return restOfProduct; // Return the product without the `id` field
+      // Destructure the product object, excluding the `id` field
+      const { id, ...restOfProduct } = product;
+      return restOfProduct; // Return the product without the `id` field
     });
 
-    const roundedTotal = total / 100
-
-    // Create order object
     const orderData = {
-        customerID: uid,
-        products, // Array of product objects with details
-        total: roundedTotal, // Total price
-        shippingAddress, // Shipping address of the customer
-        paymentDetails, // Payment information (e.g., payment method)
-    };
+      customerID: uid,
+      products, // Array of product objects with details
+      order_status: ORDER_STATUS.ORDER_PLACED,
+      order_placed: admin.firestore.Timestamp.now()
+    }
 
-    // Start Firestore transaction
-    const writeOrderInTransaction = async () => {
+    try {
+      const paymentIntent = await getPaymentIntentObject(paymentIntentID);
+
+      orderData.roundedTotal = paymentIntent.amount / 100
+      orderData.subtotal = paymentIntent.metadata.subtotal
+      orderData.shippingFee = paymentIntent.metadata.shippingFee
+      orderData.shippingAddress = paymentIntent.shipping
+
+      // Start Firestore transaction
+      const writeOrderInTransaction = async () => {
 
         try {
-            // Start a Firestore transaction
-            await db.runTransaction(async (transaction) => {
-                const orderRef = db.collection(COLLECTIONS.ORDER).doc(orderData.paymentDetails.paymentID); // Generate a new document reference for the order
-                const userCartRef = db.collection(COLLECTIONS.USER).doc(uid).collection(COLLECTIONS.CART);
+          // Start a Firestore transaction
+          await db.runTransaction(async (transaction) => {
+              const orderRef = db.collection(COLLECTIONS.ORDER).doc(paymentIntentID); // Generate a new document reference for the order
+              const userCartRef = db.collection(COLLECTIONS.USER).doc(uid).collection(COLLECTIONS.CART);
 
-                const cartSnapshot = await transaction.get(userCartRef);
-                // Add the order data to the 'orders' collection
+              const cartSnapshot = await transaction.get(userCartRef);
+              // Add the order data to the 'orders' collection
 
-                transaction.set(orderRef, orderData);
-                cartSnapshot.docs.forEach(doc => {
+              transaction.set(orderRef, orderData);
+              cartSnapshot.docs.forEach(doc => {
                 transaction.delete(doc.ref);
-                });
+              });
 
-                // You can add more actions here if necessary (e.g., updating user data, adding payment logs, etc.)
+              // You can add more actions here if necessary (e.g., updating user data, adding payment logs, etc.)
 
-                // The transaction will automatically commit at the end of this block
-            });
+              // The transaction will automatically commit at the end of this block
+          });
 
-            console.log('Order created and inventory updated successfully!');
-            return { message: 'Order created successfully' };
+          console.log('Order created and inventory updated successfully!');
+          return { message: 'Order created successfully' };
 
-        } catch (error) {
-            console.error('Error creating order in transaction: ', error);
-            return { message: 'Failed to create order', error };
-        }
-    };
+      } catch (error) {
+          console.error('Error creating order in transaction: ', error);
+          return { message: 'Failed to create order', error };
+      }
+      };
+
+      // Run the function
+      writeOrderInTransaction().then(response => {
+          res.status(200).send(response);
+      }).catch(error => {
+          res.status(500).send(error);
+      });
+
+    } catch (error) {
+      console.log(error.message)
+    }
+};
+
+export const paidOrder = async (req, res) => {
+
+  console.log("hahaahahah")
+
+  const { paymentIntentID } = req.body;
+
+  const orderData = {
+    order_status: ORDER_STATUS.ORDER_PAID,
+    order_paid: admin.firestore.Timestamp.now()
+  }
+
+  // Start Firestore transaction
+  const writeOrderInTransaction = async () => {
+
+      try {
+
+          // Start a Firestore transaction
+          await db.runTransaction(async (transaction) => {
+              const orderRef = db.collection(COLLECTIONS.ORDER).doc(paymentIntentID); // Generate a new document reference for the order
+              transaction.set(orderRef, orderData, {merge: true});
+          });
+
+          const ordersnapshot =  await db.collection(COLLECTIONS.ORDER).doc(paymentIntentID).get()
+
+          return { order: ordersnapshot.data() };
+
+      } catch (error) {
+          console.error('Error creating order in transaction: ', error);
+          return { message: 'Failed to create order', error };
+      }
+  };
+
+  try {
+    const paymentIntent = await getPaymentIntentObject(paymentIntentID);
+    const paymentMethod = await getPaymentMethodObject(paymentIntent.payment_method)
+    orderData.paymentType = paymentMethod.type
 
     // Run the function
     writeOrderInTransaction().then(response => {
-        res.status(200).send(response);
-    }).catch(error => {
-        res.status(500).send(error);
-    });
+          res.status(200).send(response);
+      }).catch(error => {
+          res.status(500).send(error);
+      });
 
-};
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+export const orderShipOut = async (req, res) => {
+
+}
+
+export const orderReceived = async (req, res) => {
+
+}
+
+export const orderCompleted = async (req, res) => {
+
+}
 
 export const getUserOrder = async (req, res) => {
   const userId = req.user;

@@ -1,0 +1,160 @@
+.terms-of-use-container {
+  padding: 40px 10%;
+  font-family: "Poppins", Arial, sans-serif;
+  background-color: #f9f9f9; /* Matches the FAQ and Privacy Policy backgrounds */
+  color: #2c3e50;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: all 0.3s ease-in-out;
+}
+
+.terms-of-use-title {
+  font-size: 2.8rem; /* Matches Privacy Policy title size */
+  margin-bottom: 30px;
+  text-align: center;
+  color: #3498db; /* Blue accent for the title */
+  font-weight: bold;
+  border-bottom: 3px solid #3498db; /* Underline effect */
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+.terms-of-use-intro {
+  font-size: 1.3rem; /* Matches the introduction font size */
+  margin-bottom: 30px;
+  text-align: center;
+  line-height: 1.8;
+  color: #555; /* Softer text color */
+}
+
+.terms-section {
+  margin-bottom: 30px; /* Consistent spacing between sections */
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.terms-section:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Adds depth on hover */
+}
+
+.terms-section-title {
+  font-size: 1.8rem; /* Matches Privacy Policy section titles */
+  margin-bottom: 15px;
+  color: #e74c3c; /* Red accent for section titles */
+  border-bottom: 2px solid #e74c3c; /* Underline effect */
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.terms-section p {
+  font-size: 1.1rem; /* Readable paragraph text */
+  line-height: 1.8;
+  color: #555; /* Consistent paragraph text color */
+  margin-bottom: 15px;
+}
+
+.terms-list {
+  list-style: disc;
+  margin-left: 20px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.terms-list li {
+  margin-bottom: 10px;
+}
+
+.terms-list li::marker {
+  color: #3498db; /* Blue marker for list items */
+}
+
+.terms-section a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: bold;
+  border-bottom: 1px solid transparent;
+  transition: color 0.3s ease, border-bottom 0.3s ease;
+}
+
+.terms-section a:hover {
+  color: #e74c3c;
+  border-bottom: 1px solid #e74c3c; /* Matches hover color */
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .terms-of-use-container {
+    padding: 30px 8%;
+  }
+
+  .terms-of-use-title {
+    font-size: 2.5rem;
+  }
+
+  .terms-section-title {
+    font-size: 1.5rem;
+  }
+
+  .terms-section p,
+  .terms-list {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .terms-of-use-container {
+    padding: 20px 5%;
+  }
+
+  .terms-of-use-title {
+    font-size: 2rem;
+  }
+
+  .terms-section-title {
+    font-size: 1.3rem;
+  }
+
+  .terms-section p,
+  .terms-list {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-of-use-container {
+    padding: 15px 5%;
+  }
+
+  .terms-of-use-title {
+    font-size: 1.8rem;
+  }
+
+  .terms-section-title {
+    font-size: 1.2rem;
+  }
+
+  .terms-section p {
+    font-size: 0.9rem;
+  }
+
+  .terms-list {
+    font-size: 0.9rem;
+  }
+}
+
+/* Enhanced Scrollbar Styling (Optional) */
+.terms-of-use-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terms-of-use-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #3498db, #e74c3c);
+  border-radius: 4px;
+}
+
+.terms-of-use-container::-webkit-scrollbar-track {
+  background: #f4f4f4;
+}

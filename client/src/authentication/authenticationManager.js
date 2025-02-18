@@ -25,11 +25,10 @@ export const AuthProvider = ({ children }) => {
 
     const auth = getAuth(app);
 
-    const [isAuthenticated, setAuthentication] = useState(false);
+    const [isAuthenticated, setAuthentication] = useState(true);
     const [uid, setUid] = useState(null)
-    const [isAdmin, setAdmin] = useState(false);
+    const [isAdmin, setAdmin] = useState(true);
     const refreshTokenTimeout = useRef(null); // Reference to store the timeout ID
-
 
     const handleAnonymousSignIn = useCallback(async () => {
         try {
