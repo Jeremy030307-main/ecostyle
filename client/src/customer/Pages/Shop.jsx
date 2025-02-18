@@ -1,10 +1,7 @@
 import "./Shop.css";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import search_icon from "../Components/Assets/search_icon.png";
 import {
-  getProducts,
-  useProduct,
+  getProducts
 } from "../../apiManager/methods/productMethods";
 import { getCategory } from "../../apiManager/methods/categoryMethods";
 import ProductCard from "../Components/ProductCard";
@@ -108,9 +105,6 @@ const Dropdown = ({ title, children }) => {
 };
 
 const Shop = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState(null);
 

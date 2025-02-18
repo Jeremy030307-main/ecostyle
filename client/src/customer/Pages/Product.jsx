@@ -96,6 +96,7 @@ const Product = () => {
 
   useEffect(() => {
     console.log(selectedSize)
+    console.log(product)
   }, [selectedSize])
 
   if (!product) {
@@ -162,15 +163,30 @@ const Product = () => {
               />
             </div>
             <div className="product-sizes">
-              {product.size?.map((size, index) => (
-                <button
-                  key={index}
-                  className={`size-button ${selectedSize === size ? "selected" : ""}`}
-                  onClick={() => setSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
+              {product.size?.map((size, index) => {
+                // Check if this size is in stock (stock > 0)
+                const currentVariant = product.variant.find(v => v.id === selectedVariant) || product.variant[0];
+                const stockInfo = currentVariant?.stock || {};
+                const inStock = (stockInfo[size] || 0) > 0;
+
+                return (
+                  <button
+                    key={index}
+                    className={`
+                size-button 
+                ${selectedSize === size ? "selected" : ""} 
+                ${!inStock ? "out-of-stock" : ""}
+              `}
+                    onClick={() => inStock && setSize(size)}
+                    disabled={!inStock}
+                  >
+                    <span className="size-button-content">
+                      {size}
+                    </span>
+                    {!inStock && <div className="slash-overlay"></div>}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
