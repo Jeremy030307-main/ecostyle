@@ -84,7 +84,7 @@ const About = () => {
 
       {/* Statistics Section */}
       <section className="about-stats">
-        <h2 className="section-title">Our Impact</h2>
+        <h2 className="about-section-title">Our Impact</h2>
         <div className="stats-grid">
           {stats.map((stat) => (
             <div
@@ -101,7 +101,7 @@ const About = () => {
 
       {/* Testimonials Section */}
       <section className="about-testimonials">
-        <h2 className="section-title">What Our Customers Say</h2>
+        <h2 className="about-section-title">What Our Customers Say</h2>
         <Slider {...settings}>
           {testimonials.map((testimonial) => (
             <div key={testimonial.id} className="testimonial-card">
@@ -115,7 +115,7 @@ const About = () => {
 
       {/* Services Section */}
       <section className="about-services">
-        <h2 className="section-title">Why Choose Us?</h2>
+        <h2 className="about-section-title">Why Choose Us?</h2>
         <div className="services-grid">
           <div className="service">
             <img src={deliveryIcon} alt="Free Delivery" />
