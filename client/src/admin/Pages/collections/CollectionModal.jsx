@@ -2,7 +2,7 @@ import { useState } from "react";
 import { addCollection } from "../../../apiManager/methods/collectionMethods";
 import "./CollectionModal.css"
 
-const CollectionModal = ({ isOpen, onClose}) => {
+const CollectionModal = ({ isOpen, onClose, onCollectionAdded }) => {
   const [name, setName] = useState("");
   const [id, setId] = useState("");
   const [description, setDescription] = useState("");
@@ -12,14 +12,15 @@ const CollectionModal = ({ isOpen, onClose}) => {
   const handleSubmit = async () => {
     setError("");
     if (!name.trim()) {
-      setError("collection name is required.");
+      setError("Collection name is required.");
       return;
     }
 
     try {
       setLoading(true);
       await addCollection(id, name, description);
-      alert("collection created successfully!"); // Simple feedback
+      alert("Collection created successfully!");
+      onCollectionAdded(); // Refresh collection list
       onClose();
     } catch (error) {
       setError("Failed to create collection.");
@@ -59,3 +60,4 @@ const CollectionModal = ({ isOpen, onClose}) => {
 };
 
 export default CollectionModal;
+
