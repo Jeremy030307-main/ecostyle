@@ -12,7 +12,7 @@ export const CartProvider = ({ children }) => {
 
   // Function to add an item to the cart
   const addItemToCart = (product) => {
-    setCartItems((prevItems) => {
+    setCartItems((prevItems) => { 
       const existingItem = prevItems.find(item => item.id === product.id);
       if (existingItem) {
         return prevItems.map(item => item.id === product.id ? 
@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
   const updateItemQuantity = (productId, newQuantity) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
-        item.id === productId
+        item.id === productId 
           ? { ...item, quantity: Math.max(1, newQuantity) } // Prevent quantity from being less than 1
           : item
       )
