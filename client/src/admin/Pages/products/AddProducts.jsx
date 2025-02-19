@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import {assets} from '../../Components/Assets/assets.js'
+import { useNavigate } from "react-router";
 import './AddProducts.css';
 import { addProduct } from '../../../apiManager/methods/productMethods.js';
 import { getCategory } from '../../../apiManager/methods/categoryMethods.js';
-import { useColors } from '../../../apiManager/methods/colorMethods.js';
 import { getAllCollection } from '../../../apiManager/methods/collectionMethods.js';
-import { Link } from 'react-router-dom';
 import CustomSelect from '../../Components/Dropdown/CustomSelect.jsx';
+import { getColors } from '../../../apiManager/methods/colorMethods.js';
 
 
 const SizeSelector = ({sizeOptions, productSize, setProductSize}) => {
@@ -50,10 +49,18 @@ const VariantContainer = ({productVariant, setProductVariant}) => {
 
   const [addingVariant, setAddingVariant] = useState(false)
   const [variantColor, setVariantColor] = useState("")
-  const color = useColors()
+  const [color, setColor] = useState();
   const [file, setFile] = useState();
   const [viewFile, setViewFile] = useState()
 
+  useEffect(()=> {
+    const fetchData = async ()=>{
+      const data = await getColors();
+      setColor(data)
+    }
+
+    fetchData()
+  }, [])
   const handleChange = (event) => {
     const file = event.target.files[0];
     setFile(file)
@@ -238,6 +245,7 @@ const CategoryMenu = ({ categories, level = 0, productCategory, setProductCatego
 
 const AddProducts = () => {
 
+  const navigate = useNavigate()
   const [productName, setProductName] = useState("")
   const [productDescription, setProductDescription] = useState("")
   const [productCollection, setProductCollection] = useState("")
@@ -283,14 +291,24 @@ const AddProducts = () => {
       collection: productCollection,
       variant: productVariants
     })
+    navigate("../products")
+
   }
 
   return (
 
     <div>
 
-      <div>
+      <div style={{display: "flex", justifyContent: "space-between"}}>
         <h2>Add New Product</h2>
+
+        <button 
+          onClick={handleCreateProduct} 
+          disabled={!productName || !productDescription || !productCollection || !productCategory || productSize.length <= 0 || productPrice<=0 || productVariants.length<=0}
+          className='add-new-product-btn'
+        >
+            Save Product
+        </button>
       </div>
 
       <div className='add-new-product-container'>
@@ -411,7 +429,7 @@ const AddProducts = () => {
           <div className='add-new-product-category-container'>
             <h3>Category</h3>
 
-            <button className='add-new-product-selecting-category-btn' onClick={()=>{setSelectCategory(true)}}>Select Category</button>
+            <button className='add-new-product-selecting-category-btn' onClick={()=>{setSelectCategory(true)}}>{productCategory ? productCategory:"Select Category"}</button>
 
             {selectCategory && 
               <div className="modal" onClick={()=>{setSelectCategory(false)}}>
@@ -429,11 +447,6 @@ const AddProducts = () => {
         </div>
 
       </div>
-
-      <button onClick={handleCreateProduct} disabled={!productName || !productDescription || !productCollection || !productCategory || productSize.length <= 0 || productPrice<=0 || productVariants.length<=0
-      }>Save Product</button>
-
-
     </div>
 
   );

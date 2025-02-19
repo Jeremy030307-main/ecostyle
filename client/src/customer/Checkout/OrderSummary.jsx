@@ -94,7 +94,7 @@ const OrderSummary = () => {
       const { error } = await stripe.confirmPayment({
         elements,
         confirmParams: {
-          return_url: "http://localhost:3000/checkout/complete",
+          return_url: "https://ecostyle-qjohpic0l-jeremys-projects-7e06879c.vercel.app/checkout/complete",
         },
       });
   

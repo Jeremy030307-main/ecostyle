@@ -1,7 +1,7 @@
 import "./Shop.css";
 import { useEffect, useState } from "react";
 import {
-  getProducts
+  getProducts,
 } from "../../apiManager/methods/productMethods";
 import { getCategory } from "../../apiManager/methods/categoryMethods";
 import ProductCard from "../Components/ProductCard";

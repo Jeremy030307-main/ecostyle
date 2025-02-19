@@ -1,26 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { currency } from "../admin";
 import { assets } from "../Components/Assets/assets";
-import { useOrder } from "../../apiManager/methods/orderMethod";
+import { getAllOrders } from "../../apiManager/methods/orderMethod";
 import "./Orders.css";
 
 const Orders = () => {
-  const orderData = useOrder();
+
+  const [orderData, setOrderData] = useState([])
+
+  useState(()=>{
+    const fetchData = async() => {
+      const data = await getAllOrders()
+      setOrderData(data)
+    }
+
+    fetchData()
+  })
+
   console.log(orderData)
   if (!orderData) {
     return <p>Loading...</p>;
   }
 
   return (
-    <div>
+    <>
+    {orderData && orderData.length>0 && <div>
       <h3>Order Page</h3>
       <div>
-        {orderData.map((order, index) => (
+        {orderData && orderData.length>0 && orderData.map((order, index) => (
           <div className="orders-container" key={index}>
             <img className="order-image" src={assets.parcel_icon} alt="" />
             <div>
               <div className="order-items">
-                {order.products.map((product, index) => {
+                {order.products && order.products.length>0 && order.products.map((product, index) => {
                   if (index === order.products.length - 1) {
                     return (
                       <p key={index}>
@@ -114,7 +126,10 @@ const Orders = () => {
           </div>
         ))}
       </div>
-    </div>
+    </div>}
+    
+    </>
+    
   );
 };
 

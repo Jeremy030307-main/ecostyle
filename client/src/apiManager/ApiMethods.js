@@ -15,11 +15,13 @@ class ApiMethods {
     
     static apiRequest(method, url, body = null, headers = null) {
 
+        console.log(`/api${url}`)
+
         return new Promise(async (resolve, reject) => {
             const options = {
                 method: method,
                 headers: headers ? headers :  await getHeaders(), // Make sure getHeaders() is defined correctly
-                // credentials: 'include',
+                credentials: 'include',
             };
     
             // Add the body only for methods that allow it (like POST or PUT)
@@ -27,7 +29,7 @@ class ApiMethods {
                 options.body = JSON.stringify(body);
             }
             
-            fetch(url, options)
+            fetch(`/api${url}`, options)
                 .then(res => {
                     // Check if the response is ok (status in the range 200-299)
                     if (!res.ok) {
@@ -48,6 +50,7 @@ class ApiMethods {
                     }
     
                     // Try to parse JSON; handle cases where response might not be JSON
+                    
                     return res.json().catch(err => {
                         // If parsing fails, reject the promise
                         reject(new Error('Failed to parse response as JSON'));

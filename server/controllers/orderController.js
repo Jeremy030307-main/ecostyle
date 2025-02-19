@@ -46,15 +46,14 @@ export const createOrder = async (req, res) => {
           // Start a Firestore transaction
           await db.runTransaction(async (transaction) => {
 
-            for (const product of products) {
-              await placedOrder(transaction, product.product, product.size, product.variant, product.quantity);
-          }
-
             const orderRef = db.collection(COLLECTIONS.ORDER).doc(paymentIntentID); // Generate a new document reference for the order
             const userCartRef = db.collection(COLLECTIONS.USER).doc(uid).collection(COLLECTIONS.CART);
 
             const cartSnapshot = await transaction.get(userCartRef);
             // Add the order data to the 'orders' collection
+            for (const product of products) {
+                await placedOrder(transaction, product.product, product.size, product.variant, product.quantity);
+            }
 
             transaction.set(orderRef, orderData);
             cartSnapshot.docs.forEach(doc => {
@@ -198,49 +197,20 @@ export const getOrderDetail = async (req, res) => {
   }
 }
 
-export const getAllOrder = (req, res) => {
-    
-    /// Set up SSE headers
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-    res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Content-Encoding', "none");
-    res.flushHeaders(); // Flush headers to establish SSE connection
+export const getAllOrder = async (req, res) => {
+  try {
+      const userOrderRef = db.collection(COLLECTIONS.ORDER);
+      const snapshot = await userOrderRef.get();
 
-    try {
-        const userOrderRef = db.collection(COLLECTIONS.ORDER)
-  
-        // Set up a Firestore snapshot listener for real-time updates
-        const unsubscribe = userOrderRef.onSnapshot(
-        async (snapshot) => {
-            const cart = await Promise.all(
-            snapshot.docs.map(async (doc) => {
-                const orderData = {
-                id: doc.id, // Include document ID for reference
-                ...doc.data(),
-                };
-      
-                return orderData;
-            })
-            );
-    
-            // Send the updated cart data to the client
-            res.write(`data: ${JSON.stringify(cart)}\n\n`);
-        },
-        (error) => {
-            console.error("Error listening to user cart changes:", error);
-            res.write(`event: error\ndata: ${JSON.stringify({ error: error.message })}\n\n`);
-        }
-        );
-  
-      // Handle connection close and clean up the listener
-      req.on('close', () => {
-        unsubscribe(); // Stop listening for changes
-        res.end();
-      });
-    } catch (error) {
-      console.error("Error setting up cart listener:", error);
-      res.status(500).json({ error: 'Failed to retrieve cart' });
-    }
+      const orders = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+      }));
+
+      res.status(200).send(orders);
+  } catch (error) {
+      console.error("Error retrieving orders:", error);
+      res.status(500).json({ success: false, error: 'Failed to retrieve orders' });
+  }
 };
+

@@ -89,6 +89,7 @@ export const addProduct = async (productData) => {
           productData.variant[i].image = imageUrl; // Replace with uploaded URL
         } catch (error) {
           console.error(`Error uploading image for variant ${variant.color}:`, error);
+          throw new Error(`Error uploading image for variant ${variant.color}`)
         }
       }
     }

@@ -24,9 +24,8 @@ const Products = () => {
         console.log(error)
       }
     }
-
     fetchProducts()
-  })
+  }, [])
 
   const handleProductClick = (product) => {
     setSelectedProduct(product);
