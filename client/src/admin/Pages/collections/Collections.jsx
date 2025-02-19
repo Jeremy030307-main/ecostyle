@@ -55,7 +55,7 @@ const Collections = () => {
           <img src={assets.add_icon} alt="Add" className="collections-add-icon" />
           <span className="collections-add-text">Add A Collection</span>
         </div>
-        <CollectionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+        <CollectionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} onCollectionAdded={fetchCollections}/>
       </div>
 
       <div className="collections-list">
