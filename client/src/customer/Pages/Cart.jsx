@@ -19,7 +19,7 @@ const Cart = () => {
 
   return (
     <div className="cart-container">
-      <div className="breadcrumbs">
+      <div className="breadcrumbs"> 
         <span>Home</span> / <span>Cart</span>
       </div>
       <h1 className="cart-title">Your Cart</h1>
