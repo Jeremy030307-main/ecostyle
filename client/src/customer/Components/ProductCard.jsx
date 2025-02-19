@@ -7,7 +7,7 @@ const ProductCard = ({ productId }) => {
     const isInWishlist = wishlist.includes(productId);
 
     return (
-        <div className="product-card">
+        <div className="product-card"> 
             <h3>Product {productId}</h3>
             <button
                 onClick={() =>
