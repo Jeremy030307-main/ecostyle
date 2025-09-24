@@ -2,7 +2,7 @@
 import admin from 'firebase-admin';
 import fs from 'fs';
 
-serviceAccount = {
+const serviceAccount = {
   "type": "service_account",
   "project_id": "ecostyle-f6ae5",
   "private_key_id": "4f37483f95288c34b1815fb04a372f0b252160ba",
@@ -15,7 +15,7 @@ serviceAccount = {
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-usabu%40ecostyle-f6ae5.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
 }
-
+ 
 // Initialize Firebase Admin app if it's not already initialized
 if (!admin.apps.length) {
   admin.initializeApp({
