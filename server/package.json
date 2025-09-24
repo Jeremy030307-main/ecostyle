@@ -9,7 +9,6 @@
     "client": "npm run start --prefix ../client",
     "dev": "concurrently -kill-others-on-fail \"npm run server\" \"npm run client\"",
     "postinstall": "cd ../client && npm install && npm run build"
-
   },
   "keywords": [],
   "author": "",
@@ -34,7 +33,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "concurrently": "^9.0.1",
+    "concurrently": "^9.2.1",
     "nodemon": "^3.1.4"
   },
   "type": "module"

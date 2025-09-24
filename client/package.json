@@ -62,7 +62,7 @@
     "@babel/preset-env": "^7.25.4",
     "@eslint/config-array": "^0.18.0",
     "@rollup/plugin-terser": "^0.4.4",
-    "concurrently": "^9.1.2",
+    "concurrently": "^9.2.1",
     "rimraf": "^4.4.1"
   }
 }

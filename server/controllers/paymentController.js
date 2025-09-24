@@ -162,15 +162,14 @@ export const createPayment = async (req, res) => {
   const { total, subtotal, shippingFee} = req.body;
   const userID = req.user;
 
-  const clientID = await getClientID(userID); // Fetch the customer ID for the logged-in user
+  // Use createStripeCustomer instead - it creates one if it doesn't exist
+  const clientID = await createStripeCustomer(userID);
 
   const intent = await stripe.paymentIntents.create({
     amount: total,
     currency: 'myr',
-    // In the latest version of the API, specifying the `automatic_payment_methods` parameter
-    // is optional because Stripe enables its functionality by default.
     automatic_payment_methods: {enabled: true},
-    customer: clientID,
+    customer: clientID, // Now this will always be a valid customer ID
     metadata: {
       shippingFee,
       subtotal
@@ -189,7 +188,6 @@ export const createPayment = async (req, res) => {
       },
     },
   });
- 
 
   res.json({
     paymentIntentID: intent.id,
